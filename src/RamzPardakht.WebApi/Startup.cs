@@ -222,7 +222,7 @@ public class Startup
 
         app.MapHealthChecks("/v1/health-check");
 
-        app.MapGroup("/account").MapIdentityApi<User>();
+        app.MapGroup("/v1/account").MapIdentityApi<User>();
 
         app.MapControllers();
     }

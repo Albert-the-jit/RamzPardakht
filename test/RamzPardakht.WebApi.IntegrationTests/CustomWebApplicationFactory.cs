@@ -21,7 +21,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
         builder.ConfigureServices(services =>
         {
 
-            #region remove Npgsql Ef and setup InMemory
+            #region remove Ef and setup sqlite
 
             var descriptor = services.SingleOrDefault(
                 d => d.ServiceType ==
@@ -29,32 +29,14 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 
             services.Remove(descriptor);
 
-            services.AddDbContextPool<IProjectDbContext, ProjectDbContext>((provider, options) =>
+            services.AddDbContextPool<IProjectDbContext, ProjectDbContext>(options =>
             {
-                options.UseInMemoryDatabase("InMemoryDbForTesting");
+                options.EnableSensitiveDataLogging();
+                options.UseSqlite($"Data Source=./mydb{Guid.NewGuid()}.db;",
+                    x => x.MigrationsAssembly("RamzPardakht.SqliteMigrations"));
             });
-
-            var sp = services.BuildServiceProvider();
-
-            using var scope = sp.CreateScope();
-            var scopedServices = scope.ServiceProvider;
-            var db = scopedServices.GetRequiredService<ProjectDbContext>();
-
-            db.Database.EnsureCreated();
 
             #endregion
-
-            services.Configure<JwtBearerOptions>("Bearer", options =>
-            {
-                var config = new OpenIdConnectConfiguration()
-                {
-                    Issuer = MockJwtTokens.Issuer,
-                };
-
-                config.SigningKeys.Add(MockJwtTokens.SecurityKey);
-                options.Configuration = config;
-                options.Audience = MockJwtTokens.Audience;
-            });
         });
 
         builder.ConfigureAppConfiguration(configurationBuilder =>

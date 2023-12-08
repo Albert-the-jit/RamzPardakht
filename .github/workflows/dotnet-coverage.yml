@@ -15,11 +15,11 @@ jobs:
         with:
           dotnet-version: 8.0.x
       - name: Test
-        run: dotnet test QuickstartTemplate.sln
+        run: dotnet test RamzPardakht.sln
 
       - name: Run the unit tests with code coverage
         run: |
-          dotnet test QuickstartTemplate.sln --collect:"XPlat Code Coverage" --settings coverlet.runsettings
+          dotnet test RamzPardakht.sln --collect:"XPlat Code Coverage" --settings coverlet.runsettings
 
       - name: install report generator
         run: dotnet tool install --global dotnet-reportgenerator-globaltool

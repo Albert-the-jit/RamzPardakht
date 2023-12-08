@@ -21,9 +21,9 @@ jobs:
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           action: "fix"
-          workspace: "QuickstartTemplate.sln"
+          workspace: "RamzPardakht.sln"
       - name: Test
-        run: dotnet test QuickstartTemplate.sln
+        run: dotnet test RamzPardakht.sln
       - name: Commit files
         if: steps.format.outputs.has-changes == 'true'
         uses: EndBug/add-and-commit@v4.1.0

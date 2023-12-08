@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RamzPardakht.WebApi.Integra
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RamzPardakht.UnitTests", "test\RamzPardakht.UnitTests\RamzPardakht.UnitTests.csproj", "{BB4AE9B9-CB92-4222-B554-23F03932F25D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RamzPardakht.SqliteMigrations", "src\RamzPardakht.SqliteMigrations\RamzPardakht.SqliteMigrations.csproj", "{3AD16B3F-CC39-4A04-8645-A339970125C2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,7 @@ Global
 		{5F08C317-AE7C-4727-A723-C928167390A4} = {C7163AD7-4514-4566-9EAA-E55EA8186559}
 		{4F430C8F-4EDC-46A0-91E7-8D2235F42891} = {834D4298-D511-484F-A8E3-3CC217A50A1A}
 		{BB4AE9B9-CB92-4222-B554-23F03932F25D} = {834D4298-D511-484F-A8E3-3CC217A50A1A}
+		{3AD16B3F-CC39-4A04-8645-A339970125C2} = {C7163AD7-4514-4566-9EAA-E55EA8186559}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{64344D28-7E5C-40D5-ACA3-4D87730E47E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -47,5 +50,9 @@ Global
 		{BB4AE9B9-CB92-4222-B554-23F03932F25D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB4AE9B9-CB92-4222-B554-23F03932F25D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB4AE9B9-CB92-4222-B554-23F03932F25D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AD16B3F-CC39-4A04-8645-A339970125C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AD16B3F-CC39-4A04-8645-A339970125C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AD16B3F-CC39-4A04-8645-A339970125C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AD16B3F-CC39-4A04-8645-A339970125C2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

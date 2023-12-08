@@ -1,9 +1,10 @@
+using RamzPardakht.Infrastructure;
 using RamzPardakht.WebApi;
 using Sentry;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
-// NOTE: Default application configuration sources can be found at 
+// NOTE: Default application configuration sources can be found at
 // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-6.0#default-application-configuration-sources
 
 builder.WebHost.UseSentry(sentryOptions => sentryOptions.AddExceptionFilterForType<OperationCanceledException>());
@@ -21,6 +22,7 @@ var app = builder.Build();
 
 // Manually call Configure()
 startup.Configure(app);
+await app.Services.InitInfrastructure(app.Configuration);
 
 app.Run();
 

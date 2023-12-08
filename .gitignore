@@ -40,6 +40,7 @@ msbuild.wrn
 
 *.nupkg
 
+/src/RamzPardakht.WebApi/*.db
 
 /test/*/*.received.txt
 /test/*/*/*.feature.cs

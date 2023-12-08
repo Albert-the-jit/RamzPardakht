@@ -1,5 +1,7 @@
 ﻿using System.Reflection;
+using System.Text.Json.Serialization;
 using Asp.Versioning;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Internal;
 using Microsoft.OpenApi.Models;
 using Npgsql;
@@ -7,6 +9,7 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Prometheus;
 using RamzPardakht.ApplicationCore;
+using RamzPardakht.ApplicationCore.Entities;
 using RamzPardakht.ApplicationCore.Resources;
 using RamzPardakht.Infrastructure;
 using RamzPardakht.Infrastructure.DbContexts;
@@ -26,6 +29,20 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
+        services.AddIdentityCore<User>(options =>
+            {
+                options.User.RequireUniqueEmail = false;
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+            })
+            .AddRoles<Role>()
+            .AddDefaultTokenProviders()
+            .AddErrorDescriber<CustomIdentityErrorDescriber>()
+            .AddEntityFrameworkStores<ProjectDbContext>()
+            .AddApiEndpoints();
+
         services.AddLocalization();
 
         services.AddControllers()
@@ -33,7 +50,9 @@ public class Startup
             {
                 options.DataAnnotationLocalizerProvider = (_, factory) =>
                     factory.Create(typeof(SharedResource));
-            });
+            })
+            .AddJsonOptions(options =>
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
         services.AddCors(corsOption =>
         {
@@ -59,18 +78,9 @@ public class Startup
                     options.SubstituteApiVersionInUrl = true;
                 });
 
-        services.AddAuthentication("Bearer")
-            // JWT tokens (default scheme)
-            .AddJwtBearer("Bearer", options =>
-            {
-                options.Authority = _configuration["Authentication:Authority"];
-                options.Audience = _configuration["Authentication:ApiName"];
-                options.MapInboundClaims = false;
-                // user id accessible by HttpContext.User.Identity.Name
-                options.TokenValidationParameters.NameClaimType = "sub";
-                options.SaveToken = true;
-                options.RequireHttpsMetadata = true;
-            });
+
+        services.AddAuthentication()
+            .AddBearerToken(IdentityConstants.BearerScheme);
 
 
         services.AddAuthorization(options =>
@@ -211,6 +221,8 @@ public class Startup
         app.MapMetrics("/metrics");
 
         app.MapHealthChecks("/v1/health-check");
+
+        app.MapGroup("/account").MapIdentityApi<User>();
 
         app.MapControllers();
     }

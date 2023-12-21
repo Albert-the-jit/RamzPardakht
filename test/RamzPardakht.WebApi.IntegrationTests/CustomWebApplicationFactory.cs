@@ -1,15 +1,13 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Moq;
 using RamzPardakht.ApplicationCore.Contracts;
+using RamzPardakht.ApplicationCore.Entities;
 using RamzPardakht.Infrastructure.DbContexts;
-using RamzPardakht.WebApi.IntegrationTests.Helpers;
 
 namespace RamzPardakht.WebApi.IntegrationTests;
 
@@ -20,6 +18,10 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
         builder.UseEnvironment("Development");
         builder.ConfigureServices(services =>
         {
+            var emailSenderMock = new Mock<IEmailSender<User>>();
+
+            services.AddTransient(_ => emailSenderMock);
+            services.AddTransient<IEmailSender<User>>(_ => emailSenderMock.Object);
 
             #region remove Ef and setup sqlite
 

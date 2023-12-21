@@ -78,6 +78,7 @@ public static class InfrastructureSetup
 
         var user = new User
         {
+            EmailConfirmed = true,
             UserName = configuration["Admin:Email"],
             Email = configuration["Admin:Email"]
         };

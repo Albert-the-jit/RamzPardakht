@@ -80,7 +80,7 @@ namespace RamzPardakht.WebApi.IntegrationTests;
 
         var client = factory.CreateClient();
 
-        var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+        var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
 
         var newEmail = "a@a.com";
         var newPass = "#Uhsdf234235";
@@ -93,6 +93,10 @@ namespace RamzPardakht.WebApi.IntegrationTests;
 
         var registerResult = await client.PostAsJsonAsync("/v1/Account/Register", registerModel);
         registerResult.EnsureSuccessStatusCode();
+
+        var user = await userManager.FindByEmailAsync(newEmail);
+        user!.EmailConfirmed = true;
+        await userManager.UpdateAsync(user);
 
         var loginModel = new LoginRequest()
         {

@@ -1,29 +1,33 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-      <TargetFramework>net8.0</TargetFramework>
-        <Nullable>enable</Nullable>
-        <ImplicitUsings>enable</ImplicitUsings>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <Using Include="TechTalk.SpecFlow"/>
-    </ItemGroup>
+  <ItemGroup>
+    <Using Include="TechTalk.SpecFlow"/>
+  </ItemGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0"/>
-        <PackageReference Include="SpecFlow.Plus.LivingDocPlugin" Version="3.9.57"/>
-        <PackageReference Include="SpecFlow.xUnit" Version="3.9.22"/>
-        <PackageReference Include="xunit" Version="2.4.1"/>
-        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="FluentAssertions" Version="6.2.0"/>
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="SpecFlow.Plus.LivingDocPlugin" Version="3.9.57"/>
+    <PackageReference Include="SpecFlow.xUnit" Version="3.9.22"/>
+    <PackageReference Include="xunit" Version="2.6.2"/>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0"/>
 
-    <ItemGroup>
-      <ProjectReference Include="..\RamzPardakht.WebApi.IntegrationTests\RamzPardakht.WebApi.IntegrationTests.csproj" />
-    </ItemGroup>
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.collector" Version="6.0.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RamzPardakht.WebApi.IntegrationTests\RamzPardakht.WebApi.IntegrationTests.csproj" />
+  </ItemGroup>
 
 </Project>

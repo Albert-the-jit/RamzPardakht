@@ -10,7 +10,6 @@
           <ExcludeByFile>**/*Migrations/*.cs,</ExcludeByFile> <!-- Globbing filter -->
           <IncludeTestAssembly>false</IncludeTestAssembly>
           <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-
         </Configuration>
       </DataCollector>
     </DataCollectors>

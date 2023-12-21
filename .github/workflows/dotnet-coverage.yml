@@ -21,20 +21,17 @@ jobs:
         run: |
           dotnet test RamzPardakht.sln --collect:"XPlat Code Coverage" --settings coverlet.runsettings
 
-      - name: install report generator
-        run: dotnet tool install --global dotnet-reportgenerator-globaltool
-
       - name: merge all test Coverage results
-        run: reportgenerator "-reports:.\test\*\TestResults\*\coverage.cobertura.xml" "-targetdir:.\docs\test_coverage" -reporttypes:Cobertura
+        run: dotnet reportgenerator "-reports:.\test\*\TestResults\*\coverage.cobertura.xml" "-targetdir:.\docs\test_coverage" -reporttypes:Cobertura
 
       - name: generate badges
-        run: reportgenerator "-reports:.\docs\test_coverage\Cobertura.xml" "-targetdir:.\docs\test_coverage\badges" -reporttypes:Badges
+        run: dotnet reportgenerator "-reports:.\docs\test_coverage\Cobertura.xml" "-targetdir:.\docs\test_coverage\badges" -reporttypes:Badges
 
       - name: generate html report
-        run: reportgenerator "-reports:.\docs\test_coverage\Cobertura.xml" "-targetdir:.\docs\test_coverage" -reporttypes:HtmlSummary
+        run: dotnet reportgenerator "-reports:.\docs\test_coverage\Cobertura.xml" "-targetdir:.\docs\test_coverage" -reporttypes:HtmlSummary
 
       - name: generate markdown report
-        run: reportgenerator "-reports:.\docs\test_coverage\Cobertura.xml" "-targetdir:.\docs\test_coverage" -reporttypes:MarkdownSummaryGithub
+        run: dotnet reportgenerator "-reports:.\docs\test_coverage\Cobertura.xml" "-targetdir:.\docs\test_coverage" -reporttypes:MarkdownSummaryGithub
 
       - name: GIT commit and push all changed files
         env:

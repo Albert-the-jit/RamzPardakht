@@ -191,14 +191,12 @@ public class Startup
         app.UseRequestLocalization(options =>
             options.AddSupportedUICultures("en-US", "fa-IR").SetDefaultCulture("en-US"));
 
-        if (app.Environment.IsDevelopment())
+        app.UseSwagger(options => options.RouteTemplate = "api-docs/{documentName}/swagger.json");
+        app.UseSwaggerUI(options =>
         {
-            app.UseSwagger(options => options.RouteTemplate = "api-docs/{documentName}/swagger.json");
-            app.UseSwaggerUI(options =>
-            {
-                options.SwaggerEndpoint("/api-docs/v1/swagger.json", "v1");
-            });
-        }
+            options.SwaggerEndpoint("/api-docs/v1/swagger.json", "v1");
+        });
+
         app.UseCors();
 
         app.UseRouting();

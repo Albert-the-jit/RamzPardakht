@@ -14,7 +14,7 @@ using RamzPardakht.ApplicationCore.Entities;
 
 namespace RamzPardakht.WebApi.IntegrationTests;
 
-    public class GeneralWebTests : IClassFixture<CustomWebApplicationFactory>
+public class GeneralWebTests : IClassFixture<CustomWebApplicationFactory>
 {
     private readonly CustomWebApplicationFactory _customWebApplicationFactory;
 

@@ -38,7 +38,7 @@ public class CustomIdentityErrorDescriber : IdentityErrorDescriber
         return new IdentityError
         {
             Code = nameof(DuplicateEmail),
-            Description = _localizer[nameof(DuplicateEmail),email]
+            Description = _localizer[nameof(DuplicateEmail), email]
         };
     }
 
@@ -47,7 +47,7 @@ public class CustomIdentityErrorDescriber : IdentityErrorDescriber
         return new IdentityError
         {
             Code = nameof(DuplicateRoleName),
-            Description = _localizer[nameof(DuplicateRoleName),role]
+            Description = _localizer[nameof(DuplicateRoleName), role]
         };
     }
 
@@ -56,7 +56,7 @@ public class CustomIdentityErrorDescriber : IdentityErrorDescriber
         return new IdentityError
         {
             Code = nameof(DuplicateUserName),
-            Description = _localizer[nameof(DuplicateUserName),userName]
+            Description = _localizer[nameof(DuplicateUserName), userName]
         };
     }
 
@@ -65,7 +65,7 @@ public class CustomIdentityErrorDescriber : IdentityErrorDescriber
         return new IdentityError
         {
             Code = nameof(InvalidEmail),
-            Description = _localizer[nameof(InvalidEmail),email]
+            Description = _localizer[nameof(InvalidEmail), email]
         };
     }
 
@@ -74,7 +74,7 @@ public class CustomIdentityErrorDescriber : IdentityErrorDescriber
         return new IdentityError
         {
             Code = nameof(InvalidRoleName),
-            Description = _localizer[nameof(InvalidRoleName),role]
+            Description = _localizer[nameof(InvalidRoleName), role]
         };
     }
 
@@ -92,7 +92,7 @@ public class CustomIdentityErrorDescriber : IdentityErrorDescriber
         return new IdentityError
         {
             Code = nameof(InvalidUserName),
-            Description = _localizer[nameof(InvalidUserName),userName]
+            Description = _localizer[nameof(InvalidUserName), userName]
 
         };
     }
@@ -147,7 +147,7 @@ public class CustomIdentityErrorDescriber : IdentityErrorDescriber
         return new IdentityError
         {
             Code = nameof(PasswordRequiresUniqueChars),
-            Description = _localizer[nameof(PasswordRequiresUniqueChars),uniqueChars]
+            Description = _localizer[nameof(PasswordRequiresUniqueChars), uniqueChars]
         };
     }
 
@@ -165,7 +165,7 @@ public class CustomIdentityErrorDescriber : IdentityErrorDescriber
         return new IdentityError
         {
             Code = nameof(PasswordTooShort),
-            Description = _localizer[nameof(PasswordTooShort),length]
+            Description = _localizer[nameof(PasswordTooShort), length]
         };
     }
 
@@ -192,7 +192,7 @@ public class CustomIdentityErrorDescriber : IdentityErrorDescriber
         return new IdentityError
         {
             Code = nameof(UserAlreadyInRole),
-            Description = _localizer[nameof(UserAlreadyInRole),role]
+            Description = _localizer[nameof(UserAlreadyInRole), role]
         };
     }
 
@@ -210,7 +210,7 @@ public class CustomIdentityErrorDescriber : IdentityErrorDescriber
         return new IdentityError
         {
             Code = nameof(UserNotInRole),
-            Description = _localizer[nameof(UserNotInRole),role]
+            Description = _localizer[nameof(UserNotInRole), role]
         };
     }
 }

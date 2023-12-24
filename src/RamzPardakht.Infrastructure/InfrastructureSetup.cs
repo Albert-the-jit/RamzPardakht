@@ -50,7 +50,7 @@ public static class InfrastructureSetup
 
         return services;
     }
-      public static async Task InitInfrastructure(this IServiceProvider serviceProvider, IConfiguration configuration)
+    public static async Task InitInfrastructure(this IServiceProvider serviceProvider, IConfiguration configuration)
     {
         using var scope = serviceProvider.CreateScope();
         var dataContext = scope.ServiceProvider.GetRequiredService<ProjectDbContext>();
@@ -66,7 +66,7 @@ public static class InfrastructureSetup
 
         if (!await dataContext.Roles.AnyAsync(x => x.Name == SystemConst.AdminRoleName))
         {
-            var role = new Role() { Name = SystemConst.AdminRoleName};
+            var role = new Role() { Name = SystemConst.AdminRoleName };
             var roleRes =
                 await roleManager.CreateAsync(role);
 

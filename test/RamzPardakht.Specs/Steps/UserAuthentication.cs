@@ -169,14 +169,15 @@ public class UserAuthentication
 
         var request = await _httpClient.PostAsJsonAsync("/v1/Account/Login", loginModel);
 
-        _scenarioContext.Set(request, $"{p0}:{request.GetType().Name}");    }
+        _scenarioContext.Set(request, $"{p0}:{request.GetType().Name}");
+    }
 
     [When(@"""(.*)"" sends forget password request for '(.*)' user")]
     public async Task WhenSendsForgetPasswordRequestForUser(string p0, string p1)
     {
         using var scope = _applicationFactory.Services.CreateScope();
 
-        var forgotPasswordRequest = new ForgotPasswordRequest() { Email = p1};
+        var forgotPasswordRequest = new ForgotPasswordRequest() { Email = p1 };
 
         var scopedServices = scope.ServiceProvider;
         var emailSenderMock = scopedServices.GetRequiredService<Mock<IEmailSender<User>>>();
@@ -225,7 +226,9 @@ public class UserAuthentication
 
         var resetPasswordRequest = new ResetPasswordRequest()
         {
-            ResetCode = resetPassCode, NewPassword = p1, Email = userEmail,
+            ResetCode = resetPassCode,
+            NewPassword = p1,
+            Email = userEmail,
         };
         var request = await _httpClient.PostAsJsonAsync("/v1/Account/ResetPassword", resetPasswordRequest);
 
@@ -243,5 +246,6 @@ public class UserAuthentication
 
         var request = await _httpClient.PostAsJsonAsync("/v1/Account/Login", loginModel);
 
-        _scenarioContext.Set(request, $"{p0}:{request.GetType().Name}");    }
+        _scenarioContext.Set(request, $"{p0}:{request.GetType().Name}");
+    }
 }

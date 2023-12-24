@@ -19,8 +19,8 @@ public static class HttpClientBuilderExtensions
         Action<RequestLoggingOptions> configureOptions = null)
     {
         if (configureOptions == null)
-            configureOptions = (Action<RequestLoggingOptions>) (options => { });
-        services.Configure(null,configureOptions);
+            configureOptions = (Action<RequestLoggingOptions>)(options => { });
+        services.Configure(null, configureOptions);
 
         services.TryAddTransient<LoggingDelegatingHandler>(s =>
             new LoggingDelegatingHandler(s.GetRequiredService<IOptionsSnapshot<RequestLoggingOptions>>().Get(null),

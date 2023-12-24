@@ -17,5 +17,4 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           script: |
             if cd RamzPardakht; then git pull ${{ secrets.Repo }}; else git clone ${{ secrets.Repo }}; fi
-            docker-compose down
             docker-compose up -d --build

@@ -1,0 +1,21 @@
+﻿name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: executing remote ssh commands on test nginx
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          script: |
+            if cd RamzPardakht; then git pull ${{ secrets.Repo }}; else git clone ${{ secrets.Repo }}; fi
+            docker-compose down
+            docker-compose up -d --build

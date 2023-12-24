@@ -1,6 +1,7 @@
 version: '3.8'
 services:
   api:
+    container_name: api
     build: .
     ports:
       - "80:80"
@@ -12,6 +13,7 @@ services:
       - Provider=Host=Postgresql
   db:
     image: postgres:latest
+    container_name: postgres
     restart: always
     environment:
       - POSTGRES_USER=postgres
@@ -20,6 +22,20 @@ services:
       - '5432:5432'
     volumes:
       - db:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin4
+    restart: always
+    ports:
+      - "8888:8888"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: a.z@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: 13791379
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
 volumes:
   db:
+    driver: local
+  pgadmin-data:
     driver: local

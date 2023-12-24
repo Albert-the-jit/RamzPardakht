@@ -3,11 +3,11 @@ services:
   api:
     build: .
     ports:
-      - "5000:80"
+      - "80:80"
     depends_on:
       - db
     environment:
-      - ASPNETCORE_URLS=http://0.0.0.0:5000
+      - ASPNETCORE_URLS=http://0.0.0.0:80
       - ConnectionStrings__DefaultConnection=Host=db; Username=postgres; Password=postgres;
       - Provider=Host=Postgresql
   db:

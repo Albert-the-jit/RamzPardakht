@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: executing remote ssh commands on test nginx
+      - name: executing remote ssh commands on server
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}

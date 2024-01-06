@@ -5,6 +5,7 @@ namespace RamzPardakht.ApplicationCore.Contracts;
 
 public interface IProjectDbContext
 {
+    DbSet<ReferenceToken> ReferenceTokens { get; set; }
     DbSet<Role> Roles { get; set; }
     DbSet<User> Users { get; set; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);

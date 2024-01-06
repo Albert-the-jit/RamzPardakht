@@ -19,6 +19,9 @@ public class ProjectDbContext : IdentityDbContext<User, Role, int, IdentityUserC
     {
     }
 
+    public DbSet<ReferenceToken> ReferenceTokens { get; set; }
+
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -105,6 +108,10 @@ public class ProjectDbContext : IdentityDbContext<User, Role, int, IdentityUserC
                     entry.State = EntityState.Modified;
                     entry.CurrentValues[nameof(ISoftDeletable.IsDeleted)] = true;
                     entry.CurrentValues[nameof(ISoftDeletable.DeletedOn)] = dateTimeProvider.UtcNow;
+                    if (httpContext?.User?.Identity?.IsAuthenticated == true && int.TryParse(httpContext.User.Identity.Name, out int id))
+                    {
+                        entry.CurrentValues[nameof(ISoftDeletable.DeletedById)] = id;
+                    }
                 }
             }
 
@@ -112,18 +119,18 @@ public class ProjectDbContext : IdentityDbContext<User, Role, int, IdentityUserC
             {
                 if (entry.State == EntityState.Added)
                 {
-                    if (httpContext?.User?.Identity?.IsAuthenticated == true)
+                    if (httpContext?.User?.Identity?.IsAuthenticated == true && int.TryParse(httpContext.User.Identity.Name, out int id))
                     {
-                        entry.CurrentValues[nameof(ITimeable.CreatedById)] = httpContext.User.Identity.Name;
+                        entry.CurrentValues[nameof(ITimeable.CreatedById)] = id;
                     }
 
                     entry.CurrentValues[nameof(ITimeable.CreatedOn)] = dateTimeProvider.UtcNow;
                 }
                 else if (httpContext != null && httpContext.User != null && entry.State == EntityState.Modified)
                 {
-                    if (httpContext?.User?.Identity?.IsAuthenticated == true)
+                    if (httpContext?.User?.Identity?.IsAuthenticated == true && int.TryParse(httpContext.User.Identity.Name, out int id))
                     {
-                        entry.CurrentValues[nameof(ITimeable.ModifiedById)] = httpContext.User.Identity.Name;
+                        entry.CurrentValues[nameof(ITimeable.ModifiedById)] = id;
                     }
 
                     entry.CurrentValues[nameof(ITimeable.ModifiedOn)] = dateTimeProvider.UtcNow;
@@ -131,4 +138,5 @@ public class ProjectDbContext : IdentityDbContext<User, Role, int, IdentityUserC
             }
         }
     }
+
 }

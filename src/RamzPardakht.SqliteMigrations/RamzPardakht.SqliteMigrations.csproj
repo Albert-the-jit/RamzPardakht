@@ -10,4 +10,9 @@
       <ProjectReference Include="..\RamzPardakht.Infrastructure\RamzPardakht.Infrastructure.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Migrations\20231229124520_ReferenceToken.cs" />
+      <Compile Remove="Migrations\20231229124520_ReferenceToken.Designer.cs" />
+    </ItemGroup>
+
 </Project>

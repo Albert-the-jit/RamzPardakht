@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
 using System.Text.Json.Serialization;
 using Asp.Versioning;
+using Gridify;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Internal;
 using Microsoft.OpenApi.Models;
@@ -9,6 +11,7 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Prometheus;
 using RamzPardakht.ApplicationCore;
+using RamzPardakht.ApplicationCore.Common;
 using RamzPardakht.ApplicationCore.Entities;
 using RamzPardakht.ApplicationCore.Resources;
 using RamzPardakht.Infrastructure;
@@ -29,6 +32,10 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
+        GridifyGlobalConfiguration.EnableEntityFrameworkCompatibilityLayer();
+
+        services.AddScoped<Mapper>();
+
         services.AddIdentityCore<User>(options =>
             {
                 options.User.RequireUniqueEmail = true;
@@ -79,13 +86,21 @@ public class Startup
                     options.SubstituteApiVersionInUrl = true;
                 });
 
-
         services.AddAuthentication()
             .AddBearerToken(IdentityConstants.BearerScheme);
 
-
+        services.AddScoped<IAuthorizationHandler, ReferenceTokenAuthorizationHandler>();
         services.AddAuthorization(options =>
         {
+            options.DefaultPolicy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .AddRequirements(new ReferenceTokenRequirement())
+                .Build();
+
+            options.AddPolicy("WebClient",
+                policy => policy.RequireAssertion(context => !context.User.Claims.Any(x =>
+                    x.Type == SystemConst.IsReferenceTokenClaimName && x.Value == true.ToString())));
+
             options.AddPolicy("admin",
                 policy => policy.RequireRole("RamzPardakht:admin"));
             options.AddPolicy("read",
@@ -121,7 +136,7 @@ public class Startup
 
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
-                Description = "JWT Authorization header using the Bearer scheme. Example: 'Bearer 12345abcdef'",
+                Description = "Authorization header using the Bearer scheme. Example: 'Bearer 12345abcdef'",
                 Name = "Authorization",
                 In = ParameterLocation.Header,
                 Type = SecuritySchemeType.ApiKey,

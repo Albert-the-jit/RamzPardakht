@@ -90,4 +90,7 @@
   <data name="CaptchaIsNotValid" xml:space="preserve">
     <value>لطفا در وارد کردن عبارت امنیتی دقت فرمائید.</value>
   </data>
+  <data name="ShouldBeBiggerThanNow" xml:space="preserve">
+    <value>باید بزرگ تر از زمان حال باشد</value>
+  </data>
 </root>

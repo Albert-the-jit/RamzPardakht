@@ -5,6 +5,140 @@
     "version": "v1"
   },
   "paths": {
+    "/v1/AccessToken": {
+      "post": {
+        "tags": [
+          "AccessToken"
+        ],
+        "summary": "create api access token",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReferenceTokenModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReferenceTokenModel"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "AccessToken"
+        ],
+        "summary": "list api access tokens",
+        "parameters": [
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "OrderBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Filter",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReferenceTokenModelPaging"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/AccessToken/{id}": {
+      "delete": {
+        "tags": [
+          "AccessToken"
+        ],
+        "summary": "delete api access tokens",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/v1/account/register": {
       "post": {
         "tags": [
@@ -499,6 +633,59 @@
         },
         "additionalProperties": false
       },
+      "ReferenceTokenModel": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "expiresUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "accessToken": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ReferenceTokenModelPaging": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReferenceTokenModel"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "RefreshRequest": {
         "type": "object",
         "properties": {
@@ -665,7 +852,7 @@
     "securitySchemes": {
       "Bearer": {
         "type": "apiKey",
-        "description": "JWT Authorization header using the Bearer scheme. Example: 'Bearer 12345abcdef'",
+        "description": "Authorization header using the Bearer scheme. Example: 'Bearer 12345abcdef'",
         "name": "Authorization",
         "in": "header"
       }

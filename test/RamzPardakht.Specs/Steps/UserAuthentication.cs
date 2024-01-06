@@ -91,6 +91,14 @@ public class UserAuthentication
 
     }
 
+    [Then(@"the ""(.*)"" should receive a failed message with ""(.*)"" status")]
+    public void ThenTheShouldReceiveAFailedMessageWithStatus(string p0, int statusCode)
+    {
+        var res = _scenarioContext.Get<HttpResponseMessage>($"{p0}:{nameof(HttpResponseMessage)}");
+        ((int)res.StatusCode).Should().BeInRange(400, 499);
+        ((int)res.StatusCode).Should().Be(statusCode);
+        }
+
     [When(@"""(.*)"" sends valid credentials on login request")]
     public async Task WhenSendsValidCredentialsOnLoginRequest(string p0)
     {
@@ -169,15 +177,14 @@ public class UserAuthentication
 
         var request = await _httpClient.PostAsJsonAsync("/v1/Account/Login", loginModel);
 
-        _scenarioContext.Set(request, $"{p0}:{request.GetType().Name}");
-    }
+        _scenarioContext.Set(request, $"{p0}:{request.GetType().Name}");    }
 
     [When(@"""(.*)"" sends forget password request for '(.*)' user")]
     public async Task WhenSendsForgetPasswordRequestForUser(string p0, string p1)
     {
         using var scope = _applicationFactory.Services.CreateScope();
 
-        var forgotPasswordRequest = new ForgotPasswordRequest() { Email = p1 };
+        var forgotPasswordRequest = new ForgotPasswordRequest() { Email = p1};
 
         var scopedServices = scope.ServiceProvider;
         var emailSenderMock = scopedServices.GetRequiredService<Mock<IEmailSender<User>>>();
@@ -226,9 +233,7 @@ public class UserAuthentication
 
         var resetPasswordRequest = new ResetPasswordRequest()
         {
-            ResetCode = resetPassCode,
-            NewPassword = p1,
-            Email = userEmail,
+            ResetCode = resetPassCode, NewPassword = p1, Email = userEmail,
         };
         var request = await _httpClient.PostAsJsonAsync("/v1/Account/ResetPassword", resetPasswordRequest);
 
@@ -246,6 +251,7 @@ public class UserAuthentication
 
         var request = await _httpClient.PostAsJsonAsync("/v1/Account/Login", loginModel);
 
-        _scenarioContext.Set(request, $"{p0}:{request.GetType().Name}");
-    }
+        _scenarioContext.Set(request, $"{p0}:{request.GetType().Name}");    }
+
+
 }

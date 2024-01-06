@@ -66,12 +66,12 @@ public class DbContextSaveChangeTests
         //Arrange
         var services = new ServiceCollection();
         var now = DateTime.Now;
-        var userId = "64624";
+        var userId = 64624;
 
         var httpContextAccessor = Substitute.For<IHttpContextAccessor>();
         httpContextAccessor.HttpContext.Returns(_ => new DefaultHttpContext()
         {
-            User = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim("sub", userId) }, "test type", "sub", null))
+            User = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim("sub", userId.ToString()) }, "test type", "sub", null))
         });
 
         var systemClock = Substitute.For<ISystemClock>();
@@ -111,7 +111,7 @@ public class DbContextSaveChangeTests
         res?.Name.Should().BeEquivalentTo(dummyEntity.Name);
         res?.CreatedOn.Should().BeExactly(now);
         res?.ModifiedOn.Should().BeNull();
-        res?.CreatedById.Should().BeEquivalentTo(userId);
+        res?.CreatedById.Should().Be(userId);
         res?.ModifiedById.Should().BeNull();
     }
 
@@ -175,12 +175,12 @@ public class DbContextSaveChangeTests
         //Arrange
         var services = new ServiceCollection();
         var now = DateTime.Now;
-        var userId = "64624";
+        var userId = 64624;
 
         var httpContextAccessor = Substitute.For<IHttpContextAccessor>();
         httpContextAccessor.HttpContext.Returns(_ => new DefaultHttpContext()
         {
-            User = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim("sub", userId) }, "test type", "sub", null))
+            User = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim("sub", userId.ToString()) }, "test type", "sub", null))
         });
 
         var systemClock = Substitute.For<ISystemClock>();
@@ -222,9 +222,9 @@ public class DbContextSaveChangeTests
         //Assert
         res?.Name.Should().BeEquivalentTo(dummyEntity.Name);
         res?.CreatedOn.Should().BeExactly(dummyEntity.CreatedOn);
-        res?.CreatedById.Should().BeSameAs(dummyEntity.CreatedById);
+        res?.CreatedById.Should().Be(dummyEntity.CreatedById);
         res?.ModifiedOn.Should().BeExactly(now);
-        res?.ModifiedById.Should().BeSameAs(userId);
+        res?.ModifiedById.Should().Be(userId);
         res?.IsDeleted.Should().BeFalse();
         res?.DeletedOn.Should().BeNull();
 
@@ -237,12 +237,12 @@ public class DbContextSaveChangeTests
         //Arrange
         var services = new ServiceCollection();
         var now = DateTime.Now;
-        var userId = "64624";
+        var userId = 64624;
 
         var httpContextAccessor = Substitute.For<IHttpContextAccessor>();
         httpContextAccessor.HttpContext.Returns(_ => new DefaultHttpContext()
         {
-            User = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim("sub", userId) }, "test type", "sub", null))
+            User = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim("sub", userId.ToString()) }, "test type", "sub", null))
         });
 
         var systemClock = Substitute.For<ISystemClock>();
@@ -278,7 +278,7 @@ public class DbContextSaveChangeTests
 
         var res = await dbContext.TimeableDummyEntities.FirstOrDefaultAsync(x => x.Id == dummyEntity.Id);
 
-        dummyEntity.CreatedById = "6060";
+        dummyEntity.CreatedById = 6060;
         dummyEntity.CreatedOn = now.AddDays(-1);
         dummyEntity.Name = "test name updated";
         await dbContext.SaveChangesAsync();
@@ -286,9 +286,9 @@ public class DbContextSaveChangeTests
         //Assert
         res?.Name.Should().BeEquivalentTo(dummyEntity.Name);
         res?.CreatedOn.Should().BeExactly(dummyEntity.CreatedOn);
-        res?.CreatedById.Should().BeSameAs(dummyEntity.CreatedById);
+        res?.CreatedById.Should().Be(dummyEntity.CreatedById);
         res?.ModifiedOn.Should().BeExactly(now);
-        res?.ModifiedById.Should().BeSameAs(userId);
+        res?.ModifiedById.Should().Be(userId);
     }
 
     [Fact]
@@ -297,12 +297,12 @@ public class DbContextSaveChangeTests
         //Arrange
         var services = new ServiceCollection();
         var now = DateTime.Now;
-        var userId = "64624";
+        var userId = 64624;
 
         var httpContextAccessor = Substitute.For<IHttpContextAccessor>();
         httpContextAccessor.HttpContext.Returns(_ => new DefaultHttpContext()
         {
-            User = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim("sub", userId) }, "test type", "sub", null))
+            User = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim("sub", userId.ToString()) }, "test type", "sub", null))
         });
 
         var systemClock = Substitute.For<ISystemClock>();
@@ -338,7 +338,7 @@ public class DbContextSaveChangeTests
 
         var res = await dbContext.TimeableAndSoftDeletableDummyEntities.FirstOrDefaultAsync(x => x.Id == dummyEntity.Id);
 
-        dummyEntity.CreatedById = "6060";
+        dummyEntity.CreatedById = 6060;
         dummyEntity.CreatedOn = now.AddDays(-1);
         dummyEntity.Name = "test name updated";
 
@@ -347,9 +347,9 @@ public class DbContextSaveChangeTests
         //Assert
         res?.Name.Should().BeEquivalentTo(dummyEntity.Name);
         res?.CreatedOn.Should().BeExactly(dummyEntity.CreatedOn);
-        res?.CreatedById.Should().BeSameAs(dummyEntity.CreatedById);
+        res?.CreatedById.Should().Be(dummyEntity.CreatedById);
         res?.ModifiedOn.Should().BeExactly(now);
-        res?.ModifiedById.Should().BeSameAs(userId);
+        res?.ModifiedById.Should().Be(userId);
         res?.IsDeleted.Should().BeFalse();
         res?.DeletedOn.Should().BeNull();
 
@@ -361,12 +361,12 @@ public class DbContextSaveChangeTests
         //Arrange
         var services = new ServiceCollection();
         var now = DateTime.Now;
-        var userId = "64624";
+        var userId = 64624;
 
         var httpContextAccessor = Substitute.For<IHttpContextAccessor>();
         httpContextAccessor.HttpContext.Returns(_ => new DefaultHttpContext()
         {
-            User = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim("sub", userId) }, "test type", "sub", null))
+            User = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim("sub", userId.ToString()) }, "test type", "sub", null))
         });
 
         var systemClock = Substitute.For<ISystemClock>();
@@ -408,9 +408,9 @@ public class DbContextSaveChangeTests
         //Assert
         res?.Name.Should().BeEquivalentTo(dummyEntity.Name);
         res?.CreatedOn.Should().BeExactly(dummyEntity.CreatedOn);
-        res?.CreatedById.Should().BeSameAs(dummyEntity.CreatedById);
+        res?.CreatedById.Should().Be(dummyEntity.CreatedById);
         res?.ModifiedOn.Should().BeExactly(now);
-        res?.ModifiedById.Should().BeSameAs(userId);
+        res?.ModifiedById.Should().Be(userId);
         res?.IsDeleted.Should().BeTrue();
         res?.DeletedOn.Should().BeExactly(now);
 

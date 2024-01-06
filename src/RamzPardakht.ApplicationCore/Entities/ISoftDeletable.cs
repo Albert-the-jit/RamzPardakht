@@ -3,5 +3,6 @@
 public interface ISoftDeletable
 {
     public bool IsDeleted { get; set; }
+    public int? DeletedById { get; set; }
     public DateTimeOffset? DeletedOn { get; set; }
 }

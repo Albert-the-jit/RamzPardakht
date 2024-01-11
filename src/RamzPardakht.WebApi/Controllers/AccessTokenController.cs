@@ -23,7 +23,7 @@ namespace RamzPardakht.WebApi.Controllers;
 
 [ApiController]
 [Route("v{version:apiVersion}/[controller]")]
-[ApiVersion("1.0")]
+[ApiVersion(1)]
 [Produces("application/json")]
 [Consumes("application/json")]
 [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]

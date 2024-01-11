@@ -6,8 +6,8 @@ namespace RamzPardakht.WebApi.Controllers;
 
 [ApiController]
 [Route("v{version:apiVersion}/[controller]")]
-[ApiVersion("1.0", Deprecated = true)]
-[ApiVersion("2.0")]
+[ApiVersion(1, Deprecated = true)]
+[ApiVersion(2)]
 [Produces("application/json")]
 [Consumes("application/json")]
 [ProducesResponseType(typeof(ValidationProblemDetails), (int)HttpStatusCode.BadRequest)]

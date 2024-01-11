@@ -235,7 +235,7 @@ public class Startup
 
         app.MapHealthChecks("/v1/health-check");
 
-        app.MapGroup("/v1/account").MapIdentityApi<User>();
+        app.MapGroup("/v1/Account").MapIdentityApi<User>().WithTags("Account");
 
         app.MapControllers();
     }

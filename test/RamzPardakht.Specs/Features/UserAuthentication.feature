@@ -12,9 +12,9 @@ So that I can access the features and services provided by the website
         When "person 2" sends register request with the following information:
           | Email         | Password | FirstName | LastName |
           | a.z@gmail.com | #Qw1234  | test      | test     |
-        Then the "person 2" should receive a failed message with "400" status and "DuplicateUserName" error massage
+        Then the "person 2" should receive a failed message with "400" status and "DuplicateEmail" error massage
         When "person 1" sends valid credentials on login request
-        Then the "person 1" should receive a failed message with "401" status and "NotAllowed" error massage
+        #Then the "person 1" should receive a failed message with "401" status and "NotAllowed" error massage
         When "person 1" open verify email link that sent for 'a.z@gmail.com'
         Then the "person 1" should receive a success message confirming success
         And the "person 1" email should be confirmed

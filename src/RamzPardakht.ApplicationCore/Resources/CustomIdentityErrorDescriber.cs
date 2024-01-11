@@ -55,8 +55,8 @@ public class CustomIdentityErrorDescriber : IdentityErrorDescriber
     {
         return new IdentityError
         {
-            Code = nameof(DuplicateUserName),
-            Description = _localizer[nameof(DuplicateUserName), userName]
+            Code = nameof(DuplicateEmail),
+            Description = _localizer[nameof(DuplicateEmail), userName]
         };
     }
 

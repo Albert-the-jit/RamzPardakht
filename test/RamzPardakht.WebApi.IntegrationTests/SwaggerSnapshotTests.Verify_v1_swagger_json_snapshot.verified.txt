@@ -139,10 +139,10 @@
         }
       }
     },
-    "/v1/account/register": {
+    "/v1/Account/register": {
       "post": {
         "tags": [
-          "RamzPardakht.WebApi"
+          "Account"
         ],
         "requestBody": {
           "content": {
@@ -170,10 +170,10 @@
         }
       }
     },
-    "/v1/account/login": {
+    "/v1/Account/login": {
       "post": {
         "tags": [
-          "RamzPardakht.WebApi"
+          "Account"
         ],
         "parameters": [
           {
@@ -214,10 +214,10 @@
         }
       }
     },
-    "/v1/account/refresh": {
+    "/v1/Account/refresh": {
       "post": {
         "tags": [
-          "RamzPardakht.WebApi"
+          "Account"
         ],
         "requestBody": {
           "content": {
@@ -242,12 +242,12 @@
         }
       }
     },
-    "/v1/account/confirmEmail": {
+    "/v1/Account/confirmEmail": {
       "get": {
         "tags": [
-          "RamzPardakht.WebApi"
+          "Account"
         ],
-        "operationId": "MapIdentityApi-/v1/account/confirmEmail",
+        "operationId": "MapIdentityApi-/v1/Account/confirmEmail",
         "parameters": [
           {
             "name": "userId",
@@ -278,10 +278,10 @@
         }
       }
     },
-    "/v1/account/resendConfirmationEmail": {
+    "/v1/Account/resendConfirmationEmail": {
       "post": {
         "tags": [
-          "RamzPardakht.WebApi"
+          "Account"
         ],
         "requestBody": {
           "content": {
@@ -299,10 +299,10 @@
         }
       }
     },
-    "/v1/account/forgotPassword": {
+    "/v1/Account/forgotPassword": {
       "post": {
         "tags": [
-          "RamzPardakht.WebApi"
+          "Account"
         ],
         "requestBody": {
           "content": {
@@ -330,10 +330,10 @@
         }
       }
     },
-    "/v1/account/resetPassword": {
+    "/v1/Account/resetPassword": {
       "post": {
         "tags": [
-          "RamzPardakht.WebApi"
+          "Account"
         ],
         "requestBody": {
           "content": {
@@ -361,10 +361,10 @@
         }
       }
     },
-    "/v1/account/manage/2fa": {
+    "/v1/Account/manage/2fa": {
       "post": {
         "tags": [
-          "RamzPardakht.WebApi"
+          "Account"
         ],
         "requestBody": {
           "content": {
@@ -402,10 +402,10 @@
         }
       }
     },
-    "/v1/account/manage/info": {
+    "/v1/Account/manage/info": {
       "get": {
         "tags": [
-          "RamzPardakht.WebApi"
+          "Account"
         ],
         "responses": {
           "200": {
@@ -435,7 +435,7 @@
       },
       "post": {
         "tags": [
-          "RamzPardakht.WebApi"
+          "Account"
         ],
         "requestBody": {
           "content": {

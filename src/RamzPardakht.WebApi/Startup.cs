@@ -211,6 +211,21 @@ public class Startup
             options.SwaggerEndpoint("/api-docs/v1/swagger.json", "v1");
         });
 
+        if(!app.Environment.IsProduction())
+        {
+            app.UseDeveloperExceptionPage();
+        }
+        else
+        {
+            app.UseExceptionHandler(exceptionHandlerApp =>
+            {
+                exceptionHandlerApp.Run(async context =>
+                {
+                    context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                });
+            });
+        }
+
         app.UseCors();
 
         app.UseRouting();

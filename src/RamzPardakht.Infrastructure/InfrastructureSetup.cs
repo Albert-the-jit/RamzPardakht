@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,6 +8,8 @@ using RamzPardakht.ApplicationCore.Common;
 using RamzPardakht.ApplicationCore.Contracts;
 using RamzPardakht.ApplicationCore.Entities;
 using RamzPardakht.Infrastructure.DbContexts;
+using RamzPardakht.Infrastructure.Services;
+using Resend;
 
 namespace RamzPardakht.Infrastructure;
 
@@ -14,6 +17,13 @@ public static class InfrastructureSetup
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddTransient<IEmailSender,EmailSender>();
+        services.AddHttpClient<ResendClient>();
+        services.Configure<ResendClientOptions>(o =>
+        {
+            o.ApiToken = "re_EayVbknX_H1T9dGaHZh4a24y7GPTKxSCN";
+        });
+        services.AddTransient<IResend, ResendClient>();
 
         string? provider = configuration["Provider"];
 

@@ -6,7 +6,7 @@ using Resend;
 
 namespace RamzPardakht.Infrastructure.Services;
 
-public class EmailSender :IEmailSender
+public class EmailSender : IEmailSender
 {
     private readonly IResend _resend;
 
@@ -19,10 +19,10 @@ public class EmailSender :IEmailSender
     {
         var message = new EmailMessage();
         message.From = "email@zaferanii.ir";
-        message.To.Add( email);
+        message.To.Add(email);
         message.Subject = subject;
         message.HtmlBody = htmlMessage;
 
-        await _resend.EmailSendAsync( message );
+        await _resend.EmailSendAsync(message);
     }
 }

@@ -25,7 +25,7 @@ public class AccessToken
     public async Task WhenSendACreateAccessTokenRequestWithRandomDateWithinPreviousMonthAsExpiresUtcAndTheFollowingDetails(string p0, Table table)
     {
         int randomDay = new Random().Next(DateTimeOffset.Now.Day,
-            DateTime.DaysInMonth(DateTimeOffset.Now.Year, DateTimeOffset.Now.Month) -1);
+            DateTime.DaysInMonth(DateTimeOffset.Now.Year, DateTimeOffset.Now.Month) - 1);
 
         var expiresUtc = DateTimeOffset.Now.AddMonths(-1).AddDays(-DateTimeOffset.Now.Day).AddDays(randomDay);
 
@@ -44,7 +44,7 @@ public class AccessToken
         string p0, Table table)
     {
         int randomDay = new Random().Next(DateTimeOffset.Now.Day,
-            DateTime.DaysInMonth(DateTimeOffset.Now.Year, DateTimeOffset.Now.Month) -1);
+            DateTime.DaysInMonth(DateTimeOffset.Now.Year, DateTimeOffset.Now.Month) - 1);
 
         var expiresUtc = DateTimeOffset.Now.AddMonths(1).AddDays(-DateTimeOffset.Now.Day).AddDays(randomDay);
 
@@ -108,7 +108,7 @@ public class AccessToken
     public async Task WhenUseAccessTokenAndSendACreateAccessTokenRequestWithRandomDateWithinNextMonthAsExpiresUtcAndTheFollowingDetails(string p0, string p1, Table table)
     {
         int randomDay = new Random().Next(DateTimeOffset.Now.Day,
-            DateTime.DaysInMonth(DateTimeOffset.Now.Year, DateTimeOffset.Now.Month) -1);
+            DateTime.DaysInMonth(DateTimeOffset.Now.Year, DateTimeOffset.Now.Month) - 1);
 
         var expiresUtc = DateTimeOffset.Now.AddMonths(1).AddDays(-DateTimeOffset.Now.Day).AddDays(randomDay);
         var createdReferenceTokenModel = _scenarioContext.Get<ReferenceTokenModel>($"{p0}:{p1}:{nameof(ReferenceTokenModel)}");
@@ -157,5 +157,6 @@ public class AccessToken
         var referenceTokenModel = _scenarioContext.Get<ReferenceTokenModel>($"{p0}:{p1}:{nameof(ReferenceTokenModel)}");
         var client = _scenarioContext.Get<HttpClient>($"{p0}:{nameof(HttpClient)}");
         var request = await client.DeleteAsync($"/v1/AccessToken/{referenceTokenModel.Id}");
-        _scenarioContext.Set(request, $"{p0}:{request.GetType().Name}");    }
+        _scenarioContext.Set(request, $"{p0}:{request.GetType().Name}");
+    }
 }

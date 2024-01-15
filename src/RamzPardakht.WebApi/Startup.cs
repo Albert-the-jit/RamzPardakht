@@ -211,7 +211,7 @@ public class Startup
             options.SwaggerEndpoint("/api-docs/v1/swagger.json", "v1");
         });
 
-        if(!app.Environment.IsProduction())
+        if (!app.Environment.IsProduction())
         {
             app.UseDeveloperExceptionPage();
         }

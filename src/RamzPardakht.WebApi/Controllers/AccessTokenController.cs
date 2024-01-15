@@ -58,23 +58,23 @@ public class AccessTokenController : ControllerBase
     /// </summary>
     /// <returns></returns>
     [HttpPost]
-    public async Task<ActionResult<ReferenceTokenModel>> Post(ReferenceTokenModel model,CancellationToken cancellationToken)
+    public async Task<ActionResult<ReferenceTokenModel>> Post(ReferenceTokenModel model, CancellationToken cancellationToken)
     {
         if (model.ExpiresUtc <= _timeProvider.GetUtcNow())
         {
-            ModelState.AddModelError<ReferenceTokenModel>(tokenModel => tokenModel.ExpiresUtc,_stringLocalizer["ShouldBeBiggerThanNow"]);
+            ModelState.AddModelError<ReferenceTokenModel>(tokenModel => tokenModel.ExpiresUtc, _stringLocalizer["ShouldBeBiggerThanNow"]);
             return ValidationProblem();
         }
 
         model.Id = Guid.NewGuid();
 
-       AuthenticationProperties properties = new();
+        AuthenticationProperties properties = new();
 
         properties.ExpiresUtc = model.ExpiresUtc;
         var user = new ClaimsIdentity(User.Identity);
-        user.AddClaim(new Claim(SystemConst.IsReferenceTokenClaimName,true.ToString()));
-        user.AddClaim(new Claim(SystemConst.TokenIdClaimName,model.Id.ToString()));
-        user.AddClaim(new Claim(SystemConst.ExpiresUtcClaimName,model.ExpiresUtc.ToString()));
+        user.AddClaim(new Claim(SystemConst.IsReferenceTokenClaimName, true.ToString()));
+        user.AddClaim(new Claim(SystemConst.TokenIdClaimName, model.Id.ToString()));
+        user.AddClaim(new Claim(SystemConst.ExpiresUtcClaimName, model.ExpiresUtc.ToString()));
 
 
         string token = _options.BearerTokenProtector.Protect(new(new ClaimsPrincipal(user), properties,
@@ -96,7 +96,7 @@ public class AccessTokenController : ControllerBase
     /// </summary>
     /// <returns></returns>
     [HttpGet]
-    public async Task<ActionResult<Paging<ReferenceTokenModel>>> List([FromQuery] GridifyQuery query,CancellationToken cancellationToken)
+    public async Task<ActionResult<Paging<ReferenceTokenModel>>> List([FromQuery] GridifyQuery query, CancellationToken cancellationToken)
     {
         if (!query.IsValid<ReferenceTokenModel>())
         {

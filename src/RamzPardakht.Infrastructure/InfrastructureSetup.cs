@@ -17,7 +17,7 @@ public static class InfrastructureSetup
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddTransient<IEmailSender,EmailSender>();
+        services.AddTransient<IEmailSender, EmailSender>();
         services.AddHttpClient<ResendClient>();
         services.Configure<ResendClientOptions>(o =>
         {

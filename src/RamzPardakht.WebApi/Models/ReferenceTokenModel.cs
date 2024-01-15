@@ -9,8 +9,8 @@ public class ReferenceTokenModel
 {
     public Guid Id { get; set; }
     [Required]
-    public string Name  { get; set; }
-    public string? Description  { get; set; }
+    public string Name { get; set; }
+    public string? Description { get; set; }
     public List<string> Permissions { get; set; } = new();
     public DateTimeOffset ExpiresUtc { get; set; }
     public string? AccessToken { get; set; }

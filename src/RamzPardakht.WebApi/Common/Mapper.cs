@@ -7,7 +7,7 @@ using Riok.Mapperly.Abstractions;
 
 namespace RamzPardakht.WebApi.Common;
 [Mapper]
-public partial  class Mapper
+public partial class Mapper
 {
     public partial ReferenceToken ToEntity(ReferenceTokenModel referenceTokenModel);
     public partial ReferenceTokenModel ToModel(ReferenceToken referenceToken);

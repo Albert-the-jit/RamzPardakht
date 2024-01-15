@@ -18,7 +18,7 @@ public class EmailSender :IEmailSender
     public async Task SendEmailAsync(string email, string subject, string htmlMessage)
     {
         var message = new EmailMessage();
-        message.From = "onboarding@resend.dev";
+        message.From = "email@zaferanii.ir";
         message.To.Add( email);
         message.Subject = subject;
         message.HtmlBody = htmlMessage;

@@ -21,4 +21,16 @@
     <data name="Test" xml:space="preserve">
         <value>Test-en</value>
     </data>
+  <data name="Url_Invalid" xml:space="preserve">
+        <value>The {0} field is not a valid fully-qualified http or https URL</value>
+    </data>
+  <data name="Only_Positive_Number_Allowed" xml:space="preserve">
+        <value>Only positive number allowed</value>
+    </data>
+  <data name="RequiredAttribute_ValidationError" xml:space="preserve">
+    <value>{0} field is required</value>
+  </data>
+  <data name="StringLengthAttribute_ValidationError" xml:space="preserve">
+    <value>The field {0} must be a string with a maximum length of {1}.</value>
+  </data>
 </root>

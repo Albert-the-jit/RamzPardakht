@@ -90,6 +90,8 @@ public class AccessToken
         var infoRequest = new HttpRequestMessage(HttpMethod.Get, "v1/account/manage/info");
         var request = await client.SendAsync(infoRequest);
 
+        _scenarioContext.Set(client, $"Token:{p1}:{nameof(HttpClient)}");
+
         _scenarioContext.Set(request, $"{p0}:{request.GetType().Name}");
     }
 

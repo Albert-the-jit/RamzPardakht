@@ -473,6 +473,84 @@
         }
       }
     },
+    "/v1/Payment": {
+      "post": {
+        "tags": [
+          "Payment"
+        ],
+        "summary": "create payment and return payment page url",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentCreationRequestModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentCreationResponseModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/Payment/Inquiry": {
+      "post": {
+        "tags": [
+          "Payment"
+        ],
+        "summary": "inquiry payment and return payment info and status",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentInquiryRequestModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentInquiryResponseModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/WeatherForecast": {
       "get": {
         "tags": [
@@ -532,6 +610,13 @@
           }
         },
         "additionalProperties": false
+      },
+      "Currency": {
+        "enum": [
+          "NotSelected",
+          "BTC"
+        ],
+        "type": "string"
       },
       "ForgotPasswordRequest": {
         "type": "object",
@@ -629,6 +714,119 @@
           "twoFactorRecoveryCode": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentCreationRequestModel": {
+        "required": [
+          "callbackUrl"
+        ],
+        "type": "object",
+        "properties": {
+          "usdAmount": {
+            "minimum": 1,
+            "type": "number",
+            "format": "double"
+          },
+          "callbackUrl": {
+            "maxLength": 200,
+            "minLength": 0,
+            "type": "string",
+            "format": "uri"
+          },
+          "webhookUrl": {
+            "maxLength": 200,
+            "minLength": 0,
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "clientRefId": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "maxLength": 200,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentCreationResponseModel": {
+        "type": "object",
+        "properties": {
+          "refId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "redirectUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "clientRefId": {
+            "type": "string",
+            "nullable": true
+          },
+          "expireOn": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentInquiryRequestModel": {
+        "required": [
+          "refId"
+        ],
+        "type": "object",
+        "properties": {
+          "refId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentInquiryResponseModel": {
+        "type": "object",
+        "properties": {
+          "refId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "clientRefId": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "$ref": "#/components/schemas/Status"
+          },
+          "expireOn": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "statusCode": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "currency": {
+            "$ref": "#/components/schemas/Currency"
+          },
+          "selectedCurrencyAmount": {
+            "type": "number",
+            "description": "computed amount in selected currency",
+            "format": "double"
+          },
+          "paidAmount": {
+            "type": "number",
+            "description": "paid amount in selected currency",
+            "format": "double"
           }
         },
         "additionalProperties": false
@@ -737,6 +935,18 @@
           }
         },
         "additionalProperties": false
+      },
+      "Status": {
+        "enum": [
+          "New",
+          "Pending",
+          "UnderPaid",
+          "OverPaid",
+          "Paid",
+          "Processing",
+          "Expired"
+        ],
+        "type": "string"
       },
       "TwoFactorRequest": {
         "type": "object",

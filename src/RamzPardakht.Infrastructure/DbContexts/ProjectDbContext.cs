@@ -20,20 +20,26 @@ public class ProjectDbContext : IdentityDbContext<User, Role, int, IdentityUserC
     }
 
     public DbSet<ReferenceToken> ReferenceTokens { get; set; }
+    public DbSet<Payment> Payments { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<UserRole>().HasOne(userRole => userRole.Role)
+        modelBuilder.Entity<UserRole>()
+            .HasOne(userRole => userRole.Role)
             .WithMany(role => role.Users)
             .HasForeignKey(userRole => userRole.RoleId);
 
-        modelBuilder.Entity<UserRole>().HasOne(userRole => userRole.User)
+        modelBuilder.Entity<UserRole>()
+            .HasOne(userRole => userRole.User)
             .WithMany(user => user.Roles)
             .HasForeignKey(userRole => userRole.UserId);
 
+        modelBuilder.Entity<Payment>()
+            .HasIndex(payment => payment.Code)
+            .IsUnique();
 
         // https://stackoverflow.com/questions/63063207/ef-core-setqueryfilter-reverse-isactive-to-isdeleted-in-onmodelcreating
         foreach (var entityType in modelBuilder.Model.GetEntityTypes().Where(x => x.ClrType.IsAssignableTo(typeof(ISoftDeletable))))

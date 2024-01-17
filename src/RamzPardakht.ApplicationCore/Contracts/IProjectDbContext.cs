@@ -8,6 +8,7 @@ public interface IProjectDbContext
     DbSet<ReferenceToken> ReferenceTokens { get; set; }
     DbSet<Role> Roles { get; set; }
     DbSet<User> Users { get; set; }
+    DbSet<Payment> Payments { get; set; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 
 }

@@ -9,8 +9,10 @@ namespace RamzPardakht.WebApi.Common;
 [Mapper]
 public partial class Mapper
 {
-    public partial ReferenceToken ToEntity(ReferenceTokenModel referenceTokenModel);
-    public partial ReferenceTokenModel ToModel(ReferenceToken referenceToken);
+    public partial ReferenceToken ToEntity(ReferenceTokenModel model);
+    public partial Payment ToEntity(PaymentCreationRequestModel model);
+    public partial ReferenceTokenModel ToModel(ReferenceToken entity);
+    public partial PaymentInquiryResponseModel ToModel(Payment entity);
 }
 
 [Mapper]

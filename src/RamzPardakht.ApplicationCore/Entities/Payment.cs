@@ -38,8 +38,8 @@ public class Payment : ITimeable, ISoftDeletable
 /// </summary>
 public enum Currency
 {
-    NotSelected=0,
-    BTC=1
+    NotSelected = 0,
+    BTC = 1
 }
 
 public enum Status

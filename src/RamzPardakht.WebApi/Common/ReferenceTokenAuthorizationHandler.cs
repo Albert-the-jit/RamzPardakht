@@ -36,7 +36,12 @@ public class ReferenceTokenAuthorizationHandler : AuthorizationHandler<Reference
             {
                 if (referenceToken.UserId == userId &&
                     (expiresUtc - referenceToken.ExpiresUtc) <= TimeSpan.FromMinutes(5))
+                {
+                    context.User.Identities.FirstOrDefault()
+                        ?.AddClaim(new Claim(SystemConst.ReferenceTokenNameClaimName, referenceToken.Name));
+
                     context.Succeed(requirement);
+                }
                 else
                 {
                     context.Fail();

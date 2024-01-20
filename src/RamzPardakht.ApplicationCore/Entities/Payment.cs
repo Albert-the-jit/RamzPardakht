@@ -24,12 +24,18 @@ public class Payment : ITimeable, ISoftDeletable
     public string? ClientRefId { get; set; }
     public int UserId { get; set; }
     public User User { get; set; }
+
+    public ReferenceToken CreatedByToken { get; set; }
+
     public int? CreatedById { get; set; }
+    public Guid? CreatedByTokenId { get; set; }
     public DateTimeOffset CreatedOn { get; set; }
     public int? ModifiedById { get; set; }
+    public Guid? ModifiedByTokenId { get; set; }
     public DateTimeOffset? ModifiedOn { get; set; }
     public bool IsDeleted { get; set; }
     public int? DeletedById { get; set; }
+    public Guid? DeletedByTokenId { get; set; }
     public DateTimeOffset? DeletedOn { get; set; }
 }
 

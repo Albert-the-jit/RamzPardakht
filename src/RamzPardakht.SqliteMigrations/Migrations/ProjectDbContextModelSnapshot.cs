@@ -124,6 +124,9 @@ namespace RamzPardakht.SqliteMigrations.Migrations
                     b.Property<int?>("CreatedById")
                         .HasColumnType("INTEGER");
 
+                    b.Property<Guid?>("CreatedByTokenId")
+                        .HasColumnType("TEXT");
+
                     b.Property<long>("CreatedOn")
                         .HasColumnType("INTEGER");
 
@@ -132,6 +135,9 @@ namespace RamzPardakht.SqliteMigrations.Migrations
 
                     b.Property<int?>("DeletedById")
                         .HasColumnType("INTEGER");
+
+                    b.Property<Guid?>("DeletedByTokenId")
+                        .HasColumnType("TEXT");
 
                     b.Property<long?>("DeletedOn")
                         .HasColumnType("INTEGER");
@@ -148,6 +154,9 @@ namespace RamzPardakht.SqliteMigrations.Migrations
 
                     b.Property<int?>("ModifiedById")
                         .HasColumnType("INTEGER");
+
+                    b.Property<Guid?>("ModifiedByTokenId")
+                        .HasColumnType("TEXT");
 
                     b.Property<long?>("ModifiedOn")
                         .HasColumnType("INTEGER");
@@ -172,6 +181,8 @@ namespace RamzPardakht.SqliteMigrations.Migrations
                     b.HasIndex("Code")
                         .IsUnique();
 
+                    b.HasIndex("CreatedByTokenId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("Payments");
@@ -186,11 +197,17 @@ namespace RamzPardakht.SqliteMigrations.Migrations
                     b.Property<int?>("CreatedById")
                         .HasColumnType("INTEGER");
 
+                    b.Property<Guid?>("CreatedByTokenId")
+                        .HasColumnType("TEXT");
+
                     b.Property<long>("CreatedOn")
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("DeletedById")
                         .HasColumnType("INTEGER");
+
+                    b.Property<Guid?>("DeletedByTokenId")
+                        .HasColumnType("TEXT");
 
                     b.Property<long?>("DeletedOn")
                         .HasColumnType("INTEGER");
@@ -206,6 +223,9 @@ namespace RamzPardakht.SqliteMigrations.Migrations
 
                     b.Property<int?>("ModifiedById")
                         .HasColumnType("INTEGER");
+
+                    b.Property<Guid?>("ModifiedByTokenId")
+                        .HasColumnType("TEXT");
 
                     b.Property<long?>("ModifiedOn")
                         .HasColumnType("INTEGER");
@@ -373,11 +393,17 @@ namespace RamzPardakht.SqliteMigrations.Migrations
 
             modelBuilder.Entity("RamzPardakht.ApplicationCore.Entities.Payment", b =>
                 {
+                    b.HasOne("RamzPardakht.ApplicationCore.Entities.ReferenceToken", "CreatedByToken")
+                        .WithMany()
+                        .HasForeignKey("CreatedByTokenId");
+
                     b.HasOne("RamzPardakht.ApplicationCore.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("CreatedByToken");
 
                     b.Navigation("User");
                 });

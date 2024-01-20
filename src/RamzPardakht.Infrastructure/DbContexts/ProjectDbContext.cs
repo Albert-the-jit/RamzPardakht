@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Internal;
+using RamzPardakht.ApplicationCore.Common;
 using RamzPardakht.ApplicationCore.Contracts;
 using RamzPardakht.ApplicationCore.Entities;
 
@@ -118,6 +119,12 @@ public class ProjectDbContext : IdentityDbContext<User, Role, int, IdentityUserC
                     {
                         entry.CurrentValues[nameof(ISoftDeletable.DeletedById)] = id;
                     }
+                    if (httpContext?.User?.HasClaim(claim => claim.Type == SystemConst.TokenIdClaimName) == true &&
+                        Guid.TryParse(httpContext?.User?.FindFirst(claim => claim.Type == SystemConst.TokenIdClaimName)?.Value, out Guid tokenId))
+                    {
+                        entry.CurrentValues[nameof(ISoftDeletable.DeletedByTokenId)] = tokenId;
+                    }
+
                 }
             }
 
@@ -130,13 +137,25 @@ public class ProjectDbContext : IdentityDbContext<User, Role, int, IdentityUserC
                         entry.CurrentValues[nameof(ITimeable.CreatedById)] = id;
                     }
 
+                    if (httpContext?.User?.HasClaim(claim => claim.Type == SystemConst.TokenIdClaimName) == true &&
+                        Guid.TryParse(httpContext?.User?.FindFirst(claim => claim.Type == SystemConst.TokenIdClaimName)?.Value, out Guid tokenId))
+                    {
+                        entry.CurrentValues[nameof(ITimeable.CreatedByTokenId)] = tokenId;
+                    }
+
                     entry.CurrentValues[nameof(ITimeable.CreatedOn)] = dateTimeProvider.UtcNow;
                 }
-                else if (httpContext != null && httpContext.User != null && entry.State == EntityState.Modified)
+                else if (entry.State == EntityState.Modified)
                 {
                     if (httpContext?.User?.Identity?.IsAuthenticated == true && int.TryParse(httpContext.User.Identity.Name, out int id))
                     {
                         entry.CurrentValues[nameof(ITimeable.ModifiedById)] = id;
+                    }
+
+                    if (httpContext?.User?.HasClaim(claim => claim.Type == SystemConst.TokenIdClaimName) == true &&
+                        Guid.TryParse(httpContext?.User?.FindFirst(claim => claim.Type == SystemConst.TokenIdClaimName)?.Value, out Guid tokenId))
+                    {
+                        entry.CurrentValues[nameof(ITimeable.ModifiedByTokenId)] = tokenId;
                     }
 
                     entry.CurrentValues[nameof(ITimeable.ModifiedOn)] = dateTimeProvider.UtcNow;

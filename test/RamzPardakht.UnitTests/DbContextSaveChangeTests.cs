@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Internal;
 using NSubstitute;
+using RamzPardakht.ApplicationCore.Common;
 using RamzPardakht.UnitTests.DummyDbContext;
 using Xunit;
 
@@ -67,11 +68,16 @@ public class DbContextSaveChangeTests
         var services = new ServiceCollection();
         var now = DateTime.Now;
         var userId = 64624;
+        var tokenId = Guid.NewGuid();
 
         var httpContextAccessor = Substitute.For<IHttpContextAccessor>();
         httpContextAccessor.HttpContext.Returns(_ => new DefaultHttpContext()
         {
-            User = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim("sub", userId.ToString()) }, "test type", "sub", null))
+            User = new ClaimsPrincipal(new ClaimsIdentity(new[]
+            {
+                new Claim("sub", userId.ToString()),
+                new Claim(SystemConst.TokenIdClaimName, tokenId.ToString()),
+            }, "test type", "sub", null))
         });
 
         var systemClock = Substitute.For<ISystemClock>();
@@ -109,10 +115,14 @@ public class DbContextSaveChangeTests
 
         //Assert
         res?.Name.Should().BeEquivalentTo(dummyEntity.Name);
+
         res?.CreatedOn.Should().BeExactly(now);
-        res?.ModifiedOn.Should().BeNull();
         res?.CreatedById.Should().Be(userId);
+        res?.CreatedByTokenId.Should().Be(tokenId);
+
+        res?.ModifiedOn.Should().BeNull();
         res?.ModifiedById.Should().BeNull();
+        res?.ModifiedByTokenId.Should().BeNull();
     }
 
     [Fact]
@@ -121,12 +131,17 @@ public class DbContextSaveChangeTests
         //Arrange
         var services = new ServiceCollection();
         var now = DateTime.Now;
-        var userId = "64624";
+        var userId = 64624;
+        var tokenId = Guid.NewGuid();
 
         var httpContextAccessor = Substitute.For<IHttpContextAccessor>();
         httpContextAccessor.HttpContext.Returns(_ => new DefaultHttpContext()
         {
-            User = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim("sub", userId) }, "test type", "sub", null))
+            User = new ClaimsPrincipal(new ClaimsIdentity(new[]
+            {
+                new Claim("sub", userId.ToString()),
+                new Claim(SystemConst.TokenIdClaimName, tokenId.ToString()),
+            }, "test type", "sub", null))
         });
 
         var systemClock = Substitute.For<ISystemClock>();
@@ -164,8 +179,11 @@ public class DbContextSaveChangeTests
 
         //Assert
         res?.Name.Should().BeEquivalentTo(dummyEntity.Name);
+
         res?.IsDeleted.Should().BeFalse();
         res?.DeletedOn.Should().BeNull();
+        res?.DeletedById.Should().BeNull();
+        res?.DeletedByTokenId.Should().BeNull();
 
     }
 
@@ -176,11 +194,16 @@ public class DbContextSaveChangeTests
         var services = new ServiceCollection();
         var now = DateTime.Now;
         var userId = 64624;
+        var tokenId = Guid.NewGuid();
 
         var httpContextAccessor = Substitute.For<IHttpContextAccessor>();
         httpContextAccessor.HttpContext.Returns(_ => new DefaultHttpContext()
         {
-            User = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim("sub", userId.ToString()) }, "test type", "sub", null))
+            User = new ClaimsPrincipal(new ClaimsIdentity(new[]
+            {
+                new Claim("sub", userId.ToString()),
+                new Claim(SystemConst.TokenIdClaimName, tokenId.ToString()),
+            }, "test type", "sub", null))
         });
 
         var systemClock = Substitute.For<ISystemClock>();
@@ -216,23 +239,26 @@ public class DbContextSaveChangeTests
 
         var res = await dbContext.TimeableAndSoftDeletableDummyEntities.FirstOrDefaultAsync(x => x.Id == dummyEntity.Id);
 
-        dummyEntity.Name = "test name updated";
-        await dbContext.SaveChangesAsync();
-
         //Assert
         res?.Name.Should().BeEquivalentTo(dummyEntity.Name);
+
         res?.CreatedOn.Should().BeExactly(dummyEntity.CreatedOn);
         res?.CreatedById.Should().Be(dummyEntity.CreatedById);
-        res?.ModifiedOn.Should().BeExactly(now);
-        res?.ModifiedById.Should().Be(userId);
+        res?.CreatedByTokenId.Should().Be(tokenId);
+
+        res?.ModifiedOn.Should().BeNull();
+        res?.ModifiedById.Should().BeNull();
+        res?.ModifiedByTokenId.Should().BeNull();
+
         res?.IsDeleted.Should().BeFalse();
         res?.DeletedOn.Should().BeNull();
-
+        res?.DeletedById.Should().BeNull();
+        res?.DeletedByTokenId.Should().BeNull();
     }
 
 
     [Fact]
-    public async Task Update_TimeableDummyEntity_and_test_timeable_props_will_fill()
+    public async Task Insert_Without_Token_TimeableAndSoftDeletableDummyEntity_and_test_softdeletable_and_timeable_props_will_fill()
     {
         //Arrange
         var services = new ServiceCollection();
@@ -242,7 +268,79 @@ public class DbContextSaveChangeTests
         var httpContextAccessor = Substitute.For<IHttpContextAccessor>();
         httpContextAccessor.HttpContext.Returns(_ => new DefaultHttpContext()
         {
-            User = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim("sub", userId.ToString()) }, "test type", "sub", null))
+            User = new ClaimsPrincipal(new ClaimsIdentity(new[]
+            {
+                new Claim("sub", userId.ToString()),
+            }, "test type", "sub", null))
+        });
+
+        var systemClock = Substitute.For<ISystemClock>();
+        systemClock.UtcNow.Returns(_ => now);
+
+        services.AddSingleton(provider => httpContextAccessor);
+        services.AddSingleton(provider => systemClock);
+
+        services.AddEntityFrameworkInMemoryDatabase();
+
+        services.AddDbContextPool<DummyDbContext.DummyDbContext>((provider, builder) =>
+        {
+            builder.EnableSensitiveDataLogging();
+            builder.UseInMemoryDatabase("InMemoryDbForTesting");
+            builder.UseInternalServiceProvider(provider);
+        });
+        using var serviceProvider = services.BuildServiceProvider();
+        using var serviceProviderScope = services.BuildServiceProvider().CreateScope();
+        var scopeServiceProvider = serviceProviderScope.ServiceProvider;
+        var dbContext = scopeServiceProvider.GetRequiredService<DummyDbContext.DummyDbContext>();
+        await dbContext.Database.EnsureDeletedAsync();
+        await dbContext.Database.EnsureCreatedAsync();
+
+        //Act
+        var dummyEntity = new TimeableAndSoftDeletableDummyEntity
+        {
+            Name = "test name"
+        };
+
+        dbContext.Add(dummyEntity);
+
+        await dbContext.SaveChangesAsync();
+
+        var res = await dbContext.TimeableAndSoftDeletableDummyEntities.FirstOrDefaultAsync(x => x.Id == dummyEntity.Id);
+
+        //Assert
+        res?.Name.Should().BeEquivalentTo(dummyEntity.Name);
+
+        res?.CreatedOn.Should().BeExactly(dummyEntity.CreatedOn);
+        res?.CreatedById.Should().Be(dummyEntity.CreatedById);
+        res?.CreatedByTokenId.Should().BeNull();
+
+        res?.ModifiedOn.Should().BeNull();
+        res?.ModifiedById.Should().BeNull();
+        res?.ModifiedByTokenId.Should().BeNull();
+
+        res?.IsDeleted.Should().BeFalse();
+        res?.DeletedOn.Should().BeNull();
+        res?.DeletedById.Should().BeNull();
+        res?.DeletedByTokenId.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task Update_TimeableDummyEntity_and_test_timeable_props_will_fill()
+    {
+        //Arrange
+        var services = new ServiceCollection();
+        var now = DateTime.Now;
+        var userId = 64624;
+        var tokenId = Guid.NewGuid();
+
+        var httpContextAccessor = Substitute.For<IHttpContextAccessor>();
+        httpContextAccessor.HttpContext.Returns(_ => new DefaultHttpContext()
+        {
+            User = new ClaimsPrincipal(new ClaimsIdentity(new[]
+            {
+                new Claim("sub", userId.ToString()),
+                new Claim(SystemConst.TokenIdClaimName, tokenId.ToString()),
+            }, "test type", "sub", null))
         });
 
         var systemClock = Substitute.For<ISystemClock>();
@@ -281,14 +379,19 @@ public class DbContextSaveChangeTests
         dummyEntity.CreatedById = 6060;
         dummyEntity.CreatedOn = now.AddDays(-1);
         dummyEntity.Name = "test name updated";
+
         await dbContext.SaveChangesAsync();
 
         //Assert
         res?.Name.Should().BeEquivalentTo(dummyEntity.Name);
+
         res?.CreatedOn.Should().BeExactly(dummyEntity.CreatedOn);
         res?.CreatedById.Should().Be(dummyEntity.CreatedById);
+        res?.CreatedByTokenId.Should().Be(dummyEntity.CreatedByTokenId);
+
         res?.ModifiedOn.Should().BeExactly(now);
         res?.ModifiedById.Should().Be(userId);
+        res?.ModifiedByTokenId.Should().Be(tokenId);
     }
 
     [Fact]
@@ -298,13 +401,17 @@ public class DbContextSaveChangeTests
         var services = new ServiceCollection();
         var now = DateTime.Now;
         var userId = 64624;
+        var tokenId = Guid.NewGuid();
 
         var httpContextAccessor = Substitute.For<IHttpContextAccessor>();
         httpContextAccessor.HttpContext.Returns(_ => new DefaultHttpContext()
         {
-            User = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim("sub", userId.ToString()) }, "test type", "sub", null))
+            User = new ClaimsPrincipal(new ClaimsIdentity(new[]
+            {
+                new Claim("sub", userId.ToString()),
+                new Claim(SystemConst.TokenIdClaimName, tokenId.ToString()),
+            }, "test type", "sub", null))
         });
-
         var systemClock = Substitute.For<ISystemClock>();
         systemClock.UtcNow.Returns(_ => now);
 
@@ -348,10 +455,16 @@ public class DbContextSaveChangeTests
         res?.Name.Should().BeEquivalentTo(dummyEntity.Name);
         res?.CreatedOn.Should().BeExactly(dummyEntity.CreatedOn);
         res?.CreatedById.Should().Be(dummyEntity.CreatedById);
+        res?.CreatedByTokenId.Should().Be(dummyEntity.CreatedByTokenId);
+
         res?.ModifiedOn.Should().BeExactly(now);
         res?.ModifiedById.Should().Be(userId);
+        res?.ModifiedByTokenId.Should().Be(tokenId);
+
         res?.IsDeleted.Should().BeFalse();
         res?.DeletedOn.Should().BeNull();
+        res?.DeletedById.Should().BeNull();
+        res?.DeletedByTokenId.Should().BeNull();
 
     }
 
@@ -362,11 +475,16 @@ public class DbContextSaveChangeTests
         var services = new ServiceCollection();
         var now = DateTime.Now;
         var userId = 64624;
+        var tokenId = Guid.NewGuid();
 
         var httpContextAccessor = Substitute.For<IHttpContextAccessor>();
         httpContextAccessor.HttpContext.Returns(_ => new DefaultHttpContext()
         {
-            User = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim("sub", userId.ToString()) }, "test type", "sub", null))
+            User = new ClaimsPrincipal(new ClaimsIdentity(new[]
+            {
+                new Claim("sub", userId.ToString()),
+                new Claim(SystemConst.TokenIdClaimName, tokenId.ToString()),
+            }, "test type", "sub", null))
         });
 
         var systemClock = Substitute.For<ISystemClock>();
@@ -407,12 +525,19 @@ public class DbContextSaveChangeTests
 
         //Assert
         res?.Name.Should().BeEquivalentTo(dummyEntity.Name);
+
         res?.CreatedOn.Should().BeExactly(dummyEntity.CreatedOn);
         res?.CreatedById.Should().Be(dummyEntity.CreatedById);
+        res?.CreatedByTokenId.Should().Be(dummyEntity.CreatedByTokenId);
+
         res?.ModifiedOn.Should().BeExactly(now);
         res?.ModifiedById.Should().Be(userId);
+        res?.ModifiedByTokenId.Should().Be(tokenId);
+
         res?.IsDeleted.Should().BeTrue();
         res?.DeletedOn.Should().BeExactly(now);
+        res?.DeletedById.Should().Be(userId);
+        res?.DeletedByTokenId.Should().Be(tokenId);
 
     }
     [Fact]
@@ -421,12 +546,17 @@ public class DbContextSaveChangeTests
         //Arrange
         var services = new ServiceCollection();
         var now = DateTime.Now;
-        var userId = "64624";
+        var userId = 64624;
+        var tokenId = Guid.NewGuid();
 
         var httpContextAccessor = Substitute.For<IHttpContextAccessor>();
         httpContextAccessor.HttpContext.Returns(_ => new DefaultHttpContext()
         {
-            User = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim("sub", userId) }, "test type", "sub", null))
+            User = new ClaimsPrincipal(new ClaimsIdentity(new[]
+            {
+                new Claim("sub", userId.ToString()),
+                new Claim(SystemConst.TokenIdClaimName, tokenId.ToString()),
+            }, "test type", "sub", null))
         });
 
         var systemClock = Substitute.For<ISystemClock>();
@@ -466,8 +596,11 @@ public class DbContextSaveChangeTests
         await dbContext.SaveChangesAsync();
         //Assert
         res?.Name.Should().BeEquivalentTo(dummyEntity.Name);
+
         res?.IsDeleted.Should().BeTrue();
         res?.DeletedOn.Should().BeExactly(now);
+        res?.DeletedById.Should().Be(userId);
+        res?.DeletedByTokenId.Should().Be(tokenId);
 
     }
 

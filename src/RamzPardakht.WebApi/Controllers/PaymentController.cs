@@ -104,7 +104,7 @@ public class PaymentController : ControllerBase
         if (payment is null)
             return NotFound();
 
-        var info = new InitialPaymentInfoForPayerModel() { TokenName = payment.CreatedByToken.Name, };
+        var info = new InitialPaymentInfoForPayerModel() { TokenName = payment?.CreatedByToken?.Name ?? "", };
 
         foreach (Currency currency in Enum.GetValues<Currency>().Where(x => x != Currency.NotSelected))
         {

@@ -86,7 +86,7 @@ public class Startup
                 });
 
         services.AddAuthentication()
-            .AddBearerToken(IdentityConstants.BearerScheme);
+            .AddBearerToken(IdentityConstants.BearerScheme,options => options.BearerTokenExpiration = TimeSpan.FromMinutes(1));
 
         services.AddScoped<IAuthorizationHandler, ReferenceTokenAuthorizationHandler>();
         services.AddAuthorization(options =>

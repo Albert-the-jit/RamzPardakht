@@ -54,6 +54,12 @@ public class PaymentController : ControllerBase
         payment.ExpireOn = _timeProvider.GetUtcNow().AddMinutes(15);
         payment.UserId = User.GetUserId();
 
+        if (payment.Currency != Currency.NotSelected)
+        {
+            decimal amount = await _exchangeService.ConvertUsdTo(payment.Currency, payment.UsdAmount);
+            payment.Amount = amount;
+        }
+
         await _projectDbContext.Payments.AddAsync(payment, cancellationToken);
         await _projectDbContext.SaveChangesAsync(cancellationToken);
 

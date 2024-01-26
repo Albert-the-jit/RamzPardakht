@@ -928,6 +928,14 @@
             "minLength": 0,
             "type": "string",
             "nullable": true
+          },
+          "currency": {
+            "$ref": "#/components/schemas/Currency"
+          },
+          "payerEmail": {
+            "type": "string",
+            "format": "email",
+            "nullable": true
           }
         },
         "additionalProperties": false

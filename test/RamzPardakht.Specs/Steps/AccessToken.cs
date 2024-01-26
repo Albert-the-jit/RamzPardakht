@@ -132,7 +132,7 @@ public class AccessToken
     public async Task WhenSendRequestToListCreatedAccessTokenDetailsExpireWithinNextMonth(string p0)
     {
         var startExpiresUtc = new DateTime(DateTimeOffset.Now.Year, DateTimeOffset.Now.Month + 1, 1);
-        var endExpiresUtc = new DateTime(DateTimeOffset.Now.Year, DateTimeOffset.Now.Month + 1, 28);
+        var endExpiresUtc = new DateTime(DateTimeOffset.Now.Year, DateTimeOffset.Now.Month + 2, 28);
 
         var client = _scenarioContext.Get<HttpClient>($"{p0}:{nameof(HttpClient)}");
 

@@ -9,6 +9,7 @@ public interface IProjectDbContext
     DbSet<Role> Roles { get; set; }
     DbSet<User> Users { get; set; }
     DbSet<Payment> Payments { get; set; }
+    DbSet<Wallet> Wallets { get; set; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 
 }

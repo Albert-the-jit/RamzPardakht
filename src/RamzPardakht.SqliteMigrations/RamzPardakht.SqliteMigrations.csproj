@@ -13,6 +13,8 @@
     <ItemGroup>
       <Compile Remove="Migrations\20231229124520_ReferenceToken.cs" />
       <Compile Remove="Migrations\20231229124520_ReferenceToken.Designer.cs" />
+      <Compile Remove="Migrations\20240125190052_Wallet.cs" />
+      <Compile Remove="Migrations\20240125190052_Wallet.Designer.cs" />
     </ItemGroup>
 
 </Project>

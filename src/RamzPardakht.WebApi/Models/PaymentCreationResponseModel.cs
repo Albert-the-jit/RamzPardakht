@@ -7,6 +7,7 @@ public class PaymentCreationResponseModel
 {
     public int RefId { get; set; }
     public string RedirectUrl { get; set; }
+    public Guid Code { get; set; }
     public string? ClientRefId { get; set; }
     public DateTimeOffset ExpireOn { get; set; }
 

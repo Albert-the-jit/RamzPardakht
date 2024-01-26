@@ -22,6 +22,11 @@ public class Payment : ITimeable, ISoftDeletable
     public string? WebhookUrl { get; set; }
     [StringLength(50)]
     public string? ClientRefId { get; set; }
+    public string? PayerEmail { get; set; }
+
+    public int? WalletId { get; set; }
+    public Wallet Wallet { get; set; }
+
     public int UserId { get; set; }
     public User User { get; set; }
 

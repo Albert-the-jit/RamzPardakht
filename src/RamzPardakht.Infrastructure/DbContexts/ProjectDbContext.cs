@@ -22,6 +22,7 @@ public class ProjectDbContext : IdentityDbContext<User, Role, int, IdentityUserC
 
     public DbSet<ReferenceToken> ReferenceTokens { get; set; }
     public DbSet<Payment> Payments { get; set; }
+    public DbSet<Wallet> Wallets { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -9,6 +9,7 @@ using RamzPardakht.ApplicationCore.Contracts;
 using RamzPardakht.ApplicationCore.Entities;
 using RamzPardakht.Infrastructure.DbContexts;
 using RamzPardakht.Infrastructure.Services;
+using Refit;
 using Resend;
 
 namespace RamzPardakht.Infrastructure;
@@ -17,16 +18,18 @@ public static class InfrastructureSetup
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddRefitClient<ICoinGateExchangeService>()
+            .ConfigureHttpClient(client => client.BaseAddress = new Uri("https://api.coingate.com/v2"));
+
+        services.AddScoped<IExchangeService, ExchangeService>();
+
         services.AddTransient<IEmailSender, EmailSender>();
         services.AddHttpClient<ResendClient>();
-        services.Configure<ResendClientOptions>(o =>
-        {
-            o.ApiToken = "re_EayVbknX_H1T9dGaHZh4a24y7GPTKxSCN";
-        });
+        services.Configure<ResendClientOptions>(configuration.GetSection("Resend"))
+            ;
         services.AddTransient<IResend, ResendClient>();
 
         string? provider = configuration["Provider"];
-
         services.AddDbContextPool<IProjectDbContext, ProjectDbContext>(options =>
         {
             options.EnableSensitiveDataLogging();

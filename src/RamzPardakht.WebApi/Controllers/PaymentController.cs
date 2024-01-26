@@ -3,7 +3,9 @@ using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NBitcoin;
 using RamzPardakht.ApplicationCore.Contracts;
+using RamzPardakht.ApplicationCore.Entities;
 using RamzPardakht.WebApi.Common;
 using RamzPardakht.WebApi.Models;
 
@@ -23,16 +25,21 @@ public class PaymentController : ControllerBase
     private readonly TimeProvider _timeProvider;
     private readonly IProjectDbContext _projectDbContext;
     private readonly Mapper _mapper;
+    private readonly IExchangeService _exchangeService;
+    private readonly IBitcoinWalletProvider _bitcoinWalletProvider;
 
     public PaymentController(
         TimeProvider timeProvider,
         IProjectDbContext projectDbContext,
-        Mapper mapper
-    )
+        Mapper mapper,
+        IExchangeService exchangeService,
+        IBitcoinWalletProvider bitcoinWalletProvider)
     {
         _timeProvider = timeProvider;
         _projectDbContext = projectDbContext;
         _mapper = mapper;
+        _exchangeService = exchangeService;
+        _bitcoinWalletProvider = bitcoinWalletProvider;
     }
 
     /// <summary>
@@ -54,6 +61,7 @@ public class PaymentController : ControllerBase
         {
             ClientRefId = payment.ClientRefId,
             RedirectUrl = $"https://example.com/payment/{payment.Code}",
+            Code = payment.Code,
             RefId = payment.Id,
             ExpireOn = payment.ExpireOn,
         };
@@ -79,4 +87,86 @@ public class PaymentController : ControllerBase
 
         return result;
     }
+
+    [HttpGet("InitialInfo/{code:guid}")]
+    [AllowAnonymous]
+    public async Task<ActionResult<InitialPaymentInfoForPayerModel>> GetInitialInfo(Guid code,
+        CancellationToken cancellationToken)
+    {
+        var payment = await _projectDbContext.Payments.Include(x => x.CreatedByToken)
+            .FirstOrDefaultAsync(x => x.Code == code, cancellationToken);
+        if (payment is null)
+            return NotFound();
+
+        var info = new InitialPaymentInfoForPayerModel() { TokenName = payment.CreatedByToken.Name, };
+
+        foreach (Currency currency in Enum.GetValues<Currency>().Where(x => x != Currency.NotSelected))
+        {
+            decimal amount = await _exchangeService.ConvertUsdTo(currency, payment.UsdAmount);
+            if (amount != decimal.Zero)
+            {
+                info.CurrenciesAmount.Add(new CurrencyAmount() { Amount = amount, Currency = currency });
+            }
+        }
+
+        info.Currency = payment.Currency;
+
+        return info;
+    }
+
+    [HttpPost("SelectCurrency")]
+    [AllowAnonymous]
+    public async Task<ActionResult> SelectCurrency(
+        PayerSelectPaymentCurrencyRequestModel model,
+        [FromHeader(Name = "X-XSRF-TOKEN")] string? _,
+        CancellationToken cancellationToken)
+    {
+        var payment = await _projectDbContext.Payments
+            .FirstOrDefaultAsync(x => x.Code == model.Code && x.Currency == Currency.NotSelected, cancellationToken);
+        if (payment is null)
+            return NotFound();
+
+        payment.Currency = model.Currency;
+        payment.PayerEmail = model.PayerEmail;
+
+        decimal amount = await _exchangeService.ConvertUsdTo(payment.Currency, payment.UsdAmount);
+        payment.Amount = amount;
+
+        await _projectDbContext.SaveChangesAsync(cancellationToken);
+        return Ok();
+    }
+
+    [HttpGet("{code:guid}")]
+    [AllowAnonymous]
+    public async Task<ActionResult<PaymentInfoForPayerModel>> Get(Guid code,
+        CancellationToken cancellationToken)
+    {
+        var payment = await _projectDbContext.Payments.Include(x=>x.Wallet)
+            .FirstOrDefaultAsync(x => x.Code == code && x.Currency != Currency.NotSelected, cancellationToken);
+
+        if (payment is null)
+            return NotFound();
+
+        if (payment.Currency != Currency.BTC)
+            return ValidationProblem($"{payment.Currency} Not Implemented");
+
+        if (payment.Wallet is null)
+        {
+            (WalletVersion walletVersion,PubKey pubKey) = _bitcoinWalletProvider.GetNewWalletPublicKey(payment.Id);
+
+            var wallet = new Wallet()
+            {
+                Address = pubKey.GetAddress(ScriptPubKeyType.Segwit,Network.TestNet).ToString(),
+                Version = walletVersion,
+                Currency = payment.Currency,
+                Path = payment.Id
+            };
+            payment.Wallet = wallet;
+
+            await _projectDbContext.SaveChangesAsync(cancellationToken);
+        }
+
+        return new PaymentInfoForPayerModel { Currency = payment.Currency, Address = payment.Wallet.Address, Amount = payment.Amount };
+    }
+
 }

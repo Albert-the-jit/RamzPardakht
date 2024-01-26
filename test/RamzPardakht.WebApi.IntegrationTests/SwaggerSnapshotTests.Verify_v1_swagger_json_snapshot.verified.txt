@@ -551,6 +551,126 @@
         }
       }
     },
+    "/v1/Payment/InitialInfo/{code}": {
+      "get": {
+        "tags": [
+          "Payment"
+        ],
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InitialPaymentInfoForPayerModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/Payment/SelectCurrency": {
+      "post": {
+        "tags": [
+          "Payment"
+        ],
+        "parameters": [
+          {
+            "name": "X-XSRF-TOKEN",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PayerSelectPaymentCurrencyRequestModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/v1/Payment/{code}": {
+      "get": {
+        "tags": [
+          "Payment"
+        ],
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentInfoForPayerModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/WeatherForecast": {
       "get": {
         "tags": [
@@ -617,6 +737,19 @@
           "BTC"
         ],
         "type": "string"
+      },
+      "CurrencyAmount": {
+        "type": "object",
+        "properties": {
+          "currency": {
+            "$ref": "#/components/schemas/Currency"
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
       },
       "ForgotPasswordRequest": {
         "type": "object",
@@ -696,6 +829,26 @@
         },
         "additionalProperties": false
       },
+      "InitialPaymentInfoForPayerModel": {
+        "type": "object",
+        "properties": {
+          "tokenName": {
+            "type": "string",
+            "nullable": true
+          },
+          "currenciesAmount": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CurrencyAmount"
+            },
+            "nullable": true
+          },
+          "currency": {
+            "$ref": "#/components/schemas/Currency"
+          }
+        },
+        "additionalProperties": false
+      },
       "LoginRequest": {
         "type": "object",
         "properties": {
@@ -713,6 +866,28 @@
           },
           "twoFactorRecoveryCode": {
             "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PayerSelectPaymentCurrencyRequestModel": {
+        "required": [
+          "code",
+          "currency"
+        ],
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "currency": {
+            "$ref": "#/components/schemas/Currency"
+          },
+          "payerEmail": {
+            "type": "string",
+            "format": "email",
             "nullable": true
           }
         },
@@ -768,6 +943,10 @@
             "type": "string",
             "nullable": true
           },
+          "code": {
+            "type": "string",
+            "format": "uuid"
+          },
           "clientRefId": {
             "type": "string",
             "nullable": true
@@ -775,6 +954,23 @@
           "expireOn": {
             "type": "string",
             "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentInfoForPayerModel": {
+        "type": "object",
+        "properties": {
+          "currency": {
+            "$ref": "#/components/schemas/Currency"
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
           }
         },
         "additionalProperties": false

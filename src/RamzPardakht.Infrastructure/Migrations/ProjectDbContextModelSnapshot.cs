@@ -176,6 +176,9 @@ namespace RamzPardakht.Infrastructure.Migrations
                     b.Property<decimal>("PaidAmount")
                         .HasColumnType("numeric");
 
+                    b.Property<string>("PayerEmail")
+                        .HasColumnType("text");
+
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
@@ -183,6 +186,9 @@ namespace RamzPardakht.Infrastructure.Migrations
                         .HasColumnType("numeric");
 
                     b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("WalletId")
                         .HasColumnType("integer");
 
                     b.Property<string>("WebhookUrl")
@@ -196,6 +202,8 @@ namespace RamzPardakht.Infrastructure.Migrations
                     b.HasIndex("CreatedByTokenId");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("WalletId");
 
                     b.ToTable("Payments");
                 });
@@ -371,6 +379,62 @@ namespace RamzPardakht.Infrastructure.Migrations
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
+            modelBuilder.Entity("RamzPardakht.ApplicationCore.Entities.Wallet", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int?>("CreatedById")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("CreatedByTokenId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Currency")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("DeletedById")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("DeletedByTokenId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset?>("DeletedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<int?>("ModifiedById")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("ModifiedByTokenId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset?>("ModifiedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Path")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Version")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Wallets");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.HasOne("RamzPardakht.ApplicationCore.Entities.Role", null)
@@ -419,9 +483,15 @@ namespace RamzPardakht.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("RamzPardakht.ApplicationCore.Entities.Wallet", "Wallet")
+                        .WithMany("Payments")
+                        .HasForeignKey("WalletId");
+
                     b.Navigation("CreatedByToken");
 
                     b.Navigation("User");
+
+                    b.Navigation("Wallet");
                 });
 
             modelBuilder.Entity("RamzPardakht.ApplicationCore.Entities.ReferenceToken", b =>
@@ -462,6 +532,11 @@ namespace RamzPardakht.Infrastructure.Migrations
             modelBuilder.Entity("RamzPardakht.ApplicationCore.Entities.User", b =>
                 {
                     b.Navigation("Roles");
+                });
+
+            modelBuilder.Entity("RamzPardakht.ApplicationCore.Entities.Wallet", b =>
+                {
+                    b.Navigation("Payments");
                 });
 #pragma warning restore 612, 618
         }

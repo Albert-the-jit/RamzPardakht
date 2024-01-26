@@ -8,6 +8,7 @@ using Moq;
 using RamzPardakht.ApplicationCore.Contracts;
 using RamzPardakht.ApplicationCore.Entities;
 using RamzPardakht.Infrastructure.DbContexts;
+using RamzPardakht.Infrastructure.Services;
 
 namespace RamzPardakht.WebApi.IntegrationTests;
 
@@ -22,6 +23,14 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 
             services.AddTransient(_ => emailSenderMock);
             services.AddTransient<IEmailSender<User>>(_ => emailSenderMock.Object);
+
+            var coinGateMock = new Mock<ICoinGateExchangeService>();
+
+            var toRemove = services.FirstOrDefault(d => d.ServiceType == typeof(ICoinGateExchangeService));
+            services.Remove(toRemove);
+
+            services.AddTransient(_ => coinGateMock);
+            services.AddTransient<ICoinGateExchangeService>(_ => coinGateMock.Object);
 
             #region remove Ef and setup sqlite
 

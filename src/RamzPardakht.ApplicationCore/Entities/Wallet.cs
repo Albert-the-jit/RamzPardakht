@@ -9,7 +9,7 @@ public class Wallet : ITimeable, ISoftDeletable
 {
     public int Id { get; set; }
     public string Address { get; set; }
-    public WalletVersion Version  { get; set; }
+    public WalletVersion Version { get; set; }
     public int Path { get; set; }
     public Currency Currency { get; set; }
     public List<Payment> Payments { get; set; } = new();

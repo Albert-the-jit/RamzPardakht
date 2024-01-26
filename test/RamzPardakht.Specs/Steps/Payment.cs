@@ -140,8 +140,8 @@ public class Payment
 
         initialPaymentInfoForPayerModel.TokenName.Should().Be(referenceTokenModel.Name);
         initialPaymentInfoForPayerModel.Currency.Should().Be(Currency.NotSelected);
-        initialPaymentInfoForPayerModel.CurrenciesAmount.Where(x=>x.Currency == Currency.BTC).Should().NotBeNull();
-        initialPaymentInfoForPayerModel.CurrenciesAmount.FirstOrDefault(x=>x.Currency == Currency.BTC)!.Amount.Should().Be(paymentCreationRequestModel.UsdAmount * 100);
+        initialPaymentInfoForPayerModel.CurrenciesAmount.Where(x => x.Currency == Currency.BTC).Should().NotBeNull();
+        initialPaymentInfoForPayerModel.CurrenciesAmount.FirstOrDefault(x => x.Currency == Currency.BTC)!.Amount.Should().Be(paymentCreationRequestModel.UsdAmount * 100);
     }
 
     [When(@"Unauthorized user ""(.*)"" send request to select info of ""(.*)"" payment with the following details:")]

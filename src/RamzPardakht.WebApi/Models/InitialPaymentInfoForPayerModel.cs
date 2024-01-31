@@ -8,6 +8,7 @@ namespace RamzPardakht.WebApi.Models;
 public class InitialPaymentInfoForPayerModel
 {
     public string TokenName { get; set; }
+    public decimal UsdAmount { get; set; }
     public List<CurrencyAmount> CurrenciesAmount { get; set; } = new();
 
     public Currency Currency { get; set; }

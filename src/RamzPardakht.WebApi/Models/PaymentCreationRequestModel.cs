@@ -15,8 +15,11 @@ public class PaymentCreationRequestModel
     [HttpUrl]
     [StringLength(200, ErrorMessage = "StringLengthAttribute_ValidationError")]
     [Required(ErrorMessage = "RequiredAttribute_ValidationError")]
-    public string CallbackUrl { get; set; }
+    public string SuccessUrl { get; set; }
 
+    [HttpUrl]
+    [StringLength(200, ErrorMessage = "StringLengthAttribute_ValidationError")]
+    public string? CancelUrl { get; set; }
     [HttpUrl]
     [StringLength(200, ErrorMessage = "StringLengthAttribute_ValidationError")]
     public string? WebhookUrl { get; set; }

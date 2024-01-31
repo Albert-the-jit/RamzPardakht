@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NBXplorer;
 using RamzPardakht.ApplicationCore.Common;
 using RamzPardakht.ApplicationCore.Contracts;
 using RamzPardakht.ApplicationCore.Entities;
@@ -20,6 +21,9 @@ public static class InfrastructureSetup
     {
         services.AddRefitClient<ICoinGateExchangeService>()
             .ConfigureHttpClient(client => client.BaseAddress = new Uri("https://api.coingate.com/v2"));
+
+        services.AddHttpClient(nameof(ExplorerClient));
+
 
         services.AddScoped<IExchangeService, ExchangeService>();
 

@@ -122,7 +122,7 @@ namespace RamzPardakht.Infrastructure.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("numeric");
 
-                    b.Property<string>("CallbackUrl")
+                    b.Property<string>("CancelUrl")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -181,6 +181,10 @@ namespace RamzPardakht.Infrastructure.Migrations
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");
+
+                    b.Property<string>("SuccessUrl")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<decimal>("UsdAmount")
                         .HasColumnType("numeric");

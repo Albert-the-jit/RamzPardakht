@@ -18,7 +18,8 @@ public class Payment : ITimeable, ISoftDeletable
     public Currency Currency { get; set; } = Currency.NotSelected;
     public Status Status { get; set; } = Status.New;
     public Guid Code { get; set; } = Guid.NewGuid();
-    public string CallbackUrl { get; set; }
+    public string SuccessUrl { get; set; }
+    public string CancelUrl { get; set; }
     public string? WebhookUrl { get; set; }
     [StringLength(50)]
     public string? ClientRefId { get; set; }
@@ -58,8 +59,6 @@ public enum Status
     New,
     Pending,
     UnderPaid,
-    OverPaid,
     Paid,
-    Processing,
-    Expired
+    Canceled
 }

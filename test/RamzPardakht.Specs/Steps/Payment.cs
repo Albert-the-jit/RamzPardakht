@@ -2,18 +2,32 @@
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Argon;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using NBitcoin;
+using NBitcoin.OpenAsset;
+using NBXplorer;
+using NBXplorer.Models;
+using RamzPardakht.ApplicationCore.Contracts;
 using RamzPardakht.ApplicationCore.Entities;
+using RamzPardakht.ApplicationCore.Services;
 using RamzPardakht.Infrastructure.Services;
+using RamzPardakht.WebApi.Hubs;
 using RamzPardakht.WebApi.IntegrationTests;
 using RamzPardakht.WebApi.Models;
 using Refit;
+using RichardSzalay.MockHttp;
 using TechTalk.SpecFlow.Assist;
+using TypedSignalR.Client;
+using AssetMoney = NBitcoin.OpenAsset.AssetMoney;
+using JsonSerializer = System.Text.Json.JsonSerializer;
+using JsonSerializerSettings = Newtonsoft.Json.JsonSerializerSettings;
 
 namespace RamzPardakht.Specs.Steps;
 
@@ -194,16 +208,22 @@ public class Payment
         _scenarioContext.Set(result, $"{p0}:{nameof(PaymentInfoForPayerModel)}");
     }
 
-    [Then(@"the ""(.*)"" response body of ""(.*)"" payment should contain ""(.*)"" currency and valid address and valid amount")]
-    public void ThenTheResponseBodyOfPaymentShouldContainCurrencyAndValidAddressAndValidAmount(string p0, string p1, Currency currency)
+    [Then(@"the ""(.*)"" response body of ""(.*)"" payment should contain ""(.*)"" currency and valid address and valid amount and ""(.*)"" payed amount and ""(.*)"" status")]
+    public void ThenTheResponseBodyOfPaymentShouldContainCurrencyAndValidAddressAndValidAmountAndPayedAmountAndStatus(string p0, string p1, Currency currency, decimal payedAmount, Status status)
     {
         var paymentInfoForPayerModel =
             _scenarioContext.Get<PaymentInfoForPayerModel>($"{p0}:{nameof(PaymentInfoForPayerModel)}");
         var paymentCreationRequestModel = _scenarioContext.Get<PaymentCreationRequestModel>($"{p1}:{nameof(PaymentCreationRequestModel)}");
+        var paymentCreationResponseModel = _scenarioContext.Get<PaymentCreationResponseModel>($"{p1}:{nameof(PaymentCreationResponseModel)}");
 
 
         paymentInfoForPayerModel.Currency.Should().Be(currency);
         paymentInfoForPayerModel.Amount.Should().Be(paymentCreationRequestModel.UsdAmount * 100);
+        paymentInfoForPayerModel.SuccessUrl.Should().Be(paymentCreationRequestModel.SuccessUrl);
+        paymentInfoForPayerModel.ClientRefId.Should().Be(paymentCreationRequestModel.ClientRefId);
+        paymentInfoForPayerModel.RefId.Should().Be(paymentCreationResponseModel.RefId);
+        paymentInfoForPayerModel.Status.Should().Be(status);
+        paymentInfoForPayerModel.PaidAmount.Should().Be(payedAmount);
         try
         {
             BitcoinAddress.Create(paymentInfoForPayerModel.Address, Network.TestNet);
@@ -213,6 +233,144 @@ public class Payment
             Console.WriteLine(e);
             throw;
         }
+    }
 
+    [When(@"Unauthorized user ""(.*)"" connect and listen for ""(.*)"" payment notification")]
+    public async Task WhenUnauthorizedUserConnectAndListenForPaymentNotification(string p0, string p1)
+    {
+        var paymentCreationResponseModel = _scenarioContext.Get<PaymentCreationResponseModel>($"{p1}:{nameof(PaymentCreationResponseModel)}");
+
+        var connection = new HubConnectionBuilder()
+            .WithUrl("http://localhost/Hub/PaymentHub", o =>
+            {
+                o.Transports = HttpTransportType.WebSockets;
+                o.SkipNegotiation = true;
+
+                o.WebSocketFactory = (context, cancellationToken) =>
+                {
+                    var webSocketClient = _applicationFactory.Server.CreateWebSocketClient();
+                    var webSocketTask = webSocketClient.ConnectAsync(context.Uri, cancellationToken);
+                    return new (webSocketTask);
+                };
+            })
+            .Build();
+        IPaymentHub hubProxy = connection.CreateHubProxy<IPaymentHub>();
+        connection.KeepAliveInterval = TimeSpan.FromSeconds(10);
+        connection.Reconnected += async (s) =>
+        {
+            await connection.StartAsync();
+            await hubProxy.ListenToPaymentByCode(new ListenToPaymentByCodeMessageModel()
+            {
+                Code = paymentCreationResponseModel.Code
+            });
+        };
+        await connection.StartAsync();
+        await hubProxy.ListenToPaymentByCode(new ListenToPaymentByCodeMessageModel()
+        {
+            Code = paymentCreationResponseModel.Code
+        });
+
+        var clientMock = new Mock<IPaymentClient>();
+        clientMock
+            .Setup(client => client.TransactionPartiallyPayed(It.IsAny<TransactionPayedMessageModel>()))
+            .Callback<TransactionPayedMessageModel>(
+                model =>
+                {
+                    _scenarioContext.Set(model,$"{p0}:{nameof(IPaymentClient.TransactionPartiallyPayed)}");
+                });
+
+        clientMock
+            .Setup(client => client.TransactionFullyPayed(It.IsAny<TransactionPayedMessageModel>()))
+            .Callback<TransactionPayedMessageModel>(
+                model =>
+                {
+                    _scenarioContext.Set(model,$"{p0}:{nameof(IPaymentClient.TransactionFullyPayed)}");
+                });
+
+
+        connection.Register(clientMock.Object);
+
+        _scenarioContext.Set(connection,$"{p0}:SignalR");
+    }
+
+    [When(@"Unauthorized user ""(.*)"" has been broadcast transaction to ""(.*)"" payment address in ""(.*)"" blockchain with ""(.*)"" confirmation and ""(.*)"" as payment amount")]
+    public async Task WhenUnauthorizedUserHasBeenBroadcastTransactionToPaymentAddressInBlockchainWithConfirmationAndAsPaymentAmount(string p0, string p1, Currency currency, int confirmation, decimal amount)
+    {
+        decimal payedAmount = 0;
+        _scenarioContext.TryGetValue($"{p0}:PayedAmount", out payedAmount);
+        payedAmount += amount;
+
+
+        var network = new NBXplorerNetworkProvider(ChainName.Testnet).GetBTC();
+
+        var paymentInfoForPayerModel =
+            _scenarioContext.Get<PaymentInfoForPayerModel>($"{p0}:{nameof(PaymentInfoForPayerModel)}");
+        using var scope = _applicationFactory.Services.CreateScope();
+
+        var scopedServices = scope.ServiceProvider;
+        var mockHttpMessageHandler = scopedServices.GetRequiredService<MockHttpMessageHandler>();
+        var bitcoinWalletProvider = scopedServices.GetRequiredService<IBitcoinWalletProvider>();
+
+        var userDerivationScheme =
+            network.DerivationStrategyFactory.CreateDirectDerivationStrategy(bitcoinWalletProvider.GetMasterPublicKey());
+
+        var transactionEvent = new NewTransactionEvent()
+        {
+            EventId = 1,
+            DerivationStrategy = userDerivationScheme,
+            TransactionData = new TransactionResult() { Confirmations = confirmation, },
+            Outputs = new List<MatchedOutput>()
+            {
+                new MatchedInput()
+                {
+                    Address = BitcoinAddress.Create(paymentInfoForPayerModel.Address, Network.TestNet),
+                    Value = Money.FromUnit(amount, MoneyUnit.BTC),
+                }
+            }
+        };
+        string json = transactionEvent.ToJObject(new Serializer(network).Settings).ToString();
+        mockHttpMessageHandler.ResetBackendDefinitions();
+
+
+
+        mockHttpMessageHandler.When($"http://*/v1/cryptos/*/events?limit=30&longPolling=True")
+            .Respond("application/json", $"[{json}]");
+        mockHttpMessageHandler.When($"http://*/v1/cryptos/*/events?limit=30&longPolling=True&lastEventId=*")
+            .Respond("application/json", $"[]");
+
+        mockHttpMessageHandler.When($"http://*/v1/cryptos/*/addresses/*/balance")
+            .Respond("application/json", network.Serializer.ToString(new GetBalanceResponse
+            {
+                Unconfirmed = Money.Zero,
+                Available = Money.Zero,
+                Confirmed = new Money(payedAmount, MoneyUnit.BTC),
+                Immature = Money.Zero,
+                Total = new Money(payedAmount, MoneyUnit.BTC),
+            }));
+        _scenarioContext.Set(transactionEvent,$"{p0}:{nameof(NewTransactionEvent)}");
+
+        _scenarioContext.Set(payedAmount,$"{p0}:PayedAmount");
+        await Task.Delay(2000);
+
+    }
+
+    [Then(@"Unauthorized user ""(.*)"" should receive notification for partially paid payment of ""(.*)""")]
+    public void ThenUnauthorizedUserShouldReceiveNotificationForPartiallyPaidPaymentOf(string p0, string p1)
+    {
+        var transactionPartiallyPayed =
+            _scenarioContext.Get<TransactionPayedMessageModel>($"{p0}:{nameof(IPaymentClient.TransactionPartiallyPayed)}");
+        var paymentCreationResponseModel = _scenarioContext.Get<PaymentCreationResponseModel>($"{p1}:{nameof(PaymentCreationResponseModel)}");
+
+        transactionPartiallyPayed.Code.Should().Be(paymentCreationResponseModel.Code);
+    }
+
+    [Then(@"Unauthorized user ""(.*)"" should receive notification for fully paid payment of ""(.*)""")]
+    public void ThenUnauthorizedUserShouldReceiveNotificationForFullyPaidPaymentOf(string p0, string p1)
+    {
+        var transactionFullyPayed =
+            _scenarioContext.Get<TransactionPayedMessageModel>($"{p0}:{nameof(IPaymentClient.TransactionFullyPayed)}");
+        var paymentCreationResponseModel = _scenarioContext.Get<PaymentCreationResponseModel>($"{p1}:{nameof(PaymentCreationResponseModel)}");
+
+        transactionFullyPayed.Code.Should().Be(paymentCreationResponseModel.Code);
     }
 }

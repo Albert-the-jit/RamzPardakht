@@ -18,4 +18,13 @@ public class SwaggerSnapshotTests : IClassFixture<CustomWebApplicationFactory>
 
         await Verify(v1SwaggerJson.Content.ReadAsStringAsync());
     }
+
+    [Fact]
+    public async Task Verify_SiganlR_Specification_json_snapshot()
+    {
+        var v1SwaggerJson = await _customWebApplicationFactory.CreateClient()
+            .GetAsync("signalr-dev/spec.json");
+
+        await Verify(v1SwaggerJson.Content.ReadAsStringAsync());
+    }
 }

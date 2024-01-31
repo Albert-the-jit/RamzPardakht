@@ -100,11 +100,15 @@ public class PaymentController : ControllerBase
         CancellationToken cancellationToken)
     {
         var payment = await _projectDbContext.Payments.Include(x => x.CreatedByToken)
-            .FirstOrDefaultAsync(x => x.Code == code, cancellationToken);
+            .FirstOrDefaultAsync(x => x.Code == code && x.Status == Status.New, cancellationToken);
         if (payment is null)
             return NotFound();
 
-        var info = new InitialPaymentInfoForPayerModel() { TokenName = payment?.CreatedByToken?.Name ?? "", };
+        var info = new InitialPaymentInfoForPayerModel()
+        {
+            TokenName = payment?.CreatedByToken?.Name ?? "",
+            UsdAmount = payment!.UsdAmount,
+        };
 
         foreach (Currency currency in Enum.GetValues<Currency>().Where(x => x != Currency.NotSelected))
         {
@@ -128,7 +132,7 @@ public class PaymentController : ControllerBase
         CancellationToken cancellationToken)
     {
         var payment = await _projectDbContext.Payments
-            .FirstOrDefaultAsync(x => x.Code == model.Code && x.Currency == Currency.NotSelected, cancellationToken);
+            .FirstOrDefaultAsync(x => x.Code == model.Code && x.Currency == Currency.NotSelected && x.Status == Status.New, cancellationToken);
         if (payment is null)
             return NotFound();
 
@@ -147,8 +151,8 @@ public class PaymentController : ControllerBase
     public async Task<ActionResult<PaymentInfoForPayerModel>> Get(Guid code,
         CancellationToken cancellationToken)
     {
-        var payment = await _projectDbContext.Payments.Include(x => x.Wallet)
-            .FirstOrDefaultAsync(x => x.Code == code && x.Currency != Currency.NotSelected, cancellationToken);
+        var payment = await _projectDbContext.Payments.Include(x=>x.Wallet)
+            .FirstOrDefaultAsync(x => x.Code == code && x.Currency != Currency.NotSelected && (x.Status != Status.Paid), cancellationToken);
 
         if (payment is null)
             return NotFound();
@@ -156,13 +160,13 @@ public class PaymentController : ControllerBase
         if (payment.Currency != Currency.BTC)
             return ValidationProblem($"{payment.Currency} Not Implemented");
 
-        if (payment.Wallet is null)
+        if (payment?.Wallet is null)
         {
-            (WalletVersion walletVersion, PubKey pubKey) = _bitcoinWalletProvider.GetNewWalletPublicKey(payment.Id);
+            (WalletVersion walletVersion,PubKey pubKey) = _bitcoinWalletProvider.GetNewWalletPublicKey(payment!.Id);
 
             var wallet = new Wallet()
             {
-                Address = pubKey.GetAddress(ScriptPubKeyType.Segwit, Network.TestNet).ToString(),
+                Address = pubKey.GetAddress(ScriptPubKeyType.Segwit,Network.TestNet).ToString(),
                 Version = walletVersion,
                 Currency = payment.Currency,
                 Path = payment.Id
@@ -170,9 +174,32 @@ public class PaymentController : ControllerBase
             payment.Wallet = wallet;
 
             await _projectDbContext.SaveChangesAsync(cancellationToken);
+
+            return new PaymentInfoForPayerModel
+            {
+                RefId = payment.Id,
+                ClientRefId = payment.ClientRefId,
+                Currency = payment.Currency,
+                Address = payment.Wallet.Address,
+                Amount = payment.Amount,
+                PaidAmount = 0,
+                SuccessUrl = payment.SuccessUrl,
+                Status = payment.Status,
+            };
+
         }
 
-        return new PaymentInfoForPayerModel { Currency = payment.Currency, Address = payment.Wallet.Address, Amount = payment.Amount };
+        return new PaymentInfoForPayerModel
+        {
+            RefId = payment.Id,
+            ClientRefId = payment.ClientRefId,
+            Currency = payment.Currency,
+            Address = payment.Wallet.Address,
+            Amount = payment.Amount,
+            SuccessUrl = payment.SuccessUrl,
+            PaidAmount = payment.PaidAmount,
+            Status = payment.Status,
+        };
     }
 
 }

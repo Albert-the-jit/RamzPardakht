@@ -836,6 +836,10 @@
             "type": "string",
             "nullable": true
           },
+          "usdAmount": {
+            "type": "number",
+            "format": "double"
+          },
           "currenciesAmount": {
             "type": "array",
             "items": {
@@ -895,7 +899,7 @@
       },
       "PaymentCreationRequestModel": {
         "required": [
-          "callbackUrl"
+          "successUrl"
         ],
         "type": "object",
         "properties": {
@@ -904,11 +908,18 @@
             "type": "number",
             "format": "double"
           },
-          "callbackUrl": {
+          "successUrl": {
             "maxLength": 200,
             "minLength": 0,
             "type": "string",
             "format": "uri"
+          },
+          "cancelUrl": {
+            "maxLength": 200,
+            "minLength": 0,
+            "type": "string",
+            "format": "uri",
+            "nullable": true
           },
           "webhookUrl": {
             "maxLength": 200,
@@ -979,6 +990,25 @@
           "amount": {
             "type": "number",
             "format": "double"
+          },
+          "paidAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "refId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "clientRefId": {
+            "type": "string",
+            "nullable": true
+          },
+          "successUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "$ref": "#/components/schemas/Status"
           }
         },
         "additionalProperties": false
@@ -1145,10 +1175,8 @@
           "New",
           "Pending",
           "UnderPaid",
-          "OverPaid",
           "Paid",
-          "Processing",
-          "Expired"
+          "Canceled"
         ],
         "type": "string"
       },

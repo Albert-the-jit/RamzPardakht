@@ -10,4 +10,10 @@ public class PaymentInfoForPayerModel
     public Currency Currency { get; set; }
     public string Address { get; set; }
     public decimal Amount { get; set; }
+    public decimal PaidAmount { get; set; }
+    public int RefId { get; set; }
+    public string? ClientRefId { get; set; }
+    public string SuccessUrl { get; set; }
+    public Status Status { get; set; }
+
 }

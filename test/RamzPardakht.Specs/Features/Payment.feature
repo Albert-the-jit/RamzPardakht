@@ -48,21 +48,21 @@ So that I can redirect user to payment page
 
 Scenario: Successful payment creation
     When "person 1" use "test-token" access token and send a create payment request with the following details:
-      | UsdAmount | Description  | WebhookUrl | CallbackUrl | ClientRefId |
-      | 5         | test-payment ||             |             |
-    Then the "person 1" should receive a failed message with "400" status and "CallbackUrl field is required" error massage
+      | UsdAmount | Description  | WebhookUrl | SuccessUrl  | ClientRefId |
+      | 5         | test-payment |            |             |             |
+    Then the "person 1" should receive a failed message with "400" status and "SuccessUrl field is required" error massage
     When "person 1" use "test-token" access token and send a create payment request with the following details:
-      | UsdAmount | Description  | WebhookUrl | CallbackUrl       | ClientRefId |
-      | -5        | test-payment |            | http://example.ir |             |
+      | UsdAmount | Description  | WebhookUrl | SuccessUrl        | CancelUrl | ClientRefId |
+      | -5        | test-payment |            | http://example.ir |           |             |
     Then the "person 1" should receive a failed message with "400" status and "Only positive number allowed" error massage
     When "person 1" use "test-token" access token and send a create payment request with the following details:
-      | UsdAmount | Description  | WebhookUrl | CallbackUrl       | ClientRefId |
-      | 5        | test-payment |            | http://example@ |             |
+      | UsdAmount | Description  | WebhookUrl | SuccessUrl        | CancelUrl | ClientRefId |
+      | 5        | test-payment |            | exampleir |           |             |
     Then the "person 1" should receive a failed message with "400" status and "field is not a valid fully-qualified http or https URL" error massage
 
     When "person 1" use "test-token" access token and send a create payment request with the following details:
-      | UsdAmount | Description  | WebhookUrl | CallbackUrl       | ClientRefId |
-      | 5        | test-payment |            | http://example.ir |             |
+      | UsdAmount | Description  | WebhookUrl | SuccessUrl        | CancelUrl | ClientRefId |
+      | 5         | test-payment |            | http://example.ir |           |             |
     Then the "person 1" should receive a success message confirming success
     And the "person 1" response body should contain the created payment RefId and RedirectUrl and details
 
@@ -92,4 +92,17 @@ Scenario: Successful payment creation
     Then the "person 10" should receive a success message confirming success
 
     When Unauthorized user "person 10" send request to get final info of "person 1" payment
-    Then the "person 10" response body of "person 1" payment should contain "BTC" currency and valid address and valid amount
+    Then the "person 10" response body of "person 1" payment should contain "BTC" currency and valid address and valid amount and "0" payed amount and "New" status
+
+    When Unauthorized user "person 10" connect and listen for "person 1" payment notification
+    And Unauthorized user "person 10" has been broadcast transaction to "person 1" payment address in "BTC" blockchain with "1" confirmation and "250" as payment amount
+    Then Unauthorized user "person 10" should receive notification for partially paid payment of "person 1"
+
+    When Unauthorized user "person 10" send request to get final info of "person 1" payment
+    Then the "person 10" response body of "person 1" payment should contain "BTC" currency and valid address and valid amount and "250" payed amount and "Pending" status
+
+    When Unauthorized user "person 10" has been broadcast transaction to "person 1" payment address in "BTC" blockchain with "1" confirmation and "250" as payment amount
+    Then Unauthorized user "person 10" should receive notification for fully paid payment of "person 1"
+
+    When Unauthorized user "person 10" send request to get final info of "person 1" payment
+    Then the "person 10" response body of "person 1" payment should contain "BTC" currency and valid address and valid amount and "500" payed amount and "Pending" status

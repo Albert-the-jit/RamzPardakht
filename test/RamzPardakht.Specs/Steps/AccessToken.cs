@@ -24,7 +24,7 @@ public class AccessToken
     [When(@"""(.*)"" send a create access token request with random date within previous month as ExpiresUtc and the following details:")]
     public async Task WhenSendACreateAccessTokenRequestWithRandomDateWithinPreviousMonthAsExpiresUtcAndTheFollowingDetails(string p0, Table table)
     {
-        int randomDay = new Random().Next(DateTimeOffset.Now.Day,
+        int randomDay = new Random().Next(DateTimeOffset.Now.Day - 2,
             DateTime.DaysInMonth(DateTimeOffset.Now.Year, DateTimeOffset.Now.Month) - 1);
 
         var expiresUtc = DateTimeOffset.Now.AddMonths(-1).AddDays(-DateTimeOffset.Now.Day).AddDays(randomDay);
@@ -43,7 +43,7 @@ public class AccessToken
     public async Task WhenSendACreateAccessTokenRequestWithRandomDateWithinNextMonthAsExpiresUtcAndTheFollowingDetails(
         string p0, Table table)
     {
-        int randomDay = new Random().Next(DateTimeOffset.Now.Day,
+        int randomDay = new Random().Next(DateTimeOffset.Now.Day - 2,
             DateTime.DaysInMonth(DateTimeOffset.Now.Year, DateTimeOffset.Now.Month) - 1);
 
         var expiresUtc = DateTimeOffset.Now.AddMonths(1).AddDays(-DateTimeOffset.Now.Day).AddDays(randomDay);
@@ -109,7 +109,7 @@ public class AccessToken
     [When(@"""(.*)"" use ""(.*)"" access token and send a create access token request with random date within next month as ExpiresUtc and the following details:")]
     public async Task WhenUseAccessTokenAndSendACreateAccessTokenRequestWithRandomDateWithinNextMonthAsExpiresUtcAndTheFollowingDetails(string p0, string p1, Table table)
     {
-        int randomDay = new Random().Next(DateTimeOffset.Now.Day,
+        int randomDay = new Random().Next(DateTimeOffset.Now.Day - 2,
             DateTime.DaysInMonth(DateTimeOffset.Now.Year, DateTimeOffset.Now.Month) - 1);
 
         var expiresUtc = DateTimeOffset.Now.AddMonths(1).AddDays(-DateTimeOffset.Now.Day).AddDays(randomDay);

@@ -9,6 +9,7 @@ public interface IBitcoinWalletProvider
 {
     (WalletVersion walletVersion, PubKey pubKey) GetNewWalletPublicKey(int uniqueId);
     WalletVersion NewWalletsVersion();
+    ExtPubKey GetMasterPublicKey();
 }
 
 public enum WalletVersion

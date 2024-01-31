@@ -1,6 +1,5 @@
 ﻿namespace RamzPardakht.WebApi.IntegrationTests;
 
-[UsesVerify]
 public class SwaggerSnapshotTests : IClassFixture<CustomWebApplicationFactory>
 {
     private readonly CustomWebApplicationFactory _customWebApplicationFactory;

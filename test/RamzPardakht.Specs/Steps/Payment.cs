@@ -350,7 +350,7 @@ public class Payment
         _scenarioContext.Set(transactionEvent,$"{p0}:{nameof(NewTransactionEvent)}");
 
         _scenarioContext.Set(payedAmount,$"{p0}:PayedAmount");
-        await Task.Delay(2000);
+        await Task.Delay(3500);
 
     }
 

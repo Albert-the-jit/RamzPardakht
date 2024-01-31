@@ -250,7 +250,7 @@ public class Payment
                 {
                     var webSocketClient = _applicationFactory.Server.CreateWebSocketClient();
                     var webSocketTask = webSocketClient.ConnectAsync(context.Uri, cancellationToken);
-                    return new (webSocketTask);
+                    return new(webSocketTask);
                 };
             })
             .Build();
@@ -276,7 +276,7 @@ public class Payment
             .Callback<TransactionPayedMessageModel>(
                 model =>
                 {
-                    _scenarioContext.Set(model,$"{p0}:{nameof(IPaymentClient.TransactionPartiallyPayed)}");
+                    _scenarioContext.Set(model, $"{p0}:{nameof(IPaymentClient.TransactionPartiallyPayed)}");
                 });
 
         clientMock
@@ -284,13 +284,13 @@ public class Payment
             .Callback<TransactionPayedMessageModel>(
                 model =>
                 {
-                    _scenarioContext.Set(model,$"{p0}:{nameof(IPaymentClient.TransactionFullyPayed)}");
+                    _scenarioContext.Set(model, $"{p0}:{nameof(IPaymentClient.TransactionFullyPayed)}");
                 });
 
 
         connection.Register(clientMock.Object);
 
-        _scenarioContext.Set(connection,$"{p0}:SignalR");
+        _scenarioContext.Set(connection, $"{p0}:SignalR");
     }
 
     [When(@"Unauthorized user ""(.*)"" has been broadcast transaction to ""(.*)"" payment address in ""(.*)"" blockchain with ""(.*)"" confirmation and ""(.*)"" as payment amount")]
@@ -347,9 +347,9 @@ public class Payment
                 Immature = Money.Zero,
                 Total = new Money(payedAmount, MoneyUnit.BTC),
             }));
-        _scenarioContext.Set(transactionEvent,$"{p0}:{nameof(NewTransactionEvent)}");
+        _scenarioContext.Set(transactionEvent, $"{p0}:{nameof(NewTransactionEvent)}");
 
-        _scenarioContext.Set(payedAmount,$"{p0}:PayedAmount");
+        _scenarioContext.Set(payedAmount, $"{p0}:PayedAmount");
         await Task.Delay(3500);
 
     }

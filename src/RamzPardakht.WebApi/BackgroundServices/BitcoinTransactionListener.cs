@@ -35,7 +35,7 @@ public class BitcoinTransactionListener : BackgroundService
         {
             await CheckForNewlyPaidPayments(stoppingToken);
         }
-        catch (Exception e) when(e is not TaskCanceledException)
+        catch (Exception e) when (e is not TaskCanceledException)
         {
             _logger.LogError(e.ToString());
             await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken);
@@ -100,7 +100,7 @@ public class BitcoinTransactionListener : BackgroundService
                     {
                         await hubContext.Clients.Group(payment.Code.ToString()).TransactionPartiallyPayed(new TransactionPayedMessageModel()
                         {
-                           Code = payment.Code
+                            Code = payment.Code
                         });
                     }
                     else

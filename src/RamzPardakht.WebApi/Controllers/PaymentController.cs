@@ -151,7 +151,7 @@ public class PaymentController : ControllerBase
     public async Task<ActionResult<PaymentInfoForPayerModel>> Get(Guid code,
         CancellationToken cancellationToken)
     {
-        var payment = await _projectDbContext.Payments.Include(x=>x.Wallet)
+        var payment = await _projectDbContext.Payments.Include(x => x.Wallet)
             .FirstOrDefaultAsync(x => x.Code == code && x.Currency != Currency.NotSelected && (x.Status != Status.Paid), cancellationToken);
 
         if (payment is null)
@@ -162,11 +162,11 @@ public class PaymentController : ControllerBase
 
         if (payment?.Wallet is null)
         {
-            (WalletVersion walletVersion,PubKey pubKey) = _bitcoinWalletProvider.GetNewWalletPublicKey(payment!.Id);
+            (WalletVersion walletVersion, PubKey pubKey) = _bitcoinWalletProvider.GetNewWalletPublicKey(payment!.Id);
 
             var wallet = new Wallet()
             {
-                Address = pubKey.GetAddress(ScriptPubKeyType.Segwit,Network.TestNet).ToString(),
+                Address = pubKey.GetAddress(ScriptPubKeyType.Segwit, Network.TestNet).ToString(),
                 Version = walletVersion,
                 Currency = payment.Currency,
                 Path = payment.Id

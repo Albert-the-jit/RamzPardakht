@@ -10,7 +10,7 @@ using TypedSignalR.Client;
 
 namespace RamzPardakht.WebApi.Hubs;
 
-public class PaymentHub : Hub<IPaymentClient> , IPaymentHub
+public class PaymentHub : Hub<IPaymentClient>, IPaymentHub
 {
     private readonly IProjectDbContext _projectDbContext;
 
@@ -26,7 +26,7 @@ public class PaymentHub : Hub<IPaymentClient> , IPaymentHub
         var payment = await _projectDbContext.Payments
             .FirstOrDefaultAsync(x => x.Code == messageModel.Code && x.Currency != Currency.NotSelected && x.Status == Status.New, cancellationToken);
 
-        if(payment != null)
+        if (payment != null)
             await Groups.AddToGroupAsync(Context.ConnectionId, messageModel.Code.ToString(), cancellationToken);
     }
 

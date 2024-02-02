@@ -42,9 +42,12 @@ public class PaymentController : ControllerBase
         _bitcoinWalletProvider = bitcoinWalletProvider;
     }
 
+
     /// <summary>
     /// create payment and return payment page url
     /// </summary>
+    /// <param name="model"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPost]
     public async Task<ActionResult<PaymentCreationResponseModel>> Post(PaymentCreationRequestModel model,
@@ -76,6 +79,8 @@ public class PaymentController : ControllerBase
     /// <summary>
     /// inquiry payment and return payment info and status
     /// </summary>
+    /// <param name="model"></param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPost("Inquiry")]
     public async Task<ActionResult<PaymentInquiryResponseModel>> Inquiry(PaymentInquiryRequestModel model,
@@ -94,6 +99,12 @@ public class PaymentController : ControllerBase
         return result;
     }
 
+    /// <summary>
+    /// inquiry initial payment info and return payment info and currencies amount
+    /// </summary>
+    /// <param name="code"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     [HttpGet("InitialInfo/{code:guid}")]
     [AllowAnonymous]
     public async Task<ActionResult<InitialPaymentInfoForPayerModel>> GetInitialInfo(Guid code,
@@ -124,6 +135,13 @@ public class PaymentController : ControllerBase
         return info;
     }
 
+    /// <summary>
+    /// select payment currency
+    /// </summary>
+    /// <param name="model"></param>
+    /// <param name="_"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     [HttpPost("SelectCurrency")]
     [AllowAnonymous]
     public async Task<ActionResult> SelectCurrency(
@@ -146,6 +164,12 @@ public class PaymentController : ControllerBase
         return Ok();
     }
 
+    /// <summary>
+    /// get finalize payment status and payment founds status
+    /// </summary>
+    /// <param name="code"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     [HttpGet("{code:guid}")]
     [AllowAnonymous]
     public async Task<ActionResult<PaymentInfoForPayerModel>> Get(Guid code,

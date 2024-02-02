@@ -105,8 +105,10 @@ public class Startup
                 .Build();
 
             options.AddPolicy("WebClient",
-                policy => policy.RequireAssertion(context => !context.User.Claims.Any(x =>
-                    x.Type == SystemConst.IsReferenceTokenClaimName && x.Value == true.ToString())));
+                policy => policy
+                    .RequireAuthenticatedUser()
+                    .RequireAssertion(context => !context.User.Claims.Any(x =>
+                        x.Type == SystemConst.IsReferenceTokenClaimName && x.Value == true.ToString())));
 
             options.AddPolicy("admin",
                 policy => policy.RequireRole("RamzPardakht:admin"));

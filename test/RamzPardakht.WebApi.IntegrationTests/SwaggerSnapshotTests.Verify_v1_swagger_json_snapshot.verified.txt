@@ -480,6 +480,7 @@
         ],
         "summary": "create payment and return payment page url",
         "requestBody": {
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -519,6 +520,7 @@
         ],
         "summary": "inquiry payment and return payment info and status",
         "requestBody": {
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -556,10 +558,12 @@
         "tags": [
           "Payment"
         ],
+        "summary": "inquiry initial payment info and return payment info and currencies amount",
         "parameters": [
           {
             "name": "code",
             "in": "path",
+            "description": "",
             "required": true,
             "schema": {
               "type": "string",
@@ -596,16 +600,19 @@
         "tags": [
           "Payment"
         ],
+        "summary": "select payment currency",
         "parameters": [
           {
             "name": "X-XSRF-TOKEN",
             "in": "header",
+            "description": "",
             "schema": {
               "type": "string"
             }
           }
         ],
         "requestBody": {
+          "description": "",
           "content": {
             "application/json": {
               "schema": {
@@ -636,10 +643,12 @@
         "tags": [
           "Payment"
         ],
+        "summary": "get finalize payment status and payment founds status",
         "parameters": [
           {
             "name": "code",
             "in": "path",
+            "description": "",
             "required": true,
             "schema": {
               "type": "string",

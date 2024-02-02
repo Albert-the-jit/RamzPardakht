@@ -12,6 +12,7 @@
         ],
         "summary": "create api access token",
         "requestBody": {
+          "description": "dont fill id param",
           "content": {
             "application/json": {
               "schema": {

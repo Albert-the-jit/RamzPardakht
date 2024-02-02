@@ -56,6 +56,8 @@ public class AccessTokenController : ControllerBase
     /// <summary>
     /// create api access token
     /// </summary>
+    /// <param name="model">dont fill id param</param>
+    /// <param name="cancellationToken"></param>
     /// <returns></returns>
     [HttpPost]
     public async Task<ActionResult<ReferenceTokenModel>> Post(ReferenceTokenModel model, CancellationToken cancellationToken)

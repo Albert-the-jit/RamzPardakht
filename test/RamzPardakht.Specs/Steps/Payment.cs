@@ -208,8 +208,8 @@ public class Payment
         _scenarioContext.Set(result, $"{p0}:{nameof(PaymentInfoForPayerModel)}");
     }
 
-    [Then(@"the ""(.*)"" response body of ""(.*)"" payment should contain ""(.*)"" currency and valid address and valid amount and ""(.*)"" payed amount and ""(.*)"" status")]
-    public void ThenTheResponseBodyOfPaymentShouldContainCurrencyAndValidAddressAndValidAmountAndPayedAmountAndStatus(string p0, string p1, Currency currency, decimal payedAmount, Status status)
+    [Then(@"the ""(.*)"" response body of ""(.*)"" payment should contain ""(.*)"" currency and valid address and valid amount and ""(.*)"" paid amount and ""(.*)"" status")]
+    public void ThenTheResponseBodyOfPaymentShouldContainCurrencyAndValidAddressAndValidAmountAndPayedAmountAndStatus(string p0, string p1, Currency currency, decimal paidAmount, Status status)
     {
         var paymentInfoForPayerModel =
             _scenarioContext.Get<PaymentInfoForPayerModel>($"{p0}:{nameof(PaymentInfoForPayerModel)}");
@@ -223,7 +223,7 @@ public class Payment
         paymentInfoForPayerModel.ClientRefId.Should().Be(paymentCreationRequestModel.ClientRefId);
         paymentInfoForPayerModel.RefId.Should().Be(paymentCreationResponseModel.RefId);
         paymentInfoForPayerModel.Status.Should().Be(status);
-        paymentInfoForPayerModel.PaidAmount.Should().Be(payedAmount);
+        paymentInfoForPayerModel.PaidAmount.Should().Be(paidAmount);
         try
         {
             BitcoinAddress.Create(paymentInfoForPayerModel.Address, Network.TestNet);
@@ -296,9 +296,9 @@ public class Payment
     [When(@"Unauthorized user ""(.*)"" has been broadcast transaction to ""(.*)"" payment address in ""(.*)"" blockchain with ""(.*)"" confirmation and ""(.*)"" as payment amount")]
     public async Task WhenUnauthorizedUserHasBeenBroadcastTransactionToPaymentAddressInBlockchainWithConfirmationAndAsPaymentAmount(string p0, string p1, Currency currency, int confirmation, decimal amount)
     {
-        decimal payedAmount = 0;
-        _scenarioContext.TryGetValue($"{p0}:PayedAmount", out payedAmount);
-        payedAmount += amount;
+        decimal paidAmount = 0;
+        _scenarioContext.TryGetValue($"{p0}:PayedAmount", out paidAmount);
+        paidAmount += amount;
 
 
         var network = new NBXplorerNetworkProvider(ChainName.Testnet).GetBTC();
@@ -343,13 +343,13 @@ public class Payment
             {
                 Unconfirmed = Money.Zero,
                 Available = Money.Zero,
-                Confirmed = new Money(payedAmount, MoneyUnit.BTC),
+                Confirmed = new Money(paidAmount, MoneyUnit.BTC),
                 Immature = Money.Zero,
-                Total = new Money(payedAmount, MoneyUnit.BTC),
+                Total = new Money(paidAmount, MoneyUnit.BTC),
             }));
         _scenarioContext.Set(transactionEvent, $"{p0}:{nameof(NewTransactionEvent)}");
 
-        _scenarioContext.Set(payedAmount, $"{p0}:PayedAmount");
+        _scenarioContext.Set(paidAmount, $"{p0}:PayedAmount");
         await Task.Delay(3500);
 
     }

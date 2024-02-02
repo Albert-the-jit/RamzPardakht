@@ -859,6 +859,10 @@
           },
           "currency": {
             "$ref": "#/components/schemas/Currency"
+          },
+          "payerEmail": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

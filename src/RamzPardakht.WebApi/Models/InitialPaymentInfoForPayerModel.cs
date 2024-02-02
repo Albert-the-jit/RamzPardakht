@@ -12,6 +12,8 @@ public class InitialPaymentInfoForPayerModel
     public List<CurrencyAmount> CurrenciesAmount { get; set; } = new();
 
     public Currency Currency { get; set; }
+    public string? PayerEmail { get; set; }
+
 }
 
 public class CurrencyAmount

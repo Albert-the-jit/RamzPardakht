@@ -131,6 +131,7 @@ public class PaymentController : ControllerBase
         }
 
         info.Currency = payment.Currency;
+        info.PayerEmail = payment.PayerEmail;
 
         return info;
     }

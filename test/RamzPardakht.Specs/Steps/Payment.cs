@@ -2,22 +2,22 @@
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Argon;
 using FluentAssertions;
+using MassTransit.Testing;
 using Microsoft.AspNetCore.Http.Connections;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Time.Testing;
 using Moq;
 using NBitcoin;
-using NBitcoin.OpenAsset;
 using NBXplorer;
+using NBXplorer.DerivationStrategy;
 using NBXplorer.Models;
 using RamzPardakht.ApplicationCore.Contracts;
 using RamzPardakht.ApplicationCore.Entities;
-using RamzPardakht.ApplicationCore.Services;
+using RamzPardakht.ApplicationCore.MessageModels;
 using RamzPardakht.Infrastructure.Services;
+using RamzPardakht.WebApi.Consumers;
 using RamzPardakht.WebApi.Hubs;
 using RamzPardakht.WebApi.IntegrationTests;
 using RamzPardakht.WebApi.Models;
@@ -25,9 +25,6 @@ using Refit;
 using RichardSzalay.MockHttp;
 using TechTalk.SpecFlow.Assist;
 using TypedSignalR.Client;
-using AssetMoney = NBitcoin.OpenAsset.AssetMoney;
-using JsonSerializer = System.Text.Json.JsonSerializer;
-using JsonSerializerSettings = Newtonsoft.Json.JsonSerializerSettings;
 
 namespace RamzPardakht.Specs.Steps;
 
@@ -87,9 +84,11 @@ public class Payment
 
     }
 
-    [Then(@"the ""(.*)"" response body should contain the created payment RefId with ""(.*)"" Status and details")]
-    public async Task ThenTheResponseBodyShouldContainTheCreatedPaymentRefIdWithStatusAndDetails(string p0, Status @new)
+    [Then(@"the ""(.*)"" response body should contain the created payment RefId with ""(.*)"" Status and following details")]
+    public async Task ThenTheResponseBodyShouldContainTheCreatedPaymentRefIdWithStatusAndFollowingDetails(string p0, Status @new, Table table)
     {
+        var expectedResponse= table.CreateInstance<PaymentInquiryResponseModel>();
+
         var paymentCreationResponseModel = _scenarioContext.Get<PaymentCreationResponseModel>($"{p0}:{nameof(PaymentCreationResponseModel)}");
 
         var res = _scenarioContext.Get<HttpResponseMessage>($"{p0}:{nameof(HttpResponseMessage)}");
@@ -101,12 +100,12 @@ public class Payment
         result!.Status.Should().Be(@new);
         result.StatusCode.Should().Be((int)@new);
 
-        result.Currency.Should().Be(Currency.NotSelected);
+        result.Currency.Should().Be(expectedResponse.Currency);
         result.RefId.Should().Be(paymentCreationResponseModel.RefId);
         result.ClientRefId.Should().BeEquivalentTo(paymentCreationResponseModel.ClientRefId);
 
-        result.PaidAmount.Should().Be(0);
-        result.SelectedCurrencyAmount.Should().Be(0);
+        result.PaidAmount.Should().Be(expectedResponse.PaidAmount);
+        result.SelectedCurrencyAmount.Should().Be(expectedResponse.SelectedCurrencyAmount);
 
         result.ExpireOn.Should().BeCloseTo(DateTimeOffset.Now.AddMinutes(10), TimeSpan.FromMinutes(5));
 
@@ -302,43 +301,17 @@ public class Payment
 
 
         var network = new NBXplorerNetworkProvider(ChainName.Testnet).GetBTC();
+        var harness = _applicationFactory.Services.GetRequiredService<ITestHarness>();
+        await harness.Start();
 
-        var paymentInfoForPayerModel =
-            _scenarioContext.Get<PaymentInfoForPayerModel>($"{p0}:{nameof(PaymentInfoForPayerModel)}");
+
         using var scope = _applicationFactory.Services.CreateScope();
 
         var scopedServices = scope.ServiceProvider;
-        var mockHttpMessageHandler = scopedServices.GetRequiredService<MockHttpMessageHandler>();
-        var bitcoinWalletProvider = scopedServices.GetRequiredService<IBitcoinWalletProvider>();
+        var mockHttpMessageHandlers = scopedServices.GetRequiredService<Dictionary<string, MockHttpMessageHandler>>();
+        var mockHttpMessageHandler  = mockHttpMessageHandlers.TryGet(nameof(ExplorerClient));
 
-        var userDerivationScheme =
-            network.DerivationStrategyFactory.CreateDirectDerivationStrategy(bitcoinWalletProvider.GetMasterPublicKey());
-
-        var transactionEvent = new NewTransactionEvent()
-        {
-            EventId = 1,
-            DerivationStrategy = userDerivationScheme,
-            TransactionData = new TransactionResult() { Confirmations = confirmation, },
-            Outputs = new List<MatchedOutput>()
-            {
-                new MatchedInput()
-                {
-                    Address = BitcoinAddress.Create(paymentInfoForPayerModel.Address, Network.TestNet),
-                    Value = Money.FromUnit(amount, MoneyUnit.BTC),
-                }
-            }
-        };
-        string json = transactionEvent.ToJObject(new Serializer(network).Settings).ToString();
-        mockHttpMessageHandler.ResetBackendDefinitions();
-
-
-
-        mockHttpMessageHandler.When($"http://*/v1/cryptos/*/events?limit=30&longPolling=True")
-            .Respond("application/json", $"[{json}]");
-        mockHttpMessageHandler.When($"http://*/v1/cryptos/*/events?limit=30&longPolling=True&lastEventId=*")
-            .Respond("application/json", $"[]");
-
-        mockHttpMessageHandler.When($"http://*/v1/cryptos/*/addresses/*/balance")
+        mockHttpMessageHandler.Expect($"http://*/v1/cryptos/*/addresses/*/balance")
             .Respond("application/json", network.Serializer.ToString(new GetBalanceResponse
             {
                 Unconfirmed = Money.Zero,
@@ -347,11 +320,13 @@ public class Payment
                 Immature = Money.Zero,
                 Total = new Money(paidAmount, MoneyUnit.BTC),
             }));
-        _scenarioContext.Set(transactionEvent, $"{p0}:{nameof(NewTransactionEvent)}");
+
+        await harness.Bus.Publish(new NewBitcoinBlockEvent());
 
         _scenarioContext.Set(paidAmount, $"{p0}:PayedAmount");
-        await Task.Delay(3500);
-
+        await Task.Delay(2000);
+        mockHttpMessageHandler.VerifyNoOutstandingExpectation();
+        mockHttpMessageHandler.ResetExpectations();
     }
 
     [Then(@"Unauthorized user ""(.*)"" should receive notification for partially paid payment of ""(.*)""")]
@@ -367,10 +342,110 @@ public class Payment
     [Then(@"Unauthorized user ""(.*)"" should receive notification for fully paid payment of ""(.*)""")]
     public void ThenUnauthorizedUserShouldReceiveNotificationForFullyPaidPaymentOf(string p0, string p1)
     {
+
         var transactionFullyPayed =
             _scenarioContext.Get<TransactionPayedMessageModel>($"{p0}:{nameof(IPaymentClient.TransactionFullyPayed)}");
         var paymentCreationResponseModel = _scenarioContext.Get<PaymentCreationResponseModel>($"{p1}:{nameof(PaymentCreationResponseModel)}");
 
         transactionFullyPayed.Code.Should().Be(paymentCreationResponseModel.Code);
     }
+
+
+    [Then(@"user ""(.*)"" should receive notification by webhook for changed status to ""(.*)""")]
+    public async Task ThenUserShouldReceiveNotificationByWebhookForChangedStatusTo(string p0, Status status)
+    {
+        await Task.Delay(500);
+        var paymentCreationResponseModel =
+            _scenarioContext.Get<PaymentCreationResponseModel>($"{p0}:{nameof(PaymentCreationResponseModel)}");
+
+        var harness = _applicationFactory.Services.GetRequiredService<ITestHarness>();
+        var consumerHarness = harness.GetConsumerHarness<PaymentStatusChangedConsumer>();
+
+        (await consumerHarness.Consumed
+            .Any<PaymentStatusChanged>(x =>
+                x.Context.Message.Id == paymentCreationResponseModel.RefId &&
+                x.Context.Message.ClientRefId == paymentCreationResponseModel.ClientRefId &&
+                x.Context.Message.Status == status)).Should().BeTrue();
+    }
+
+    [When(@"after user ""(.*)"" payment paid by ""(.*)"" and is expired and confirmed for ""(.*)"" time")]
+    public async Task WhenAfterUserPaymentPaidByAndIsExpiredAndConfirmedForTime(string p0, string p1,
+        int confirmationCount)
+    {
+        var paymentCreationResponseModel =
+            _scenarioContext.Get<PaymentCreationResponseModel>($"{p0}:{nameof(PaymentCreationResponseModel)}");
+
+        var paidAmount = _scenarioContext.Get<decimal>($"{p1}:PayedAmount");
+
+        var network = new NBXplorerNetworkProvider(ChainName.Testnet).GetBTC();
+
+        var fakeTimeProvider = _applicationFactory.Services.GetRequiredService<FakeTimeProvider>();
+        // Set the current UTC time
+        if(fakeTimeProvider.GetUtcNow() < paymentCreationResponseModel.ExpireOn.AddMinutes(5))
+            fakeTimeProvider.SetUtcNow(paymentCreationResponseModel.ExpireOn.AddMinutes(5));
+
+        var harness = _applicationFactory.Services.GetRequiredService<ITestHarness>();
+
+        using var scope = _applicationFactory.Services.CreateScope();
+
+        var scopedServices = scope.ServiceProvider;
+        var bitcoinWalletProvider = scopedServices.GetRequiredService<IBitcoinWalletProvider>();
+        var mockHttpMessageHandlers = scopedServices.GetRequiredService<Dictionary<string, MockHttpMessageHandler>>();
+        var mockHttpMessageHandler = mockHttpMessageHandlers.TryGet(nameof(ExplorerClient));
+
+        mockHttpMessageHandler.Expect($"http://*/v1/cryptos/*/addresses/*/balance")
+            .Respond("application/json", network.Serializer.ToString(new GetBalanceResponse
+            {
+                Unconfirmed = Money.Zero,
+                Available = Money.Zero,
+                Confirmed = new Money(paidAmount, MoneyUnit.BTC),
+                Immature = Money.Zero,
+                Total = new Money(paidAmount, MoneyUnit.BTC),
+            }));
+
+        DerivationStrategyBase directDerivationStrategy =
+            network.DerivationStrategyFactory.CreateDirectDerivationStrategy(bitcoinWalletProvider
+                .GetMasterPublicKey());
+
+        KeyPath keyPath = new KeyPath("1");
+
+        mockHttpMessageHandler.Expect($"http://*/v1/cryptos/*/addresses/*/utxos")
+            .Respond("application/json",
+                network.Serializer.ToString(new UTXOChanges
+                {
+                    Unconfirmed = new UTXOChange(),
+                    DerivationStrategy =
+                        directDerivationStrategy,
+                    Confirmed = new UTXOChange()
+                    {
+                        UTXOs = new List<UTXO>()
+                        {
+                            new UTXO()
+                            {
+                                Value = new Money(paidAmount / 2, MoneyUnit.BTC),
+                                KeyPath = keyPath,
+                                Confirmations = confirmationCount,
+                                Outpoint = new OutPoint(uint256.Zero, 0),
+                                ScriptPubKey = directDerivationStrategy.GetDerivation(keyPath).ScriptPubKey
+                            },
+                            new UTXO()
+                            {
+                                Value = new Money(paidAmount / 2, MoneyUnit.BTC),
+                                KeyPath = keyPath,
+                                Confirmations = confirmationCount,
+                                Outpoint = new OutPoint(uint256.One, 1),
+                                ScriptPubKey = directDerivationStrategy.GetDerivation(keyPath).ScriptPubKey
+                            },
+                        }
+                    }
+                }));
+
+        await harness.Bus.Publish(new NewBitcoinBlockEvent());
+
+        await Task.Delay(2000);
+
+        mockHttpMessageHandler.VerifyNoOutstandingExpectation();
+        mockHttpMessageHandler.ResetExpectations();
+    }
+
 }

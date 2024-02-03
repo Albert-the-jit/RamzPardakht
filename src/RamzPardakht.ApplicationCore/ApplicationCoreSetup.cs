@@ -8,7 +8,7 @@ public static class ApplicationCoreSetup
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        services.AddScoped<IBitcoinWalletProvider, BitcoinWalletProvider>();
+        services.AddSingleton<IBitcoinWalletProvider, BitcoinWalletProvider>();
         return services;
     }
 }

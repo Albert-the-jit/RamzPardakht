@@ -2,6 +2,7 @@
 using System.Text.Json.Serialization;
 using Asp.Versioning;
 using Gridify;
+using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
@@ -19,6 +20,7 @@ using RamzPardakht.Infrastructure;
 using RamzPardakht.Infrastructure.DbContexts;
 using RamzPardakht.WebApi.BackgroundServices;
 using RamzPardakht.WebApi.Common;
+using RamzPardakht.WebApi.Consumers;
 using RamzPardakht.WebApi.Hubs;
 using Serilog;
 using TypedSignalR.Client.DevTools;
@@ -38,7 +40,9 @@ public class Startup
     {
         GridifyGlobalConfiguration.EnableEntityFrameworkCompatibilityLayer();
 
-        services.AddHostedService<BitcoinTransactionListener>();
+        services.AddHttpClient<PaymentStatusChangedConsumer>();
+
+        services.AddHostedService<BitcoinNewBlockListener>();
 
         services.AddScoped<Mapper>();
 
@@ -66,6 +70,15 @@ public class Startup
             })
             .AddJsonOptions(options =>
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
+        services.AddMassTransit(x =>
+        {
+            var entryAssembly = Assembly.GetEntryAssembly();
+
+            x.AddConsumers(entryAssembly);
+
+            x.UsingInMemory((context, cfg) => { cfg.ConfigureEndpoints(context); });
+        });
 
         services.AddSignalR();
 

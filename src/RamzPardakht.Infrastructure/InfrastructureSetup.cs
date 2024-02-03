@@ -22,6 +22,7 @@ public static class InfrastructureSetup
         services.AddRefitClient<ICoinGateExchangeService>()
             .ConfigureHttpClient(client => client.BaseAddress = new Uri("https://api.coingate.com/v2"));
 
+
         services.AddHttpClient(nameof(ExplorerClient));
 
 

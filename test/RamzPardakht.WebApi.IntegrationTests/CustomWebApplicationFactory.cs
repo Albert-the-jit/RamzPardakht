@@ -1,4 +1,4 @@
-﻿using System.Net;
+﻿using MassTransit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -6,12 +6,15 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Time.Testing;
 using Moq;
 using NBXplorer;
 using RamzPardakht.ApplicationCore.Contracts;
 using RamzPardakht.ApplicationCore.Entities;
 using RamzPardakht.Infrastructure.DbContexts;
 using RamzPardakht.Infrastructure.Services;
+using RamzPardakht.WebApi.BackgroundServices;
 using RichardSzalay.MockHttp;
 
 namespace RamzPardakht.WebApi.IntegrationTests;
@@ -24,10 +27,25 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
         builder.UseEnvironment("Development");
         builder.ConfigureServices(services =>
         {
+            services.Remove(services.First(serviceDescriptor => serviceDescriptor.ServiceType == typeof(TimeProvider)));
+
+            var fakeTimeProvider = new FakeTimeProvider(DateTimeOffset.Now) { AutoAdvanceAmount = TimeSpan.FromMilliseconds(1) };
+            services.AddSingleton<TimeProvider>(fakeTimeProvider);
+            services.AddSingleton(fakeTimeProvider);
             var emailSenderMock = new Mock<IEmailSender<User>>();
 
             services.AddTransient(_ => emailSenderMock);
+            services.AddMassTransitTestHarness(x =>
+            {
+                var entryAssembly = typeof(Program).Assembly;
+
+                x.AddConsumers(entryAssembly);
+            });
+
             services.AddTransient<IEmailSender<User>>(_ => emailSenderMock.Object);
+            ServiceDescriptor? bitcoinNewBlockListener = services.FirstOrDefault(x=>x.ServiceType == typeof(IHostedService) && x.ImplementationType == typeof(BitcoinNewBlockListener));
+            if (bitcoinNewBlockListener is not null)
+                services.Remove(bitcoinNewBlockListener);
 
             var coinGateMock = new Mock<ICoinGateExchangeService>();
 
@@ -37,24 +55,15 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             services.AddTransient(_ => coinGateMock);
             services.AddTransient<ICoinGateExchangeService>(_ => coinGateMock.Object);
 
-            var mockHttp = new MockHttpMessageHandler();
+            var httpMocks = new Dictionary<string, MockHttpMessageHandler>();
 
-            mockHttp.When($"http://*/v1/cryptos/*/derivations/*")
-                .Respond(message =>
-                {
-                    var x = new HttpResponseMessage(HttpStatusCode.OK);
-                    x.Content.Headers.ContentLength = 0;
-                    return x;
-                });
+            var explorerClientMock = new MockHttpMessageHandler();
 
-            mockHttp.When($"http://*/v1/cryptos/*/events?limit=30&longPolling=True")
-                .Respond("application/json", "[]");
-            mockHttp.When($"http://*/v1/cryptos/*/events?limit=30&longPolling=True&lastEventId=1")
-                .Respond("application/json", "[]");
+            services.AddHttpClient(nameof(ExplorerClient)).ConfigurePrimaryHttpMessageHandler(() => explorerClientMock);
+            httpMocks.Add(nameof(ExplorerClient),explorerClientMock);
 
-            services.AddTransient(_ => mockHttp);
+            services.AddTransient<Dictionary<string, MockHttpMessageHandler>>(_ => httpMocks);
 
-            services.AddHttpClient(nameof(ExplorerClient)).ConfigurePrimaryHttpMessageHandler(() => mockHttp);
             #region remove Ef and setup sqlite
 
             var descriptor = services.SingleOrDefault(

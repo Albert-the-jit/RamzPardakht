@@ -71,7 +71,9 @@ Scenario: Successful payment creation
 
     When "person 1" use "test-token" access token and inquiry the "person 1" created payment info
     Then the "person 1" should receive a success message confirming success
-    And the "person 1" response body should contain the created payment RefId with "New" Status and details
+    And the "person 1" response body should contain the created payment RefId with "New" Status and following details
+    | Currency    | SelectedCurrencyAmount | PaidAmount |
+    | NotSelected | 0                      | 0          |
 
     When Unauthorized user "person 10" send request to get initial info of "person 1" payment
     Then the "person 10" response body of "person 1" payment should contain "test-token" access token name and "NotSelected" as currency and valid currency amount conversion
@@ -97,6 +99,7 @@ Scenario: Successful payment creation
     When Unauthorized user "person 10" connect and listen for "person 1" payment notification
     And Unauthorized user "person 10" has been broadcast transaction to "person 1" payment address in "BTC" blockchain with "1" confirmation and "250" as payment amount
     Then Unauthorized user "person 10" should receive notification for partially paid payment of "person 1"
+    And user "person 1" should receive notification by webhook for changed status to "Pending"
 
     When Unauthorized user "person 10" send request to get final info of "person 1" payment
     Then the "person 10" response body of "person 1" payment should contain "BTC" currency and valid address and valid amount and "250" paid amount and "Pending" status
@@ -106,3 +109,17 @@ Scenario: Successful payment creation
 
     When Unauthorized user "person 10" send request to get final info of "person 1" payment
     Then the "person 10" response body of "person 1" payment should contain "BTC" currency and valid address and valid amount and "500" paid amount and "Pending" status
+
+    When after user "person 1" payment paid by "person 10" and is expired and confirmed for "5" time
+    And "person 1" use "test-token" access token and inquiry the "person 1" created payment info
+    Then the "person 1" should receive a success message confirming success
+    And the "person 1" response body should contain the created payment RefId with "Pending" Status and following details
+      | Currency | SelectedCurrencyAmount | PaidAmount |
+      | BTC      | 500                    | 500        |
+
+    When after user "person 1" payment paid by "person 10" and is expired and confirmed for "6" time
+    And "person 1" use "test-token" access token and inquiry the "person 1" created payment info
+    Then the "person 1" should receive a success message confirming success
+    And the "person 1" response body should contain the created payment RefId with "Paid" Status and following details
+      | Currency | SelectedCurrencyAmount | PaidAmount |
+      | BTC      | 500                    | 500        |

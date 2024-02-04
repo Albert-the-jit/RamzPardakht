@@ -43,7 +43,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             });
 
             services.AddTransient<IEmailSender<User>>(_ => emailSenderMock.Object);
-            ServiceDescriptor? bitcoinNewBlockListener = services.FirstOrDefault(x=>x.ServiceType == typeof(IHostedService) && x.ImplementationType == typeof(BitcoinNewBlockListener));
+            ServiceDescriptor? bitcoinNewBlockListener = services.FirstOrDefault(x => x.ServiceType == typeof(IHostedService) && x.ImplementationType == typeof(BitcoinNewBlockListener));
             if (bitcoinNewBlockListener is not null)
                 services.Remove(bitcoinNewBlockListener);
 
@@ -60,7 +60,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             var explorerClientMock = new MockHttpMessageHandler();
 
             services.AddHttpClient(nameof(ExplorerClient)).ConfigurePrimaryHttpMessageHandler(() => explorerClientMock);
-            httpMocks.Add(nameof(ExplorerClient),explorerClientMock);
+            httpMocks.Add(nameof(ExplorerClient), explorerClientMock);
 
             services.AddTransient<Dictionary<string, MockHttpMessageHandler>>(_ => httpMocks);
 

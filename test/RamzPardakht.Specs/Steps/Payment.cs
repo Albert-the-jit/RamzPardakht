@@ -87,7 +87,7 @@ public class Payment
     [Then(@"the ""(.*)"" response body should contain the created payment RefId with ""(.*)"" Status and following details")]
     public async Task ThenTheResponseBodyShouldContainTheCreatedPaymentRefIdWithStatusAndFollowingDetails(string p0, Status @new, Table table)
     {
-        var expectedResponse= table.CreateInstance<PaymentInquiryResponseModel>();
+        var expectedResponse = table.CreateInstance<PaymentInquiryResponseModel>();
 
         var paymentCreationResponseModel = _scenarioContext.Get<PaymentCreationResponseModel>($"{p0}:{nameof(PaymentCreationResponseModel)}");
 
@@ -309,7 +309,7 @@ public class Payment
 
         var scopedServices = scope.ServiceProvider;
         var mockHttpMessageHandlers = scopedServices.GetRequiredService<Dictionary<string, MockHttpMessageHandler>>();
-        var mockHttpMessageHandler  = mockHttpMessageHandlers.TryGet(nameof(ExplorerClient));
+        var mockHttpMessageHandler = mockHttpMessageHandlers.TryGet(nameof(ExplorerClient));
 
         mockHttpMessageHandler.Expect($"http://*/v1/cryptos/*/addresses/*/balance")
             .Respond("application/json", network.Serializer.ToString(new GetBalanceResponse
@@ -381,7 +381,7 @@ public class Payment
 
         var fakeTimeProvider = _applicationFactory.Services.GetRequiredService<FakeTimeProvider>();
         // Set the current UTC time
-        if(fakeTimeProvider.GetUtcNow() < paymentCreationResponseModel.ExpireOn.AddMinutes(5))
+        if (fakeTimeProvider.GetUtcNow() < paymentCreationResponseModel.ExpireOn.AddMinutes(5))
             fakeTimeProvider.SetUtcNow(paymentCreationResponseModel.ExpireOn.AddMinutes(5));
 
         var harness = _applicationFactory.Services.GetRequiredService<ITestHarness>();

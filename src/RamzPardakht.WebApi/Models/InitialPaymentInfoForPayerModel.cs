@@ -13,6 +13,7 @@ public class InitialPaymentInfoForPayerModel
 
     public Currency Currency { get; set; }
     public string? PayerEmail { get; set; }
+    public DateTimeOffset ExpireOn { get; set; }
 
 }
 

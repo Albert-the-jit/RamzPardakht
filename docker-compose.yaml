@@ -76,7 +76,7 @@ services:
       - "bitcoin_datadir:/root/.bitcoin"
     links:
       - bitcoind
-      - nbxplorer-postgres
+      - postgres
 volumes:
   nbxplorer_datadir:
     driver: local

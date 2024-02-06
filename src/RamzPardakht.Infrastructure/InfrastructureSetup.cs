@@ -48,8 +48,8 @@ public static class InfrastructureSetup
                 "Postgresql" => options.UseNpgsql(
                     configuration.GetConnectionString("DefaultConnection")!),
 
-                _ => options.UseSqlite($"Data Source=./mydb.db;",
-                    x => x.MigrationsAssembly("RamzPardakht.SqliteMigrations")),
+                _ => options.UseNpgsql(
+                    configuration.GetConnectionString("DefaultConnection")!),
             };
         });
         services.AddDbContextPool<IProjectDbContext, ProjectDbContext>((serviceProvider, optionsBuilder) =>

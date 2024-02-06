@@ -59,7 +59,7 @@ services:
       - "32838:32838"
     environment:
       NBXPLORER_NETWORK: testnet
-      NBXPLORER_BTCRESCAN: true
+      NBXPLORER_BTCRESCAN: "true"
       NBXPLORER_BTCSTARTHEIGHT: 10
       NBXPLORER_BIND: 0.0.0.0:32838
       NBXPLORER_TRIMEVENTS: 10000

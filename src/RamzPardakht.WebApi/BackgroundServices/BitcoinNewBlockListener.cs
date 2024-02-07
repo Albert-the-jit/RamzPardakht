@@ -49,12 +49,12 @@ public class BitcoinNewBlockListener : BackgroundService
         var network = new NBXplorerNetworkProvider(ChainName.Testnet).GetBTC();
 
         var httpClient = _httpClientFactory.CreateClient(nameof(ExplorerClient));
-        ExplorerClient client = new ExplorerClient(network,new Uri("http://localhost:32838"));
+        ExplorerClient client = new ExplorerClient(network, new Uri("http://localhost:32838"));
         client.SetClient(httpClient);
 
         var userDerivationScheme =
             network.DerivationStrategyFactory.CreateDirectDerivationStrategy(
-                _bitcoinWalletProvider.GetMasterPublicKey(),new DerivationStrategyOptions()
+                _bitcoinWalletProvider.GetMasterPublicKey(), new DerivationStrategyOptions()
                 {
                     ScriptPubKeyType = ScriptPubKeyType.Segwit
                 });

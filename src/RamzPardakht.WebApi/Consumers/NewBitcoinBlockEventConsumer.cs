@@ -39,7 +39,7 @@ public class NewBitcoinBlockEventConsumer : IConsumer<NewBitcoinBlockEvent>
         _network = new NBXplorerNetworkProvider(ChainName.Testnet).GetBTC();
 
         var httpClient = httpClientFactory.CreateClient(nameof(ExplorerClient));
-        ExplorerClient client = new ExplorerClient(_network,new Uri("http://localhost:32838"));
+        ExplorerClient client = new ExplorerClient(_network, new Uri("http://localhost:32838"));
         client.SetClient(httpClient);
 
         _explorerClient = client;

@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NBitcoin;
+using NBXplorer;
+using NBXplorer.Models;
 using RamzPardakht.ApplicationCore.Contracts;
 using RamzPardakht.ApplicationCore.Entities;
 using RamzPardakht.WebApi.Common;
@@ -27,10 +29,13 @@ public class PaymentController : ControllerBase
     private readonly Mapper _mapper;
     private readonly IExchangeService _exchangeService;
     private readonly IBitcoinWalletProvider _bitcoinWalletProvider;
+    private readonly ExplorerClient _explorerClient;
+    private readonly NBXplorerNetwork _network;
 
     public PaymentController(
         TimeProvider timeProvider,
         IProjectDbContext projectDbContext,
+        IHttpClientFactory httpClientFactory,
         Mapper mapper,
         IExchangeService exchangeService,
         IBitcoinWalletProvider bitcoinWalletProvider)
@@ -40,6 +45,14 @@ public class PaymentController : ControllerBase
         _mapper = mapper;
         _exchangeService = exchangeService;
         _bitcoinWalletProvider = bitcoinWalletProvider;
+
+        _network = new NBXplorerNetworkProvider(ChainName.Testnet).GetBTC();
+
+        var httpClient = httpClientFactory.CreateClient(nameof(ExplorerClient));
+        ExplorerClient client = new ExplorerClient(_network,new Uri("http://localhost:32838"));
+        client.SetClient(httpClient);
+
+        _explorerClient = client;
     }
 
 
@@ -199,7 +212,12 @@ public class PaymentController : ControllerBase
             };
             payment.Wallet = wallet;
 
-            await _projectDbContext.SaveChangesAsync(cancellationToken);
+            var addressTrackedSource =
+                new AddressTrackedSource(BitcoinAddress.Create(payment.Wallet.Address, _network.NBitcoinNetwork));
+
+            await _explorerClient.TrackAsync(addressTrackedSource, cancellation: cancellationToken);
+
+            await _projectDbContext.SaveChangesAsync(CancellationToken.None);
 
             return new PaymentInfoForPayerModel
             {

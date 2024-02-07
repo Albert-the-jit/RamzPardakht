@@ -922,7 +922,7 @@
         "type": "object",
         "properties": {
           "usdAmount": {
-            "minimum": 1,
+            "minimum": 0.01,
             "type": "number",
             "format": "double"
           },

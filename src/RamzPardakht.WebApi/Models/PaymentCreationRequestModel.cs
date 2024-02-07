@@ -9,7 +9,7 @@ namespace RamzPardakht.WebApi.Models;
 
 public class PaymentCreationRequestModel
 {
-    [Range(1, (double)decimal.MaxValue, ErrorMessage = "Only_Positive_Number_Allowed")]
+    [Range(0.01, (double)decimal.MaxValue, ErrorMessage = "Only_Positive_Number_Allowed")]
     public decimal UsdAmount { get; set; }
 
     [HttpUrl]

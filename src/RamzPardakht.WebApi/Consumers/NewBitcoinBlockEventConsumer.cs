@@ -39,7 +39,7 @@ public class NewBitcoinBlockEventConsumer : IConsumer<NewBitcoinBlockEvent>
         _network = new NBXplorerNetworkProvider(ChainName.Testnet).GetBTC();
 
         var httpClient = httpClientFactory.CreateClient(nameof(ExplorerClient));
-        ExplorerClient client = new ExplorerClient(_network);
+        ExplorerClient client = new ExplorerClient(_network,new Uri("http://localhost:32838"));
         client.SetClient(httpClient);
 
         _explorerClient = client;
@@ -55,7 +55,7 @@ public class NewBitcoinBlockEventConsumer : IConsumer<NewBitcoinBlockEvent>
         CancellationToken cancellationToken)
     {
         var payments = await _projectDbContext.Payments.Include(x => x.Wallet)
-            .Where(x => x.ExpireOn > _timeProvider.GetUtcNow())
+            .Where(x => x.ExpireOn > _timeProvider.GetUtcNow().AddMinutes(-10))
             .Where(x => x.Status == Status.New || x.Status == Status.Pending)
             .ToListAsync(cancellationToken: cancellationToken);
 
@@ -101,9 +101,10 @@ public class NewBitcoinBlockEventConsumer : IConsumer<NewBitcoinBlockEvent>
     private async Task CheckPendingPaymentsStatusAndBalance(ConsumeContext<NewBitcoinBlockEvent> context,
         CancellationToken cancellationToken)
     {
-        var payments = await _projectDbContext.Payments.Include(x => x.Wallet)
-            .Where(x => x.Status == Status.Pending)
-            .Where(x => x.ExpireOn < _timeProvider.GetUtcNow())
+        var payments = await _projectDbContext.Payments
+            .Include(x => x.Wallet)
+            .Where(x => x.Status == Status.Pending|| x.Status == Status.UnderPaid)
+            .Where(x => x.ExpireOn > _timeProvider.GetUtcNow().AddMinutes(-20))
             .ToListAsync(cancellationToken: cancellationToken);
 
         foreach (Payment payment in payments)
@@ -127,7 +128,7 @@ public class NewBitcoinBlockEventConsumer : IConsumer<NewBitcoinBlockEvent>
 
             if (confirmedPaidAmount == payment.PaidAmount)
             {
-                payment.Status = payment.PaidAmount <= payment.Amount ? Status.Paid : Status.UnderPaid;
+                payment.Status = payment.PaidAmount >= payment.Amount ? Status.Paid : Status.UnderPaid;
             }
 
             await _projectDbContext.SaveChangesAsync(CancellationToken.None);

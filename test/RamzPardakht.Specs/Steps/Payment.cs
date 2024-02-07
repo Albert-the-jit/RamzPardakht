@@ -194,6 +194,12 @@ public class Payment
             .ReturnsAsync(() =>
                 new ApiResponse<decimal>(new HttpResponseMessage(HttpStatusCode.OK), 100, new RefitSettings()));
 
+        var mockHttpMessageHandlers = scopedServices.GetRequiredService<Dictionary<string, MockHttpMessageHandler>>();
+        var mockHttpMessageHandler = mockHttpMessageHandlers.TryGet(nameof(ExplorerClient));
+
+        mockHttpMessageHandler.When($"http://*/v1/cryptos/*/addresses/*")
+            .Respond(HttpStatusCode.OK);
+
         var paymentCreationResponseModel = _scenarioContext.Get<PaymentCreationResponseModel>($"{p1}:{nameof(PaymentCreationResponseModel)}");
 
         var client = _applicationFactory.CreateClient();
@@ -205,6 +211,9 @@ public class Payment
             $"v1.0/Payment/{paymentCreationResponseModel.Code}", jsonSerializerOptions);
 
         _scenarioContext.Set(result, $"{p0}:{nameof(PaymentInfoForPayerModel)}");
+
+        mockHttpMessageHandler.VerifyNoOutstandingExpectation();
+        mockHttpMessageHandler.ResetExpectations();
     }
 
     [Then(@"the ""(.*)"" response body of ""(.*)"" payment should contain ""(.*)"" currency and valid address and valid amount and ""(.*)"" paid amount and ""(.*)"" status")]

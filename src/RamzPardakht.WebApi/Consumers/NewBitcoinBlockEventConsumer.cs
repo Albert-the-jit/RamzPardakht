@@ -55,7 +55,7 @@ public class NewBitcoinBlockEventConsumer : IConsumer<NewBitcoinBlockEvent>
         CancellationToken cancellationToken)
     {
         var payments = await _projectDbContext.Payments.Include(x => x.Wallet)
-            .Where(x => x.ExpireOn > _timeProvider.GetUtcNow().AddMinutes(-10))
+            .Where(x => x.ExpireOn > _timeProvider.GetUtcNow())
             .Where(x => x.Status == Status.New || x.Status == Status.Pending)
             .ToListAsync(cancellationToken: cancellationToken);
 
@@ -103,8 +103,8 @@ public class NewBitcoinBlockEventConsumer : IConsumer<NewBitcoinBlockEvent>
     {
         var payments = await _projectDbContext.Payments
             .Include(x => x.Wallet)
-            .Where(x => x.Status == Status.Pending|| x.Status == Status.UnderPaid)
-            .Where(x => x.ExpireOn > _timeProvider.GetUtcNow().AddMinutes(-20))
+            .Where(x => x.Status == Status.Pending)
+            .Where(x => x.ExpireOn > _timeProvider.GetUtcNow().AddMinutes(-60))
             .ToListAsync(cancellationToken: cancellationToken);
 
         foreach (Payment payment in payments)

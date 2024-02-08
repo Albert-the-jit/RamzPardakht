@@ -93,6 +93,7 @@ public class PayoutController : ControllerBase
             Amount = model.Amount,
             Status = PayoutStatus.Unconfirmed,
             ToAddress = model.ToAddress,
+            UserId = User.GetUserId(),
 
         };
         foreach (Payment payment in partiallySettled)

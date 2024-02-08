@@ -270,9 +270,14 @@ namespace RamzPardakht.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedByTokenId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Payouts");
                 });
@@ -613,7 +618,15 @@ namespace RamzPardakht.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("CreatedByTokenId");
 
+                    b.HasOne("RamzPardakht.ApplicationCore.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("CreatedByToken");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("RamzPardakht.ApplicationCore.Entities.PayoutPayment", b =>

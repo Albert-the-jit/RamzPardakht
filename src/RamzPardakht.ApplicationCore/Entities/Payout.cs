@@ -12,6 +12,9 @@ public class Payout : ITimeable, ISoftDeletable
     public string ToAddress { get; set; }
     public string TransactionId { get; set; }
 
+    public int UserId { get; set; }
+    public User User { get; set; }
+
     public PayoutStatus Status { get; set; } = PayoutStatus.Unconfirmed;
 
     public List<PayoutPayment> PayoutPayments { get; set; } = new();

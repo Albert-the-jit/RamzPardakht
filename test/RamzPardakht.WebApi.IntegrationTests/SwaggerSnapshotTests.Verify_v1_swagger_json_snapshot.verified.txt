@@ -474,6 +474,39 @@
         }
       }
     },
+    "/v1/Balance": {
+      "get": {
+        "tags": [
+          "Balance"
+        ],
+        "summary": "",
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserBalanceInfoResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/Payment": {
       "post": {
         "tags": [
@@ -1331,6 +1364,19 @@
           },
           "isMachineRemembered": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserBalanceInfoResponse": {
+        "type": "object",
+        "properties": {
+          "currency": {
+            "$ref": "#/components/schemas/Currency"
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
           }
         },
         "additionalProperties": false

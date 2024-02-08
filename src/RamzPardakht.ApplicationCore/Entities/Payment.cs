@@ -31,6 +31,7 @@ public class Payment : ITimeable, ISoftDeletable
     public int UserId { get; set; }
     public User User { get; set; }
 
+    public List<PayoutPayment> PaymentPayouts { get; set; } = new();
     public ReferenceToken CreatedByToken { get; set; }
 
     public int? CreatedById { get; set; }

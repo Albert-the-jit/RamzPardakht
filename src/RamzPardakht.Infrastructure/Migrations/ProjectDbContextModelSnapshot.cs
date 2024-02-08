@@ -212,6 +212,115 @@ namespace RamzPardakht.Infrastructure.Migrations
                     b.ToTable("Payments");
                 });
 
+            modelBuilder.Entity("RamzPardakht.ApplicationCore.Entities.Payout", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("numeric");
+
+                    b.Property<int?>("CreatedById")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("CreatedByTokenId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Currency")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("DeletedById")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("DeletedByTokenId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset?>("DeletedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<int?>("ModifiedById")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("ModifiedByTokenId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset?>("ModifiedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal>("NetworkFee")
+                        .HasColumnType("numeric");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ToAddress")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("TransactionId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedByTokenId");
+
+                    b.ToTable("Payouts");
+                });
+
+            modelBuilder.Entity("RamzPardakht.ApplicationCore.Entities.PayoutPayment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("numeric");
+
+                    b.Property<int?>("CreatedById")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("CreatedByTokenId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("ModifiedById")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("ModifiedByTokenId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset?>("ModifiedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("PaymentId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PayoutId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PaymentId");
+
+                    b.HasIndex("PayoutId");
+
+                    b.ToTable("PayoutPayments");
+                });
+
             modelBuilder.Entity("RamzPardakht.ApplicationCore.Entities.ReferenceToken", b =>
                 {
                     b.Property<Guid>("Id")
@@ -498,6 +607,34 @@ namespace RamzPardakht.Infrastructure.Migrations
                     b.Navigation("Wallet");
                 });
 
+            modelBuilder.Entity("RamzPardakht.ApplicationCore.Entities.Payout", b =>
+                {
+                    b.HasOne("RamzPardakht.ApplicationCore.Entities.ReferenceToken", "CreatedByToken")
+                        .WithMany()
+                        .HasForeignKey("CreatedByTokenId");
+
+                    b.Navigation("CreatedByToken");
+                });
+
+            modelBuilder.Entity("RamzPardakht.ApplicationCore.Entities.PayoutPayment", b =>
+                {
+                    b.HasOne("RamzPardakht.ApplicationCore.Entities.Payment", "Payment")
+                        .WithMany("PaymentPayouts")
+                        .HasForeignKey("PaymentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RamzPardakht.ApplicationCore.Entities.Payout", "Payout")
+                        .WithMany("PayoutPayments")
+                        .HasForeignKey("PayoutId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Payment");
+
+                    b.Navigation("Payout");
+                });
+
             modelBuilder.Entity("RamzPardakht.ApplicationCore.Entities.ReferenceToken", b =>
                 {
                     b.HasOne("RamzPardakht.ApplicationCore.Entities.User", "User")
@@ -526,6 +663,16 @@ namespace RamzPardakht.Infrastructure.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("RamzPardakht.ApplicationCore.Entities.Payment", b =>
+                {
+                    b.Navigation("PaymentPayouts");
+                });
+
+            modelBuilder.Entity("RamzPardakht.ApplicationCore.Entities.Payout", b =>
+                {
+                    b.Navigation("PayoutPayments");
                 });
 
             modelBuilder.Entity("RamzPardakht.ApplicationCore.Entities.Role", b =>

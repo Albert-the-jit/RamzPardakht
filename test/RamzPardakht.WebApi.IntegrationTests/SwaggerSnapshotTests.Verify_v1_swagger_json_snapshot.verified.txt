@@ -681,6 +681,46 @@
         }
       }
     },
+    "/v1/Payout": {
+      "post": {
+        "tags": [
+          "Payout"
+        ],
+        "summary": "create payout",
+        "requestBody": {
+          "description": "dont fill id param",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PayoutCreationRequestModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PayoutCreationResponseModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/WeatherForecast": {
       "get": {
         "tags": [
@@ -1079,6 +1119,53 @@
             "type": "number",
             "description": "paid amount in selected currency",
             "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PayoutCreationRequestModel": {
+        "type": "object",
+        "properties": {
+          "currency": {
+            "$ref": "#/components/schemas/Currency"
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
+          },
+          "toAddress": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PayoutCreationResponseModel": {
+        "type": "object",
+        "properties": {
+          "currency": {
+            "$ref": "#/components/schemas/Currency"
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
+          },
+          "networkFee": {
+            "type": "number",
+            "format": "double"
+          },
+          "toAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "transactionId": {
+            "type": "string",
+            "nullable": true
+          },
+          "amountAfterNetworkFee": {
+            "type": "number",
+            "format": "double",
+            "readOnly": true
           }
         },
         "additionalProperties": false

@@ -31,5 +31,21 @@ public class BitcoinWalletProvider : IBitcoinWalletProvider
         return masterKey.Neuter();
     }
 
+    public Key GetPrivateKeyById(WalletVersion version,int uniqueId)
+    {
+        var mnemonic =
+            new Mnemonic(
+                "notable dice nurse december correct spy indicate chaos garment gate require there match transfer vast casino market degree brand puzzle news dragon summer weather");
+        var masterKey = mnemonic.DeriveExtKey("my master password");
+
+        var versionExtKey = masterKey.Derive((int)version, hardened: true);
+
+        var extKey = versionExtKey.Derive(uniqueId, hardened: true);
+
+        return extKey.PrivateKey;
+
+
+    }
+
     public WalletVersion NewWalletsVersion() => WalletVersion.V1;
 }

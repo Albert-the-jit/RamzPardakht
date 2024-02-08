@@ -23,6 +23,8 @@
     <ItemGroup>
       <Compile Remove="Migrations\20240125190045_Wallet.cs" />
       <Compile Remove="Migrations\20240125190045_Wallet.Designer.cs" />
+      <Compile Remove="Migrations\20240205201231_Payout.cs" />
+      <Compile Remove="Migrations\20240205201231_Payout.Designer.cs" />
     </ItemGroup>
 
 </Project>

@@ -22,6 +22,8 @@ public class ProjectDbContext : IdentityDbContext<User, Role, int, IdentityUserC
 
     public DbSet<ReferenceToken> ReferenceTokens { get; set; }
     public DbSet<Payment> Payments { get; set; }
+    public DbSet<Payout> Payouts { get; set; }
+    public DbSet<PayoutPayment> PayoutPayments { get; set; }
     public DbSet<Wallet> Wallets { get; set; }
 
 
@@ -59,6 +61,11 @@ public class ProjectDbContext : IdentityDbContext<User, Role, int, IdentityUserC
             // use the DateTimeOffsetToBinaryConverter
             // Based on: https://github.com/aspnet/EntityFrameworkCore/issues/10784#issuecomment-415769754
             // This only supports millisecond precision, but should be sufficient for most use cases.
+
+            var converter = new ValueConverter<decimal, double>(
+                v => (double)v,
+                v => (decimal)v
+            );
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
                 var properties = entityType.ClrType.GetProperties().Where(p => p.PropertyType == typeof(DateTimeOffset)
@@ -70,6 +77,18 @@ public class ProjectDbContext : IdentityDbContext<User, Role, int, IdentityUserC
                         .Entity(entityType.Name)
                         .Property(property.Name)
                         .HasConversion(new DateTimeOffsetToBinaryConverter());
+                }
+
+                properties = entityType.ClrType.GetProperties().Where(p => p.PropertyType == typeof(decimal)
+                                                                           || p.PropertyType ==
+                                                                           typeof(decimal?));
+                foreach (var property in properties.Where(x => !x.GetCustomAttributes<NotMappedAttribute>().Any()))
+                {
+                    modelBuilder
+                        .Entity(entityType.Name)
+                        .Property(property.Name)
+                        .HasConversion<double>()
+                        .HasColumnType("NUMERIC");
                 }
             }
         }

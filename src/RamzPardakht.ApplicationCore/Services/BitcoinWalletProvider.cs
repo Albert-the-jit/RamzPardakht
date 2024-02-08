@@ -31,7 +31,7 @@ public class BitcoinWalletProvider : IBitcoinWalletProvider
         return masterKey.Neuter();
     }
 
-    public Key GetPrivateKeyById(WalletVersion version,int uniqueId)
+    public Key GetPrivateKeyById(WalletVersion version, int uniqueId)
     {
         var mnemonic =
             new Mnemonic(

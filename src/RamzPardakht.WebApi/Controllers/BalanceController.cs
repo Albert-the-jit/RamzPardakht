@@ -53,7 +53,7 @@ public class BalanceController : ControllerBase
 
             result.Add(new UserBalanceInfoResponse()
             {
-                Amount = @in- @out,
+                Amount = @in - @out,
                 Currency = currency
             });
         }

@@ -69,7 +69,7 @@ public class PayoutController : ControllerBase
         }
         catch (Exception e)
         {
-            ModelState.AddModelError<PayoutCreationRequestModel>(requestModel=> requestModel.ToAddress,_stringLocalizer["InvalidWalletAddress"]);
+            ModelState.AddModelError<PayoutCreationRequestModel>(requestModel => requestModel.ToAddress, _stringLocalizer["InvalidWalletAddress"]);
             return ValidationProblem();
         }
 
@@ -114,7 +114,10 @@ public class PayoutController : ControllerBase
 
                 var paymentPayout = new PayoutPayment()
                 {
-                    Payout = payout, Payment = payment, Amount = paymentPayoutAmount, PaymentId = payment.Id,
+                    Payout = payout,
+                    Payment = payment,
+                    Amount = paymentPayoutAmount,
+                    PaymentId = payment.Id,
 
                 };
                 payout.PayoutPayments.Add(paymentPayout);
@@ -158,7 +161,10 @@ public class PayoutController : ControllerBase
 
                     var paymentPayout = new PayoutPayment()
                     {
-                        Payout = payout, Payment = payment, Amount = paymentPayoutAmount, PaymentId = payment.Id,
+                        Payout = payout,
+                        Payment = payment,
+                        Amount = paymentPayoutAmount,
+                        PaymentId = payment.Id,
 
                     };
                     payout.PayoutPayments.Add(paymentPayout);
@@ -252,12 +258,12 @@ public class PayoutController : ControllerBase
         }
         else if (finalRemainingPayoutAmount > 0)
         {
-            ModelState.AddModelError<PayoutCreationRequestModel>(requestModel => requestModel.Amount,_stringLocalizer["NotEnoughMoney"]);
+            ModelState.AddModelError<PayoutCreationRequestModel>(requestModel => requestModel.Amount, _stringLocalizer["NotEnoughMoney"]);
             return ValidationProblem();
         }
         else
         {
-            ModelState.AddModelError<PayoutCreationRequestModel>(requestModel => requestModel.Amount,_stringLocalizer["NotEnoughMoney"]);
+            ModelState.AddModelError<PayoutCreationRequestModel>(requestModel => requestModel.Amount, _stringLocalizer["NotEnoughMoney"]);
             return ValidationProblem();
         }
     }

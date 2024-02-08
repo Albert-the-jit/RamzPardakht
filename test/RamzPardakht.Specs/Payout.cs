@@ -95,7 +95,7 @@ public class Payout
             .Respond("application/json", network.Serializer.ToString(new GetFeeRateResult { FeeRate = new FeeRate(10M), BlockCount = 1 }));
 
         mockHttpMessageHandler.When($"http://*/v1/cryptos/*/transactions").WithQueryString("testMempoolAccept=False")
-            .Respond("application/json", network.Serializer.ToString(new BroadcastResult { Success = true}));
+            .Respond("application/json", network.Serializer.ToString(new BroadcastResult { Success = true }));
 
 
 

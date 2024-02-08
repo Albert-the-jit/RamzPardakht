@@ -215,7 +215,7 @@ public class PaymentController : ControllerBase
             var addressTrackedSource =
                 new AddressTrackedSource(BitcoinAddress.Create(payment.Wallet.Address, _network.NBitcoinNetwork));
 
-            await _explorerClient.TrackAsync(addressTrackedSource, cancellation: cancellationToken);
+            //await _explorerClient.TrackAsync(addressTrackedSource, cancellation: cancellationToken);
 
             await _projectDbContext.SaveChangesAsync(CancellationToken.None);
 

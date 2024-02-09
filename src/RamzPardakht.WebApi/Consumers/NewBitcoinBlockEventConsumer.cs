@@ -49,6 +49,7 @@ public class NewBitcoinBlockEventConsumer : IConsumer<NewBitcoinBlockEvent>
     {
         await CheckNewPaymentsStatusAndBalance(context, context.CancellationToken);
         await CheckPendingPaymentsStatusAndBalance(context, context.CancellationToken);
+        await CheckUnconfirmedPayoutTransactions(context.CancellationToken);
     }
 
     private async Task CheckNewPaymentsStatusAndBalance(ConsumeContext<NewBitcoinBlockEvent> context,
@@ -142,6 +143,29 @@ public class NewBitcoinBlockEventConsumer : IConsumer<NewBitcoinBlockEvent>
                         ClientRefId = payment.ClientRefId,
                         WebhookUrl = payment.WebhookUrl,
                     }, cancellationToken);
+
+        }
+    }
+
+    private async Task CheckUnconfirmedPayoutTransactions(CancellationToken cancellationToken)
+    {
+        var payouts = await _projectDbContext.Payouts
+            .Where(x => x.Status == PayoutStatus.Unconfirmed)
+            .ToListAsync(cancellationToken: cancellationToken);
+
+        foreach (Payout payout in payouts)
+        {
+            var transactionResult =
+                await _explorerClient.GetTransactionAsync(new uint256(payout.TransactionId), cancellationToken);
+
+
+            if (transactionResult is null)
+                payout.Status = PayoutStatus.Failed;
+            else if (transactionResult.Confirmations >= 6)
+                payout.Status = PayoutStatus.Done;
+
+
+            await _projectDbContext.SaveChangesAsync(CancellationToken.None);
 
         }
     }

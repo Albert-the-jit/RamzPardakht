@@ -227,7 +227,6 @@ public class Payment
 
         paymentInfoForPayerModel.Currency.Should().Be(currency);
         paymentInfoForPayerModel.Amount.Should().Be(paymentCreationRequestModel.UsdAmount * 100);
-        paymentInfoForPayerModel.SuccessUrl.Should().Be(paymentCreationRequestModel.SuccessUrl);
         paymentInfoForPayerModel.ClientRefId.Should().Be(paymentCreationRequestModel.ClientRefId);
         paymentInfoForPayerModel.RefId.Should().Be(paymentCreationResponseModel.RefId);
         paymentInfoForPayerModel.Status.Should().Be(status);

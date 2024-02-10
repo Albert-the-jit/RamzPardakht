@@ -227,7 +227,7 @@ public class PaymentController : ControllerBase
                 Address = payment.Wallet.Address,
                 Amount = payment.Amount,
                 PaidAmount = 0,
-                SuccessUrl = payment.SuccessUrl,
+                SuccessUrl = $"{Request.Scheme}://{Request.Host.ToUriComponent()}/v1/Payment/Redirect/{payment.Code}",
                 Status = payment.Status,
             };
 
@@ -240,10 +240,40 @@ public class PaymentController : ControllerBase
             Currency = payment.Currency,
             Address = payment.Wallet.Address,
             Amount = payment.Amount,
-            SuccessUrl = payment.SuccessUrl,
+            SuccessUrl = $"{Request.Scheme}://{Request.Host.ToUriComponent()}/v1/Payment/Redirect/{payment.Code}",
             PaidAmount = payment.PaidAmount,
             Status = payment.Status,
         };
     }
 
+    [HttpGet("Redirect/{code:guid}")]
+    [AllowAnonymous]
+    [ApiExplorerSettings(IgnoreApi = true)]
+    public async Task<ActionResult> Redirect(Guid code, [FromQuery] bool isSuccess = true,
+        CancellationToken cancellationToken = default)
+    {
+
+        var payment = await _projectDbContext.Payments
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.Code == code, cancellationToken);
+
+        if (payment is null)
+            return NotFound();
+
+        if (isSuccess == true &&
+            payment.Status == Status.Pending &&
+            payment.PaidAmount >= payment.Amount &&
+            payment.ExpireOn >= _timeProvider.GetUtcNow())
+
+            return Redirect(payment.SuccessUrl);
+
+        if (isSuccess == false &&
+            !string.IsNullOrEmpty(payment.CancelUrl)  &&
+            payment.ExpireOn >= _timeProvider.GetUtcNow().AddMinutes(-5))
+
+            return Redirect(payment.CancelUrl);
+
+        return NotFound();
+
+    }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage line-rate="0.7487437185929648" branch-rate="0.7213114754098361" lines-covered="596" lines-valid="796" branches-covered="88" branches-valid="122" complexity="188" version="0" timestamp="1707402978">
+<coverage line-rate="0.743142144638404" branch-rate="0.7213114754098361" lines-covered="596" lines-valid="802" branches-covered="88" branches-valid="122" complexity="189" version="0" timestamp="1707599300">
   <sources>
     <source>D:\a\RamzPardakht\RamzPardakht\src\</source>
   </sources>
@@ -51,14 +51,14 @@
           <methods>
             <method name=".ctor" signature="()" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="15" hits="2" branch="false" />
-                <line number="17" hits="2" branch="false" />
+                <line number="18" hits="2" branch="false" />
+                <line number="20" hits="2" branch="false" />
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="15" hits="2" branch="false" />
-            <line number="17" hits="2" branch="false" />
+            <line number="18" hits="2" branch="false" />
+            <line number="20" hits="2" branch="false" />
           </lines>
         </class>
         <class name="RamzPardakht.ApplicationCore.Entities.ReferenceToken" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.ApplicationCore\Entities\ReferenceToken.cs" line-rate="1" branch-rate="1" complexity="1">
@@ -971,7 +971,7 @@
         </class>
       </classes>
     </package>
-    <package name="RamzPardakht.WebApi" line-rate="0.8990825688073395" branch-rate="0.7307692307692307" complexity="54">
+    <package name="RamzPardakht.WebApi" line-rate="0.8868778280542986" branch-rate="0.7307692307692307" complexity="55">
       <classes>
         <class name="RamzPardakht.WebApi.BackgroundServices.BitcoinNewBlockListener" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\BackgroundServices\BitcoinNewBlockListener.cs" line-rate="0" branch-rate="1" complexity="1">
           <methods>
@@ -1007,26 +1007,26 @@
           <methods>
             <method name="GetUserId" signature="(System.Security.Claims.ClaimsPrincipal)" line-rate="0.75" branch-rate="0.5" complexity="4">
               <lines>
-                <line number="11" hits="33" branch="false" />
-                <line number="12" hits="33" branch="true" condition-coverage="50% (1/2)" />
+                <line number="11" hits="35" branch="false" />
+                <line number="12" hits="35" branch="true" condition-coverage="50% (1/2)" />
                 <line number="13" hits="0" branch="false" />
-                <line number="14" hits="33" branch="false" />
-                <line number="16" hits="33" branch="true" condition-coverage="50% (1/2)" />
-                <line number="17" hits="33" branch="false" />
+                <line number="14" hits="35" branch="false" />
+                <line number="16" hits="35" branch="true" condition-coverage="50% (1/2)" />
+                <line number="17" hits="35" branch="false" />
                 <line number="18" hits="0" branch="false" />
-                <line number="19" hits="33" branch="false" />
+                <line number="19" hits="35" branch="false" />
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="11" hits="33" branch="false" />
-            <line number="12" hits="33" branch="true" condition-coverage="50% (1/2)" />
+            <line number="11" hits="35" branch="false" />
+            <line number="12" hits="35" branch="true" condition-coverage="50% (1/2)" />
             <line number="13" hits="0" branch="false" />
-            <line number="14" hits="33" branch="false" />
-            <line number="16" hits="33" branch="true" condition-coverage="50% (1/2)" />
-            <line number="17" hits="33" branch="false" />
+            <line number="14" hits="35" branch="false" />
+            <line number="16" hits="35" branch="true" condition-coverage="50% (1/2)" />
+            <line number="17" hits="35" branch="false" />
             <line number="18" hits="0" branch="false" />
-            <line number="19" hits="33" branch="false" />
+            <line number="19" hits="35" branch="false" />
           </lines>
         </class>
         <class name="RamzPardakht.WebApi.Common.HideSignalRHubSpecificationFromSwaggerFilter" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Common\HideSignalRHubSpecificationFromSwaggerFilter.cs" line-rate="1" branch-rate="1" complexity="1">
@@ -1305,6 +1305,28 @@
             <line number="52" hits="9" branch="false" />
             <line number="53" hits="9" branch="false" />
             <line number="54" hits="9" branch="false" />
+          </lines>
+        </class>
+        <class name="RamzPardakht.WebApi.Controllers.BalanceController" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Controllers\BalanceController.cs" line-rate="0" branch-rate="1" complexity="1">
+          <methods>
+            <method name=".ctor" signature="(RamzPardakht.ApplicationCore.Contracts.IProjectDbContext)" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="26" hits="0" branch="false" />
+                <line number="27" hits="0" branch="false" />
+                <line number="28" hits="0" branch="false" />
+                <line number="29" hits="0" branch="false" />
+                <line number="30" hits="0" branch="false" />
+                <line number="31" hits="0" branch="false" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="26" hits="0" branch="false" />
+            <line number="27" hits="0" branch="false" />
+            <line number="28" hits="0" branch="false" />
+            <line number="29" hits="0" branch="false" />
+            <line number="30" hits="0" branch="false" />
+            <line number="31" hits="0" branch="false" />
           </lines>
         </class>
         <class name="RamzPardakht.WebApi.Controllers.PaymentController" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Controllers\PaymentController.cs" line-rate="1" branch-rate="1" complexity="1">

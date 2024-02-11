@@ -268,7 +268,7 @@ public class PaymentController : ControllerBase
             return Redirect(payment.SuccessUrl);
 
         if (isSuccess == false &&
-            !string.IsNullOrEmpty(payment.CancelUrl)  &&
+            !string.IsNullOrEmpty(payment.CancelUrl) &&
             payment.ExpireOn >= _timeProvider.GetUtcNow().AddMinutes(-5))
 
             return Redirect(payment.CancelUrl);

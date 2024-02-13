@@ -1,13 +1,15 @@
 ﻿using System.Net;
 using Asp.Versioning;
+using Gridify;
+using Gridify.EntityFramework;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using NBitcoin;
-using NBXplorer;
-using NBXplorer.Models;
 using RamzPardakht.ApplicationCore.Contracts;
 using RamzPardakht.ApplicationCore.Entities;
+using RamzPardakht.ApplicationCore.Resources;
 using RamzPardakht.WebApi.Common;
 using RamzPardakht.WebApi.Models;
 
@@ -29,32 +31,49 @@ public class PaymentController : ControllerBase
     private readonly Mapper _mapper;
     private readonly IExchangeService _exchangeService;
     private readonly IBitcoinWalletProvider _bitcoinWalletProvider;
-    private readonly ExplorerClient _explorerClient;
-    private readonly NBXplorerNetwork _network;
+    private readonly IStringLocalizer<SharedResource> _stringLocalizer;
 
     public PaymentController(
         TimeProvider timeProvider,
         IProjectDbContext projectDbContext,
-        IHttpClientFactory httpClientFactory,
         Mapper mapper,
         IExchangeService exchangeService,
-        IBitcoinWalletProvider bitcoinWalletProvider)
+        IBitcoinWalletProvider bitcoinWalletProvider,
+        IStringLocalizer<SharedResource> stringLocalizer
+        )
     {
         _timeProvider = timeProvider;
         _projectDbContext = projectDbContext;
         _mapper = mapper;
         _exchangeService = exchangeService;
         _bitcoinWalletProvider = bitcoinWalletProvider;
-
-        _network = new NBXplorerNetworkProvider(ChainName.Testnet).GetBTC();
-
-        var httpClient = httpClientFactory.CreateClient(nameof(ExplorerClient));
-        ExplorerClient client = new ExplorerClient(_network, new Uri("http://localhost:32838"));
-        client.SetClient(httpClient);
-
-        _explorerClient = client;
+        _stringLocalizer = stringLocalizer;
     }
 
+
+    /// <summary>
+    /// report of payments
+    /// </summary>
+    /// <param name="query"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    [HttpGet]
+    public async Task<ActionResult<Paging<PaymentReportModel>>> List([FromQuery] GridifyQuery query,
+        CancellationToken cancellationToken)
+    {
+
+        if (!query.IsValid<PaymentReportModel>())
+        {
+            ModelState.AddModelError("", _stringLocalizer["InvalidQuery"]);
+            return ValidationProblem(ModelState);
+        }
+
+        var payments = await _projectDbContext.Payments
+            .ProjectToModel()
+            .GridifyAsync(query, cancellationToken);
+
+        return payments;
+    }
 
     /// <summary>
     /// create payment and return payment page url
@@ -212,8 +231,8 @@ public class PaymentController : ControllerBase
             };
             payment.Wallet = wallet;
 
-            var addressTrackedSource =
-                new AddressTrackedSource(BitcoinAddress.Create(payment.Wallet.Address, _network.NBitcoinNetwork));
+            //var addressTrackedSource =
+                //new AddressTrackedSource(BitcoinAddress.Create(payment.Wallet.Address, _network.NBitcoinNetwork));
 
             //await _explorerClient.TrackAsync(addressTrackedSource, cancellation: cancellationToken);
 

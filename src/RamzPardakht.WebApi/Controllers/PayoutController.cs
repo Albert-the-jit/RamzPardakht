@@ -1,5 +1,7 @@
 ﻿using System.Net;
 using Asp.Versioning;
+using Gridify;
+using Gridify.EntityFramework;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -53,6 +55,29 @@ public class PayoutController : ControllerBase
 
         _explorerClient = client;
 
+    }
+
+    /// <summary>
+    /// report of payouts
+    /// </summary>
+    /// <param name="query"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    [HttpGet]
+    public async Task<ActionResult<Paging<PayoutReportModel>>> List([FromQuery] GridifyQuery query,
+        CancellationToken cancellationToken)
+    {
+        if (!query.IsValid<PayoutReportModel>())
+        {
+            ModelState.AddModelError("", _stringLocalizer["InvalidQuery"]);
+            return ValidationProblem(ModelState);
+        }
+
+        var payouts = await _projectDbContext.Payouts
+            .ProjectToModel()
+            .GridifyAsync(query, cancellationToken);
+
+        return payouts;
     }
 
     /// <summary>

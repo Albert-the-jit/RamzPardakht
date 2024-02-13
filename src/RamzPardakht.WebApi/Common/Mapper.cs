@@ -20,4 +20,12 @@ public partial class Mapper
 public static partial class StaticMapper
 {
     public static partial IQueryable<ReferenceTokenModel> ProjectToModel(this IQueryable<ReferenceToken> organizations);
+    public static partial IQueryable<PayoutReportModel> ProjectToModel(this IQueryable<Payout> payouts);
+    [MapProperty(nameof(Payment.Id),nameof(PaymentReportModel.RefId))]
+    public static partial IQueryable<PaymentReportModel> ProjectToModel(this IQueryable<Payment> payouts);
+
+
+    [MapProperty(nameof(Payment.Id),nameof(PaymentReportModel.RefId))]
+    private static partial PaymentReportModel ToModel(this Payment entity);
+
 }

@@ -3,17 +3,17 @@
 
 |||
 |:---|:---|
-| Generated on: | 2/10/2024 - 9:08:22 PM |
-| Coverage date: | 2/10/2024 - 9:08:20 PM |
+| Generated on: | 2/17/2024 - 9:06:49 PM |
+| Coverage date: | 2/17/2024 - 9:06:47 PM |
 | Parser: | Cobertura |
 | Assemblies: | 3 |
 | Classes: | 36 |
 | Files: | 37 |
-| **Line coverage:** | 72% (524 of 727) |
-| Covered lines: | 524 |
+| **Line coverage:** | 71.9% (521 of 724) |
+| Covered lines: | 521 |
 | Uncovered lines: | 203 |
-| Coverable lines: | 727 |
-| Total lines: | 2562 |
+| Coverable lines: | 724 |
+| Total lines: | 2606 |
 | **Branch coverage:** | 72% (85 of 118) |
 | Covered branches: | 85 |
 | Total branches: | 118 |
@@ -49,11 +49,11 @@
 |RamzPardakht.Infrastructure.Services.ExchangeService|100%||
 
 </details>
-<details><summary>RamzPardakht.WebApi - 87.1%</summary>
+<details><summary>RamzPardakht.WebApi - 87%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**RamzPardakht.WebApi**|**87.1%**|**72.7%**|
+|**RamzPardakht.WebApi**|**87%**|**72.7%**|
 |RamzPardakht.WebApi.BackgroundServices.BitcoinNewBlockListener|0%||
 |RamzPardakht.WebApi.Common.ClaimsPrincipalExtensions|75%|50%|
 |RamzPardakht.WebApi.Common.HideSignalRHubSpecificationFromSwaggerFilter|100%||

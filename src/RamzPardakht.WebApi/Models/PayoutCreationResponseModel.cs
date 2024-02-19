@@ -7,6 +7,7 @@ namespace RamzPardakht.WebApi.Models;
 
 public class PayoutCreationResponseModel
 {
+    public int Id { get; set; }
     public Currency Currency { get; set; }
     public decimal Amount { get; set; }
     public decimal NetworkFee { get; set; }

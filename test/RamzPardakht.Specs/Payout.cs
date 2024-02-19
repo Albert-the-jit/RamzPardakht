@@ -2,6 +2,8 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using FluentAssertions;
+using Gridify;
+using MassTransit.Testing;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +13,7 @@ using NBXplorer.DerivationStrategy;
 using NBXplorer.Models;
 using RamzPardakht.ApplicationCore.Contracts;
 using RamzPardakht.ApplicationCore.Entities;
+using RamzPardakht.ApplicationCore.MessageModels;
 using RamzPardakht.WebApi.IntegrationTests;
 using RamzPardakht.WebApi.Models;
 using RichardSzalay.MockHttp;
@@ -53,7 +56,7 @@ public class Payout
 
         var userPayments = await projectDbContext.Payments.Where(x => x.UserId == user.Id && x.Status == Status.Paid).ToListAsync();
 
-        ;
+        mockHttpMessageHandler.ResetBackendDefinitions();
 
         DerivationStrategyBase directDerivationStrategy =
             network.DerivationStrategyFactory.CreateDirectDerivationStrategy(bitcoinWalletProvider.GetMasterPublicKey());
@@ -104,7 +107,6 @@ public class Payout
         _scenarioContext.Set(request, $"{p0}:{request.GetType().Name}");
         _scenarioContext.Set(payoutCreationRequestModel, $"{p0}:{nameof(PayoutCreationRequestModel)}");
 
-        mockHttpMessageHandler.ResetBackendDefinitions();
 
     }
 
@@ -126,5 +128,82 @@ public class Payout
         paymentCreationResponseModel.ToAddress.Should().Be(payoutCreationRequestModel.ToAddress);
         paymentCreationResponseModel.NetworkFee.Should().BeGreaterThan(0);
         paymentCreationResponseModel.TransactionId.Should().NotBeNullOrWhiteSpace();
+
+        _scenarioContext.Set(paymentCreationResponseModel, $"{p0}:{nameof(PayoutCreationResponseModel)}");
+
+    }
+
+    [Then(@"the ""(.*)"" payout transaction should broadcast")]
+    public void ThenThePayoutTransactionShouldBroadcast(string p0)
+    {
+        using var scope = _applicationFactory.Services.CreateScope();
+
+        var scopedServices = scope.ServiceProvider;
+        var mockHttpMessageHandlers = scopedServices.GetRequiredService<Dictionary<string, MockHttpMessageHandler>>();
+        var mockHttpMessageHandler = mockHttpMessageHandlers.TryGet(nameof(ExplorerClient));
+
+        mockHttpMessageHandler.VerifyNoOutstandingExpectation();
+
+        mockHttpMessageHandler.ResetExpectations();
+    }
+
+    [When(@"after user ""(.*)"" payout request broadcast and confirmed for ""(.*)"" time")]
+    public async Task WhenAfterUserPayoutRequestBroadcastAndConfirmedForTime(string p0, int confirmationCount)
+    {
+        var network = new NBXplorerNetworkProvider(ChainName.Testnet).GetBTC();
+
+
+        var harness = _applicationFactory.Services.GetRequiredService<ITestHarness>();
+
+        using var scope = _applicationFactory.Services.CreateScope();
+
+        var scopedServices = scope.ServiceProvider;
+        var mockHttpMessageHandlers = scopedServices.GetRequiredService<Dictionary<string, MockHttpMessageHandler>>();
+        var mockHttpMessageHandler = mockHttpMessageHandlers.TryGet(nameof(ExplorerClient));
+
+        mockHttpMessageHandler.Expect($"http://*/v1/cryptos/*/transactions/*")
+            .Respond("application/json", network.Serializer.ToString(new TransactionResult
+            {
+                Confirmations = confirmationCount,
+            }));
+
+        await harness.Bus.Publish(new NewBitcoinBlockEvent());
+
+        await Task.Delay(2000);
+
+        mockHttpMessageHandler.VerifyNoOutstandingExpectation();
+        mockHttpMessageHandler.ResetExpectations();
+
+    }
+
+    [When(@"""(.*)"" send list request for payouts")]
+    public async Task WhenSendListRequestForPayouts(string p0)
+    {
+        var client = _scenarioContext.Get<HttpClient>($"{p0}:{nameof(HttpClient)}");
+        var jsonSerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
+        jsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        var request = await client.GetFromJsonAsync<Paging<PayoutReportModel>>("/v1/Payout",jsonSerializerOptions);
+        _scenarioContext.Set(request, $"{p0}:{request!.GetType().FullName}");
+
+    }
+
+    [Then(@"the ""(.*)"" response body should contain the created payout with transaction id and network fee and ""(.*)"" status")]
+    public void ThenTheResponseBodyShouldContainTheCreatedPayoutWithTransactionIdAndNetworkFeeAndStatus(string p0, PayoutStatus status)
+    {
+        var payoutCreationResponseModel = _scenarioContext.Get<PayoutCreationResponseModel>($"{p0}:{nameof(PayoutCreationResponseModel)}");
+
+        var payouts = _scenarioContext.Get<Paging<PayoutReportModel>>($"{p0}:{typeof(Paging<PayoutReportModel>).FullName}");
+
+        payouts.Should().NotBeNull();
+
+        payouts.Data.Should().Contain(model => model.Id == payoutCreationResponseModel.Id);
+
+        payouts.Data.First(x => x.Id == payoutCreationResponseModel.Id).Should()
+            .BeEquivalentTo(payoutCreationResponseModel,options => options.ExcludingMissingMembers());
+
+        payouts.Data.First(x => x.Id == payoutCreationResponseModel.Id).TransactionId.Should().NotBeNullOrEmpty();
+
+        payouts.Data.First(x => x.Id == payoutCreationResponseModel.Id).NetworkFee.Should().BeGreaterThan(0);
+        payouts.Data.First(x => x.Id == payoutCreationResponseModel.Id).Status.Should().Be(status);
     }
 }

@@ -95,3 +95,63 @@ Scenario: Successful payout creation
       | BTC      | 250    | tb1qdmzvjd0azxpntnfjm66cdr04zy0grxj6cwfy62 |
     Then the "person 1" should receive a success message confirming success
     And the "person 1" response body should contain the created payout and details
+    And the "person 1" payout transaction should broadcast
+
+    When "person 1" send list request for payouts
+    Then the "person 1" response body should contain the created payout with transaction id and network fee and "Unconfirmed" status
+
+    When after user "person 1" payout request broadcast and confirmed for "5" time
+
+    And "person 1" send list request for payouts
+    Then the "person 1" response body should contain the created payout with transaction id and network fee and "Unconfirmed" status
+
+
+    When "person 1" sends payout request with the following information:
+      | Currency | Amount | ToAddress                                  |
+      | BTC      | 400 | tb1qdmzvjd0azxpntnfjm66cdr04zy0grxj6cwfy62 |
+    Then the "person 1" should receive a failed message with "400" status and "NotEnoughMoney" error massage
+
+    When after user "person 1" payout request broadcast and confirmed for "6" time
+
+    And "person 1" send list request for payouts
+    Then the "person 1" response body should contain the created payout with transaction id and network fee and "Done" status
+
+
+    When "person 1" sends payout request with the following information:
+      | Currency | Amount | ToAddress                                  |
+      | BTC      | 200    | tb1qdmzvjd0azxpntnfjm66cdr04zy0grxj6cwfy62 |
+    Then the "person 1" should receive a success message confirming success
+    And the "person 1" response body should contain the created payout and details
+    And the "person 1" payout transaction should broadcast
+
+    When after user "person 1" payout request broadcast and confirmed for "5" time
+
+    And "person 1" send list request for payouts
+    Then the "person 1" response body should contain the created payout with transaction id and network fee and "Unconfirmed" status
+
+    When after user "person 1" payout request broadcast and confirmed for "6" time
+
+    And "person 1" send list request for payouts
+    Then the "person 1" response body should contain the created payout with transaction id and network fee and "Done" status
+
+    When "person 1" sends payout request with the following information:
+      | Currency | Amount | ToAddress                                  |
+      | BTC      | 51     | tb1qdmzvjd0azxpntnfjm66cdr04zy0grxj6cwfy62 |
+    Then the "person 1" should receive a failed message with "400" status and "NotEnoughMoney" error massage
+
+    When "person 1" sends payout request with the following information:
+      | Currency | Amount | ToAddress                                  |
+      | BTC      | 50    | tb1qdmzvjd0azxpntnfjm66cdr04zy0grxj6cwfy62 |
+    Then the "person 1" should receive a success message confirming success
+    And the "person 1" response body should contain the created payout and details
+    And the "person 1" payout transaction should broadcast
+
+    When after user "person 1" payout request broadcast and confirmed for "5" time
+
+    And "person 1" send list request for payouts
+    Then the "person 1" response body should contain the created payout with transaction id and network fee and "Unconfirmed" status
+
+    When after user "person 1" payout request broadcast and confirmed for "6" time
+
+    And "person 1" send list request for payouts
+    Then the "person 1" response body should contain the created payout with transaction id and network fee and "Done" status

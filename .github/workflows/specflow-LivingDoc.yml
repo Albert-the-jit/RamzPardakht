@@ -1,0 +1,38 @@
+﻿name: specflow living doc gen
+
+on:
+  schedule:
+    - cron: '0 22 * * 5'
+  workflow_dispatch:
+
+
+jobs:
+  build-test-docs:
+
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 6.0.x
+      - name: Create SpecFlow Tests documentation
+        uses: cryptic-wizard/run-specflow-tests@v1.3.1
+        with:
+          test-assembly-path: test/Baharan.Farhangi.Specs/bin/Release/net6.0
+          test-assembly-dll: Baharan.Farhangi.Specs.dll
+
+      - name: Download SpecFlow artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: Specflow Test Results
+          path: ./docs
+
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v9
+        with:
+          message:  'docs: update LivingDoc'
+          add: 'docs/*.html'
+          new_branch: LivingDoc
+          push: origin LivingDoc --force

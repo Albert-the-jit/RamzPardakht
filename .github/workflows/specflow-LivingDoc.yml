@@ -16,12 +16,12 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: 8.0.x
       - name: Create SpecFlow Tests documentation
-        uses: cryptic-wizard/run-specflow-tests@v1.3.1
+        uses: cryptic-wizard/run-specflow-tests@v1.3.2
         with:
-          test-assembly-path: test/Baharan.Farhangi.Specs/bin/Release/net6.0
-          test-assembly-dll: Baharan.Farhangi.Specs.dll
+          test-assembly-path: test/RamzPardakht.Specs/bin/Release/net8.0
+          test-assembly-dll: RamzPardakht.Specs.dll
 
       - name: Download SpecFlow artifact
         uses: actions/download-artifact@v3

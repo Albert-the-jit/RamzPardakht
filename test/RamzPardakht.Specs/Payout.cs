@@ -182,7 +182,7 @@ public class Payout
         var client = _scenarioContext.Get<HttpClient>($"{p0}:{nameof(HttpClient)}");
         var jsonSerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
         jsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-        var request = await client.GetFromJsonAsync<Paging<PayoutReportModel>>("/v1/Payout",jsonSerializerOptions);
+        var request = await client.GetFromJsonAsync<Paging<PayoutReportModel>>("/v1/Payout", jsonSerializerOptions);
         _scenarioContext.Set(request, $"{p0}:{request!.GetType().FullName}");
 
     }
@@ -199,7 +199,7 @@ public class Payout
         payouts.Data.Should().Contain(model => model.Id == payoutCreationResponseModel.Id);
 
         payouts.Data.First(x => x.Id == payoutCreationResponseModel.Id).Should()
-            .BeEquivalentTo(payoutCreationResponseModel,options => options.ExcludingMissingMembers());
+            .BeEquivalentTo(payoutCreationResponseModel, options => options.ExcludingMissingMembers());
 
         payouts.Data.First(x => x.Id == payoutCreationResponseModel.Id).TransactionId.Should().NotBeNullOrEmpty();
 
@@ -213,7 +213,7 @@ public class Payout
         var client = _scenarioContext.Get<HttpClient>($"{p0}:{nameof(HttpClient)}");
         var jsonSerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
         jsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-        var request = await client.GetFromJsonAsync<List<UserBalanceInfoResponse>>("/v1/Balance",jsonSerializerOptions);
+        var request = await client.GetFromJsonAsync<List<UserBalanceInfoResponse>>("/v1/Balance", jsonSerializerOptions);
         _scenarioContext.Set(request, $"{p0}:{request!.GetType().FullName}");
     }
 

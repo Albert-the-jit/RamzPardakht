@@ -206,4 +206,25 @@ public class Payout
         payouts.Data.First(x => x.Id == payoutCreationResponseModel.Id).NetworkFee.Should().BeGreaterThan(0);
         payouts.Data.First(x => x.Id == payoutCreationResponseModel.Id).Status.Should().Be(status);
     }
+
+    [When(@"""(.*)"" sends user balance request")]
+    public async Task WhenSendsUserBalanceRequest(string p0)
+    {
+        var client = _scenarioContext.Get<HttpClient>($"{p0}:{nameof(HttpClient)}");
+        var jsonSerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
+        jsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        var request = await client.GetFromJsonAsync<List<UserBalanceInfoResponse>>("/v1/Balance",jsonSerializerOptions);
+        _scenarioContext.Set(request, $"{p0}:{request!.GetType().FullName}");
+    }
+
+    [Then(@"the ""(.*)"" should receive response that hase balance for ""(.*)"" and (.*) as amount")]
+    public void ThenTheShouldReceiveResponseThatHaseBalanceForAndAsAmount(string p0, Currency currency, int amount)
+    {
+        var balanceInfoResponses = _scenarioContext.Get<List<UserBalanceInfoResponse>>($"{p0}:{typeof(List<UserBalanceInfoResponse>).FullName}");
+
+        balanceInfoResponses.Should().ContainSingle(response => response.Currency == currency);
+
+        balanceInfoResponses.First(response => response.Currency == currency).Amount.Should().Be(amount);
+
+    }
 }

@@ -79,6 +79,8 @@ So that I can receive and use my founds
 
 
 Scenario: Successful payout creation
+    When "person 1" sends user balance request
+    Then the "person 1" should receive response that hase balance for "BTC" and 500 as amount
 
     When "person 1" sends payout request with the following information:
       | Currency | Amount | ToAddress |
@@ -97,6 +99,9 @@ Scenario: Successful payout creation
     And the "person 1" response body should contain the created payout and details
     And the "person 1" payout transaction should broadcast
 
+    When "person 1" sends user balance request
+    Then the "person 1" should receive response that hase balance for "BTC" and 250 as amount
+
     When "person 1" send list request for payouts
     Then the "person 1" response body should contain the created payout with transaction id and network fee and "Unconfirmed" status
 
@@ -105,6 +110,8 @@ Scenario: Successful payout creation
     And "person 1" send list request for payouts
     Then the "person 1" response body should contain the created payout with transaction id and network fee and "Unconfirmed" status
 
+    When "person 1" sends user balance request
+    Then the "person 1" should receive response that hase balance for "BTC" and 250 as amount
 
     When "person 1" sends payout request with the following information:
       | Currency | Amount | ToAddress                                  |
@@ -116,6 +123,8 @@ Scenario: Successful payout creation
     And "person 1" send list request for payouts
     Then the "person 1" response body should contain the created payout with transaction id and network fee and "Done" status
 
+    When "person 1" sends user balance request
+    Then the "person 1" should receive response that hase balance for "BTC" and 250 as amount
 
     When "person 1" sends payout request with the following information:
       | Currency | Amount | ToAddress                                  |
@@ -123,6 +132,9 @@ Scenario: Successful payout creation
     Then the "person 1" should receive a success message confirming success
     And the "person 1" response body should contain the created payout and details
     And the "person 1" payout transaction should broadcast
+
+    When "person 1" sends user balance request
+    Then the "person 1" should receive response that hase balance for "BTC" and 50 as amount
 
     When after user "person 1" payout request broadcast and confirmed for "5" time
 
@@ -133,6 +145,9 @@ Scenario: Successful payout creation
 
     And "person 1" send list request for payouts
     Then the "person 1" response body should contain the created payout with transaction id and network fee and "Done" status
+
+    When "person 1" sends user balance request
+    Then the "person 1" should receive response that hase balance for "BTC" and 50 as amount
 
     When "person 1" sends payout request with the following information:
       | Currency | Amount | ToAddress                                  |
@@ -146,6 +161,9 @@ Scenario: Successful payout creation
     And the "person 1" response body should contain the created payout and details
     And the "person 1" payout transaction should broadcast
 
+    When "person 1" sends user balance request
+    Then the "person 1" should receive response that hase balance for "BTC" and 0 as amount
+
     When after user "person 1" payout request broadcast and confirmed for "5" time
 
     And "person 1" send list request for payouts
@@ -155,3 +173,6 @@ Scenario: Successful payout creation
 
     And "person 1" send list request for payouts
     Then the "person 1" response body should contain the created payout with transaction id and network fee and "Done" status
+
+    When "person 1" sends user balance request
+    Then the "person 1" should receive response that hase balance for "BTC" and 0 as amount

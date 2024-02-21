@@ -23,6 +23,7 @@ public class ProjectDbContext : IdentityDbContext<User, Role, int, IdentityUserC
     public DbSet<ReferenceToken> ReferenceTokens { get; set; }
     public DbSet<Payment> Payments { get; set; }
     public DbSet<Payout> Payouts { get; set; }
+    public DbSet<Archive> Archives { get; set; }
     public DbSet<PayoutPayment> PayoutPayments { get; set; }
     public DbSet<Wallet> Wallets { get; set; }
 

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Minio;
 using NBXplorer;
 using RamzPardakht.ApplicationCore.Common;
 using RamzPardakht.ApplicationCore.Contracts;
@@ -19,12 +20,17 @@ public static class InfrastructureSetup
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddMinio(client =>
+            client
+                .WithSSL(false)
+                .WithEndpoint(configuration["Minio:Endpoint"])
+                .WithCredentials(configuration["Minio:AccessKey"], configuration["Minio:SecretKey"]));
+
         services.AddRefitClient<ICoinGateExchangeService>()
             .ConfigureHttpClient(client => client.BaseAddress = new Uri("https://api.coingate.com/v2"));
 
 
         services.AddHttpClient(nameof(ExplorerClient));
-
 
         services.AddScoped<IExchangeService, ExchangeService>();
 

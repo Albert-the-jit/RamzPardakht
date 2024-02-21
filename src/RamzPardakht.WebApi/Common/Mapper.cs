@@ -12,6 +12,7 @@ public partial class Mapper
     public partial ReferenceToken ToEntity(ReferenceTokenModel model);
     public partial Payment ToEntity(PaymentCreationRequestModel model);
     public partial ReferenceTokenModel ToModel(ReferenceToken entity);
+    public partial ArchiveModel ToModel(Archive entity);
     public partial PaymentInquiryResponseModel ToModel(Payment entity);
     public partial PayoutCreationResponseModel ToModel(Payout entity);
 }

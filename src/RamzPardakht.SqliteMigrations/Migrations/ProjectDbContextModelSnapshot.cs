@@ -15,7 +15,7 @@ namespace RamzPardakht.SqliteMigrations.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.1");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.2");
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
@@ -99,6 +99,54 @@ namespace RamzPardakht.SqliteMigrations.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("RamzPardakht.ApplicationCore.Entities.Archive", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("CreatedById")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid?>("CreatedByTokenId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("CreatedOn")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("DeletedById")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid?>("DeletedByTokenId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long?>("DeletedOn")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("FileExtension")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("ModifiedById")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid?>("ModifiedByTokenId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long?>("ModifiedOn")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Archives");
                 });
 
             modelBuilder.Entity("RamzPardakht.ApplicationCore.Entities.Payment", b =>

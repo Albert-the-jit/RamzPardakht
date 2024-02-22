@@ -38,12 +38,14 @@ public class BitcoinNewBlockListener : BackgroundService
     {
         try
         {
+            await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
+
             await NewBlockListener(stoppingToken);
         }
         catch (Exception e) when (e is not TaskCanceledException)
         {
             _logger.LogError(e.ToString());
-            await Task.Delay(TimeSpan.FromMinutes(20), stoppingToken);
+            await Task.Delay(TimeSpan.FromMinutes(10), stoppingToken);
 
             await ExecuteAsync(stoppingToken);
         }

@@ -15,6 +15,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
           script: |
             if cd RamzPardakht; then git pull ${{ secrets.Repo }}; else git clone ${{ secrets.Repo }}; fi
             docker-compose up -d --build

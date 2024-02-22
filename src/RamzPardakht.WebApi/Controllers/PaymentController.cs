@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using NBitcoin;
+using NBXplorer;
+using NBXplorer.Models;
 using RamzPardakht.ApplicationCore.Contracts;
 using RamzPardakht.ApplicationCore.Entities;
 using RamzPardakht.ApplicationCore.Resources;
@@ -33,14 +35,19 @@ public class PaymentController : ControllerBase
     private readonly IBitcoinWalletProvider _bitcoinWalletProvider;
     private readonly IStringLocalizer<SharedResource> _stringLocalizer;
 
+    private readonly ExplorerClient _explorerClient;
+    private readonly NBXplorerNetwork _network;
+    private readonly IConfiguration _configuration;
+
     public PaymentController(
         TimeProvider timeProvider,
         IProjectDbContext projectDbContext,
         Mapper mapper,
+        IHttpClientFactory httpClientFactory,
         IExchangeService exchangeService,
         IBitcoinWalletProvider bitcoinWalletProvider,
-        IStringLocalizer<SharedResource> stringLocalizer
-        )
+        IStringLocalizer<SharedResource> stringLocalizer,
+        IConfiguration configuration)
     {
         _timeProvider = timeProvider;
         _projectDbContext = projectDbContext;
@@ -48,6 +55,16 @@ public class PaymentController : ControllerBase
         _exchangeService = exchangeService;
         _bitcoinWalletProvider = bitcoinWalletProvider;
         _stringLocalizer = stringLocalizer;
+        _configuration = configuration;
+
+
+        _network = new NBXplorerNetworkProvider(ChainName.Testnet).GetBTC();
+
+        var httpClient = httpClientFactory.CreateClient(nameof(ExplorerClient));
+        ExplorerClient client = new ExplorerClient(_network, new Uri(configuration["NBXplorer:Endpoint"]!));
+        client.SetClient(httpClient);
+
+        _explorerClient = client;
     }
 
 
@@ -231,10 +248,10 @@ public class PaymentController : ControllerBase
             };
             payment.Wallet = wallet;
 
-            //var addressTrackedSource =
-            //new AddressTrackedSource(BitcoinAddress.Create(payment.Wallet.Address, _network.NBitcoinNetwork));
+            var addressTrackedSource =
+            new AddressTrackedSource(BitcoinAddress.Create(payment.Wallet.Address, _network.NBitcoinNetwork));
 
-            //await _explorerClient.TrackAsync(addressTrackedSource, cancellation: cancellationToken);
+            await _explorerClient.TrackAsync(addressTrackedSource, cancellation: cancellationToken);
 
             await _projectDbContext.SaveChangesAsync(CancellationToken.None);
 

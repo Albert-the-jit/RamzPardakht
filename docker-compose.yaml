@@ -10,6 +10,7 @@ services:
       - ASPNETCORE_URLS=http://0.0.0.0:80
 
   postgres:
+    container_name: postgres
     image: postgres:16.1
     restart: always
     ports:
@@ -23,7 +24,7 @@ services:
   bitcoind:
     restart: unless-stopped
 
-    container_name: btcpayserver_bitcoind
+    container_name: bitcoind
     image: btcpayserver/bitcoin:26.0
     ports:
       - "43782:43782"
@@ -51,6 +52,7 @@ services:
 
   nbxplorer:
     image: nicolasdorier/nbxplorer:2.5.0
+    container_name: nbxplorer
 
     restart: always
     ports:
@@ -77,6 +79,7 @@ services:
       - postgres
 
   minio:
+    container_name: minio
     image: minio/minio
     ports:
       - "9000:9000"

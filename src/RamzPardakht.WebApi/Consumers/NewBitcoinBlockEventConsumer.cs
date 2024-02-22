@@ -23,23 +23,27 @@ public class NewBitcoinBlockEventConsumer : IConsumer<NewBitcoinBlockEvent>
     private readonly ExplorerClient _explorerClient;
     private readonly NBXplorerNetwork _network;
     private readonly ConsumeContext ConsumeContext;
+    private readonly IConfiguration _configuration;
 
 
     public NewBitcoinBlockEventConsumer(
         IHttpClientFactory httpClientFactory,
         IProjectDbContext projectDbContext,
         TimeProvider timeProvider,
-        IHubContext<PaymentHub, IPaymentClient> hubContext
-    )
+        IHubContext<PaymentHub, IPaymentClient> hubContext,
+        IConfiguration configuration
+        )
     {
+
         _projectDbContext = projectDbContext;
         _timeProvider = timeProvider;
         _hubContext = hubContext;
+        _configuration = configuration;
 
         _network = new NBXplorerNetworkProvider(ChainName.Testnet).GetBTC();
 
         var httpClient = httpClientFactory.CreateClient(nameof(ExplorerClient));
-        ExplorerClient client = new ExplorerClient(_network, new Uri("http://localhost:32838"));
+        ExplorerClient client = new ExplorerClient(_network, new Uri(configuration["NBXplorer:Endpoint"]!));
         client.SetClient(httpClient);
 
         _explorerClient = client;

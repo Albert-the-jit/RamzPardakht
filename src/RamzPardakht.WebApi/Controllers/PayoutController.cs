@@ -35,22 +35,27 @@ public class PayoutController : ControllerBase
 
     private readonly ExplorerClient _explorerClient;
     private readonly IBitcoinWalletProvider _bitcoinWalletProvider;
+    private readonly IConfiguration _configuration;
 
     public PayoutController(
         IProjectDbContext projectDbContext,
         Mapper mapper,
         IHttpClientFactory httpClientFactory,
-        IBitcoinWalletProvider bitcoinWalletProvider, IStringLocalizer<SharedResource> stringLocalizer)
+        IBitcoinWalletProvider bitcoinWalletProvider,
+        IStringLocalizer<SharedResource> stringLocalizer,
+        IConfiguration configuration
+        )
     {
         _projectDbContext = projectDbContext;
         _mapper = mapper;
         _bitcoinWalletProvider = bitcoinWalletProvider;
         _stringLocalizer = stringLocalizer;
+        _configuration = configuration;
 
         NBXplorerNetwork network = new NBXplorerNetworkProvider(ChainName.Testnet).GetBTC();
 
         var httpClient = httpClientFactory.CreateClient(nameof(ExplorerClient));
-        ExplorerClient client = new ExplorerClient(network, new Uri("http://localhost:32838"));
+        ExplorerClient client = new ExplorerClient(network, new Uri(configuration["NBXplorer:Endpoint"]!));
         client.SetClient(httpClient);
 
         _explorerClient = client;

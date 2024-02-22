@@ -17,13 +17,18 @@ public class BitcoinNewBlockListener : BackgroundService
     private readonly ILogger<BitcoinNewBlockListener> _logger;
     private readonly IBitcoinWalletProvider _bitcoinWalletProvider;
     private readonly IBus _bus;
+    private readonly IConfiguration _configuration;
 
     public BitcoinNewBlockListener(
         IHttpClientFactory httpClientFactory,
+        IConfiguration configuration,
         ILogger<BitcoinNewBlockListener> logger,
-        IBitcoinWalletProvider bitcoinWalletProvider, IBus bus)
+        IBitcoinWalletProvider bitcoinWalletProvider,
+        IBus bus
+        )
     {
         _httpClientFactory = httpClientFactory;
+        _configuration = configuration;
         _logger = logger;
         _bitcoinWalletProvider = bitcoinWalletProvider;
         _bus = bus;
@@ -49,7 +54,7 @@ public class BitcoinNewBlockListener : BackgroundService
         var network = new NBXplorerNetworkProvider(ChainName.Testnet).GetBTC();
 
         var httpClient = _httpClientFactory.CreateClient(nameof(ExplorerClient));
-        ExplorerClient client = new ExplorerClient(network, new Uri("http://localhost:32838"));
+        ExplorerClient client = new ExplorerClient(network, new Uri(_configuration["NBXplorer:Endpoint"]!));
         client.SetClient(httpClient);
 
         var userDerivationScheme =

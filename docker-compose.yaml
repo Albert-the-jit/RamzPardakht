@@ -17,7 +17,7 @@ services:
       - "5432:5432"
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_PASSWORD=$M]431*8Z.gC
     volumes:
       - postgres_datadir:/var/lib/postgresql/data
 
@@ -56,7 +56,7 @@ services:
       - "4040:5432"
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=adminadmin
+      - POSTGRES_PASSWORD=S{@08[i8i3tX
     volumes:
       - nbxplorer_postgres_datadir:/var/lib/postgresql/data
 
@@ -75,7 +75,7 @@ services:
       NBXPLORER_BIND: 0.0.0.0:32838
       NBXPLORER_TRIMEVENTS: 10000
       NBXPLORER_SIGNALFILESDIR: /datadir
-      NBXPLORER_POSTGRES: User ID=postgres;Password=adminadmin;Host=nbxplorer-postgres;Port=5432;Database=nbxplorer;
+      NBXPLORER_POSTGRES: User ID=postgres;Password=S{@08[i8i3tX;Host=nbxplorer-postgres;Port=5432;Database=nbxplorer;
       NBXPLORER_AUTOMIGRATE: 1
       NBXPLORER_NOMIGRATEEVTS: 1
       NBXPLORER_CHAINS: "btc"
@@ -99,7 +99,7 @@ services:
       - minio_storage:/data
     environment:
       MINIO_ROOT_USER: admin
-      MINIO_ROOT_PASSWORD: adminadmin
+      MINIO_ROOT_PASSWORD: 92;,7&UyU9%s
     command: server --console-address ":9001" /data
 
 volumes:

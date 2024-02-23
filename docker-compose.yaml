@@ -50,6 +50,19 @@ services:
       - "bitcoin_datadir:/data"
 
 
+  nbxplorer-postgres:
+    container_name: nbxplorer-postgres
+    image: postgres:16.1
+    restart: always
+    ports:
+      - "4040:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=adminadmin
+    volumes:
+      - nbxplorer_postgres_datadir:/var/lib/postgresql/data
+
+
   nbxplorer:
     image: nicolasdorier/nbxplorer:2.5.0
     container_name: nbxplorer
@@ -64,7 +77,7 @@ services:
       NBXPLORER_BIND: 0.0.0.0:32838
       NBXPLORER_TRIMEVENTS: 10000
       NBXPLORER_SIGNALFILESDIR: /datadir
-      NBXPLORER_POSTGRES: User ID=postgres;Password=postgres;Host=postgres;Port=5432;Database=nbxplorer;
+      NBXPLORER_POSTGRES: User ID=postgres;Password=adminadmin;Host=nbxplorer-postgres;Port=5432;Database=nbxplorer;
       NBXPLORER_AUTOMIGRATE: 1
       NBXPLORER_NOMIGRATEEVTS: 1
       NBXPLORER_CHAINS: "btc"
@@ -76,7 +89,7 @@ services:
       - "bitcoin_datadir:/root/.bitcoin"
     links:
       - bitcoind
-      - postgres
+      - nbxplorer-postgres
 
   minio:
     container_name: minio
@@ -99,6 +112,9 @@ volumes:
     driver: local
 
   postgres_datadir:
+    driver: local
+
+  nbxplorer_postgres_datadir:
     driver: local
 
   minio_storage:

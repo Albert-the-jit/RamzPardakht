@@ -31,8 +31,6 @@ services:
       - "39388:39388"
     environment:
       BITCOIN_NETWORK: testnet
-      CREATE_WALLET: "false"
-      BITCOIN_WALLETDIR: "/walletdata"
       # rpcport and rpcbind seems duplicates, but they are not
       # rpcport is using by some tooling to automatically get
       # the rpcport from the configuration file. Do not remove!

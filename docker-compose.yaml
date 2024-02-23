@@ -47,7 +47,7 @@ services:
       - "43782"
       - "39388"
     volumes:
-      - "bitcoin_datadir:/data"
+      - bitcoin_datadir:/data
 
 
   nbxplorer-postgres:

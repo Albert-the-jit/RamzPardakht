@@ -8,7 +8,8 @@ services:
 
     environment:
       - ASPNETCORE_URLS=http://0.0.0.0:80
-
+      - OTEL_EXPORTER_ZIPKIN_ENDPOINT=http://zipkin:9411/api/v2/spans
+      - OTEL_SERVICE_NAME=Api
   postgres:
     container_name: postgres
     image: postgres:16.1
@@ -18,8 +19,6 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=]431*8Z.gC
-      - OTEL_EXPORTER_ZIPKIN_ENDPOINT=http://zipkin:9411/api/v2/spans
-      - OTEL_SERVICE_NAME=Api
     volumes:
       - postgres_datadir:/var/lib/postgresql/data
 

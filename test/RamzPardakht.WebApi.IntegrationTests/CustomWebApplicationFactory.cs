@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Time.Testing;
+using Minio;
 using Moq;
 using NBXplorer;
 using RamzPardakht.ApplicationCore.Contracts;
@@ -27,6 +28,14 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
         builder.UseEnvironment("Development");
         builder.ConfigureServices(services =>
         {
+            services.Remove(services.First(serviceDescriptor => serviceDescriptor.ServiceType == typeof(IMinioClient)));
+
+            var minioMock = new Mock<IMinioClient>();
+
+            services.AddTransient(_ => minioMock);
+            services.AddTransient<IMinioClient>(_ => minioMock.Object);
+
+
             services.Remove(services.First(serviceDescriptor => serviceDescriptor.ServiceType == typeof(TimeProvider)));
 
             var fakeTimeProvider = new FakeTimeProvider(DateTimeOffset.Now) { AutoAdvanceAmount = TimeSpan.FromMilliseconds(1) };
@@ -35,6 +44,8 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             var emailSenderMock = new Mock<IEmailSender<User>>();
 
             services.AddTransient(_ => emailSenderMock);
+            services.AddTransient<IEmailSender<User>>(_ => emailSenderMock.Object);
+
             services.AddMassTransitTestHarness(x =>
             {
                 var entryAssembly = typeof(Program).Assembly;
@@ -42,7 +53,6 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
                 x.AddConsumers(entryAssembly);
             });
 
-            services.AddTransient<IEmailSender<User>>(_ => emailSenderMock.Object);
             ServiceDescriptor? bitcoinNewBlockListener = services.FirstOrDefault(x => x.ServiceType == typeof(IHostedService) && x.ImplementationType == typeof(BitcoinNewBlockListener));
             if (bitcoinNewBlockListener is not null)
                 services.Remove(bitcoinNewBlockListener);

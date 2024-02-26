@@ -152,6 +152,7 @@ public class Payment
 
 
         initialPaymentInfoForPayerModel.TokenName.Should().Be(referenceTokenModel.Name);
+        initialPaymentInfoForPayerModel.LogoId.Should().Be(referenceTokenModel.LogoId);
         initialPaymentInfoForPayerModel.Currency.Should().Be(Currency.NotSelected);
         initialPaymentInfoForPayerModel.CurrenciesAmount.Where(x => x.Currency == Currency.BTC).Should().NotBeNull();
         initialPaymentInfoForPayerModel.CurrenciesAmount.FirstOrDefault(x => x.Currency == Currency.BTC)!.Amount.Should().Be(paymentCreationRequestModel.UsdAmount * 100);

@@ -161,4 +161,24 @@ public class AccessToken
         var request = await client.DeleteAsync($"/v1/AccessToken/{referenceTokenModel.Id}");
         _scenarioContext.Set(request, $"{p0}:{request.GetType().Name}");
     }
+
+    [When(@"""(.*)"" send a create access token request with random date within next month as ExpiresUtc and with uploaded image id as logo id the following details:")]
+    public async Task WhenSendACreateAccessTokenRequestWithRandomDateWithinNextMonthAsExpiresUtcAndWithUploadedImageIdAsLogoIdTheFollowingDetails(string p0, Table table)
+    {
+        var archiveModel = _scenarioContext.Get<ArchiveModel>($"{p0}:{nameof(ArchiveModel)}");
+
+
+        int randomDay = new Random().Next(DateTimeOffset.Now.Day - 2,
+            DateTime.DaysInMonth(DateTimeOffset.Now.Year, DateTimeOffset.Now.Month) - 1);
+
+        var expiresUtc = DateTimeOffset.Now.AddMonths(1).AddDays(-DateTimeOffset.Now.Day).AddDays(randomDay);
+
+        var referenceTokenModel = table.CreateInstance<ReferenceTokenModel>();
+        referenceTokenModel.ExpiresUtc = expiresUtc;
+        referenceTokenModel.LogoId = archiveModel.Id;
+        var client = _scenarioContext.Get<HttpClient>($"{p0}:{nameof(HttpClient)}");
+
+        var request = await client.PostAsJsonAsync("/v1/AccessToken", referenceTokenModel);
+        _scenarioContext.Set(request, $"{p0}:{request.GetType().Name}");
+        _scenarioContext.Set(referenceTokenModel, $"{p0}:{nameof(ReferenceTokenModel)}");    }
 }

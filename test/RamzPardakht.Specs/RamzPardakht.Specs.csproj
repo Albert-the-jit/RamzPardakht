@@ -34,4 +34,19 @@
     <ProjectReference Include="..\RamzPardakht.WebApi.IntegrationTests\RamzPardakht.WebApi.IntegrationTests.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="ArchiveTestFiles\images.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Features\Archive.feature.cs">
+      <DependentUpon>Archive.feature</DependentUpon>
+      <AutoGen>true</AutoGen>
+      <DesignTime>true</DesignTime>
+      <Visible>true</Visible>
+    </Compile>
+  </ItemGroup>
+
 </Project>

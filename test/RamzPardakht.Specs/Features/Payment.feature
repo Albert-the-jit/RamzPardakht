@@ -16,7 +16,12 @@ So that I can redirect user to payment page
         Then the "person 1" should receive a success message confirming success
         And "person 1" should receive access token from login
 
-        When "person 1" send a create access token request with random date within next month as ExpiresUtc and the following details:
+
+        When the "person 1" send upload request containing simple image
+        Then the "person 1" should receive a success message confirming success
+        And the "person 1" response body should contain the uploaded file unique identifier
+
+        When "person 1" send a create access token request with random date within next month as ExpiresUtc and with uploaded image id as logo id the following details:
           | Name       | Description | Permissions |
           | test-token | test-token  |             |
         Then the "person 1" should receive a success message confirming success

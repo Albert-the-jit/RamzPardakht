@@ -146,7 +146,10 @@ public class PayoutController : ControllerBase
 
                 var paymentPayout = new PayoutPayment()
                 {
-                    Payout = payout, Payment = payment, Amount = paymentPayoutAmount, PaymentId = payment.Id,
+                    Payout = payout,
+                    Payment = payment,
+                    Amount = paymentPayoutAmount,
+                    PaymentId = payment.Id,
 
                 };
                 payout.PayoutPayments.Add(paymentPayout);
@@ -190,7 +193,10 @@ public class PayoutController : ControllerBase
 
                     var paymentPayout = new PayoutPayment()
                     {
-                        Payout = payout, Payment = payment, Amount = paymentPayoutAmount, PaymentId = payment.Id,
+                        Payout = payout,
+                        Payment = payment,
+                        Amount = paymentPayoutAmount,
+                        PaymentId = payment.Id,
 
                     };
                     payout.PayoutPayments.Add(paymentPayout);

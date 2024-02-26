@@ -180,5 +180,6 @@ public class AccessToken
 
         var request = await client.PostAsJsonAsync("/v1/AccessToken", referenceTokenModel);
         _scenarioContext.Set(request, $"{p0}:{request.GetType().Name}");
-        _scenarioContext.Set(referenceTokenModel, $"{p0}:{nameof(ReferenceTokenModel)}");    }
+        _scenarioContext.Set(referenceTokenModel, $"{p0}:{nameof(ReferenceTokenModel)}");
+    }
 }

@@ -70,7 +70,7 @@ public class NewBitcoinBlockEventConsumer : IConsumer<NewBitcoinBlockEvent>
 
         foreach (Payment payment in payments)
         {
-            _logger.LogInformation("CheckNewPaymentsStatusAndBalance {PaymentId}",payment.Id);
+            _logger.LogInformation("CheckNewPaymentsStatusAndBalance {PaymentId}", payment.Id);
 
             var balanceResponse =
                 await _explorerClient.GetBalanceAsync(
@@ -122,7 +122,7 @@ public class NewBitcoinBlockEventConsumer : IConsumer<NewBitcoinBlockEvent>
 
         foreach (Payment payment in payments)
         {
-            _logger.LogInformation("CheckPendingPaymentsStatusAndBalance {PaymentId}",payment.Id);
+            _logger.LogInformation("CheckPendingPaymentsStatusAndBalance {PaymentId}", payment.Id);
 
             var balanceResponse =
                 await _explorerClient.GetBalanceAsync(

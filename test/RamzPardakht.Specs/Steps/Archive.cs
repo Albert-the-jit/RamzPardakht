@@ -44,13 +44,13 @@ public class Archive
             .ReturnsAsync(() => true);
 
         service.Setup(e => e.PutObjectAsync(It.IsAny<PutObjectArgs>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(() =>new PutObjectResponse(HttpStatusCode.OK,"",new Dictionary<string, string>(),100,Guid.NewGuid().ToString()));
+            .ReturnsAsync(() => new PutObjectResponse(HttpStatusCode.OK, "", new Dictionary<string, string>(), 100, Guid.NewGuid().ToString()));
 
         service.Setup(e => e.GetObjectAsync(It.IsAny<GetObjectArgs>(), It.IsAny<CancellationToken>()))
             .Returns(new Func<GetObjectArgs, CancellationToken, Task<ObjectStat>>(async (arg1, arg2) =>
             {
                 PropertyInfo? propertyInfo = typeof(GetObjectArgs)
-                    .GetProperty("CallBack",BindingFlags.Instance |
+                    .GetProperty("CallBack", BindingFlags.Instance |
                                             BindingFlags.NonPublic |
                                             BindingFlags.Public);
 
@@ -65,7 +65,7 @@ public class Archive
 
                 action?.Invoke(memoryStream);
 
-                var statResponse = ObjectStat.FromResponseHeaders("xcvxcv",new Dictionary<string, string>());
+                var statResponse = ObjectStat.FromResponseHeaders("xcvxcv", new Dictionary<string, string>());
 
                 await Task.Delay(1000, arg2);
                 return statResponse;
@@ -100,7 +100,8 @@ public class Archive
 
         result!.Id.Should().NotBeEmpty();
 
-        _scenarioContext.Set(result, $"{p0}:{nameof(ArchiveModel)}");    }
+        _scenarioContext.Set(result, $"{p0}:{nameof(ArchiveModel)}");
+    }
 
 
     [When(@"the ""(.*)"" send request to view uploaded file")]
@@ -110,7 +111,8 @@ public class Archive
         var archiveModel = _scenarioContext.Get<ArchiveModel>($"{p0}:{nameof(ArchiveModel)}");
 
         var request = await client.GetAsync($"/v1/Archive/{archiveModel.Id}");
-        _scenarioContext.Set(request, $"{p0}:{request.GetType().Name}");    }
+        _scenarioContext.Set(request, $"{p0}:{request.GetType().Name}");
+    }
 
     [When(@"the ""(.*)"" use uploaded file in ""(.*)"" usage")]
     public async Task WhenTheUseUploadedFileInUsage(string p0, string type)

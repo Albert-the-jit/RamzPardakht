@@ -391,6 +391,9 @@ namespace RamzPardakht.SqliteMigrations.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("INTEGER");
 
+                    b.Property<Guid?>("LogoId")
+                        .HasColumnType("TEXT");
+
                     b.Property<int?>("ModifiedById")
                         .HasColumnType("INTEGER");
 
@@ -412,6 +415,8 @@ namespace RamzPardakht.SqliteMigrations.Migrations
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("LogoId");
 
                     b.HasIndex("UserId");
 
@@ -676,11 +681,17 @@ namespace RamzPardakht.SqliteMigrations.Migrations
 
             modelBuilder.Entity("RamzPardakht.ApplicationCore.Entities.ReferenceToken", b =>
                 {
+                    b.HasOne("RamzPardakht.ApplicationCore.Entities.Archive", "Logo")
+                        .WithMany()
+                        .HasForeignKey("LogoId");
+
                     b.HasOne("RamzPardakht.ApplicationCore.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Logo");
 
                     b.Navigation("User");
                 });

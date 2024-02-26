@@ -10,6 +10,11 @@ public class ReferenceToken : ITimeable, ISoftDeletable
     public string? Description { get; set; }
     public DateTimeOffset ExpiresUtc { get; set; }
     public List<string> Permissions { get; set; } = new();
+
+
+    public Archive Logo { get; set; }
+
+    public Guid? LogoId { get; set; }
     public int UserId { get; set; }
     public User User { get; set; }
 

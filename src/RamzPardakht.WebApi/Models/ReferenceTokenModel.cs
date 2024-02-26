@@ -14,5 +14,5 @@ public class ReferenceTokenModel
     public List<string> Permissions { get; set; } = new();
     public DateTimeOffset ExpiresUtc { get; set; }
     public string? AccessToken { get; set; }
-
+    public Guid? LogoId { get; set; }
 }

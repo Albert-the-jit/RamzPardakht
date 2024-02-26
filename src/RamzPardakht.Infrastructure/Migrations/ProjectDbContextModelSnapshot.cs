@@ -407,6 +407,9 @@ namespace RamzPardakht.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
+                    b.Property<Guid?>("LogoId")
+                        .HasColumnType("uuid");
+
                     b.Property<int?>("ModifiedById")
                         .HasColumnType("integer");
 
@@ -428,6 +431,8 @@ namespace RamzPardakht.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("LogoId");
 
                     b.HasIndex("UserId");
 
@@ -698,11 +703,17 @@ namespace RamzPardakht.Infrastructure.Migrations
 
             modelBuilder.Entity("RamzPardakht.ApplicationCore.Entities.ReferenceToken", b =>
                 {
+                    b.HasOne("RamzPardakht.ApplicationCore.Entities.Archive", "Logo")
+                        .WithMany()
+                        .HasForeignKey("LogoId");
+
                     b.HasOne("RamzPardakht.ApplicationCore.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Logo");
 
                     b.Navigation("User");
                 });

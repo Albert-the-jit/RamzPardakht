@@ -1141,6 +1141,11 @@
             "type": "string",
             "nullable": true
           },
+          "logoId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "usdAmount": {
             "type": "number",
             "format": "double"

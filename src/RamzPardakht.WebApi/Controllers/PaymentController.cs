@@ -159,7 +159,8 @@ public class PaymentController : ControllerBase
     public async Task<ActionResult<InitialPaymentInfoForPayerModel>> GetInitialInfo(Guid code,
         CancellationToken cancellationToken)
     {
-        var payment = await _projectDbContext.Payments.Include(x => x.CreatedByToken)
+        var payment = await _projectDbContext.Payments
+            .Include(x => x.CreatedByToken)
             .FirstOrDefaultAsync(x => x.Code == code && x.Status == Status.New, cancellationToken);
         if (payment is null)
             return NotFound();
@@ -167,6 +168,7 @@ public class PaymentController : ControllerBase
         var info = new InitialPaymentInfoForPayerModel()
         {
             TokenName = payment?.CreatedByToken?.Name ?? "",
+            LogoId = payment?.CreatedByToken?.LogoId,
             UsdAmount = payment!.UsdAmount,
         };
 

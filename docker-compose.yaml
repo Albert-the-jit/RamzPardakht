@@ -18,6 +18,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=]431*8Z.gC
+      - OTEL_EXPORTER_ZIPKIN_ENDPOINT=]431*8Z.gC
     volumes:
       - postgres_datadir:/var/lib/postgresql/data
 

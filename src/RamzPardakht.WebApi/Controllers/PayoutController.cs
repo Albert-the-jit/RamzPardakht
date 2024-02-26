@@ -36,6 +36,7 @@ public class PayoutController : ControllerBase
     private readonly ExplorerClient _explorerClient;
     private readonly IBitcoinWalletProvider _bitcoinWalletProvider;
     private readonly IConfiguration _configuration;
+    private readonly ILogger<PayoutController> _logger;
 
     public PayoutController(
         IProjectDbContext projectDbContext,
@@ -43,14 +44,14 @@ public class PayoutController : ControllerBase
         IHttpClientFactory httpClientFactory,
         IBitcoinWalletProvider bitcoinWalletProvider,
         IStringLocalizer<SharedResource> stringLocalizer,
-        IConfiguration configuration
-        )
+        IConfiguration configuration, ILogger<PayoutController> logger)
     {
         _projectDbContext = projectDbContext;
         _mapper = mapper;
         _bitcoinWalletProvider = bitcoinWalletProvider;
         _stringLocalizer = stringLocalizer;
         _configuration = configuration;
+        _logger = logger;
 
         NBXplorerNetwork network = new NBXplorerNetworkProvider(ChainName.Testnet).GetBTC();
 
@@ -248,12 +249,20 @@ public class PayoutController : ControllerBase
 
                 // Set the fee rate
 
+
+
                 var fallbackFeeRate = new FeeRate(Money.Satoshis(1), 1);
                 var feeRate = (await _explorerClient.GetFeeRateAsync(1, fallbackFeeRate)).FeeRate;
 
+                var tx = builder.BuildTransaction(true);
+               var f =  builder.EstimateFees(tx,feeRate);
+
+               _logger.LogInformation($"fee is {f.ToString()}");
+               _logger.LogInformation($"feeRate is {feeRate.SatoshiPerByte}");
+
                 builder.SendEstimatedFees(feeRate);
 
-                var tx = builder.BuildTransaction(true);
+                tx = builder.BuildTransaction(true);
 
                 var result = await _explorerClient.BroadcastAsync(tx);
                 if (result.Success)

@@ -29,8 +29,6 @@ public class PaymentCreationRequestModel
 
     [StringLength(200, ErrorMessage = "StringLengthAttribute_ValidationError")]
     public string? Description { get; set; }
-
-    [AllowedValues(null, ApplicationCore.Entities.Currency.BTC, ErrorMessage = "AllowedValuesAttribute_Invalid")]
     public Currency? Currency { get; set; }
 
     [EmailAddress(ErrorMessage = "EmailAddressAttribute_Invalid")]

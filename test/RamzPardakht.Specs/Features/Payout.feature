@@ -98,6 +98,11 @@ Scenario: Successful payout creation
     Then the "person 1" should receive a failed message with "400" status and "NotEnoughMoney" error massage
 
     When "person 1" sends payout request with the following information:
+      | Currency | Amount   | ToAddress |
+      | BTC      | 0.00001 | tb1qdmzvjd0azxpntnfjm66cdr04zy0grxj6cwfy62 |
+    Then the "person 1" should receive a failed message with "400" status and "AmountShouldBeBiggerThanNetworkFee" error massage
+
+    When "person 1" sends payout request with the following information:
       | Currency | Amount | ToAddress                                  |
       | BTC      | 250    | tb1qdmzvjd0azxpntnfjm66cdr04zy0grxj6cwfy62 |
     Then the "person 1" should receive a success message confirming success

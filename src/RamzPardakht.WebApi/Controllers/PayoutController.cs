@@ -221,6 +221,8 @@ public class PayoutController : ControllerBase
                 TransactionBuilder builder = Network.TestNet.CreateTransactionBuilder();
                 foreach (var payoutPayment in payout.PayoutPayments)
                 {
+
+
                     BitcoinAddress bitcoinAddress = BitcoinAddress.Create(
                         payoutPayment.Payment.Wallet.Address,
                         Network.TestNet);
@@ -240,12 +242,13 @@ public class PayoutController : ControllerBase
                     decimal payoutPaymentAmountChange =
                         coins.Sum(coin => coin.Amount.ToDecimal(MoneyUnit.BTC)) - payoutPayment.Amount;
 
-                    builder.Send(bitcoinAddress,
-                        Money.FromUnit(payoutPaymentAmountChange, MoneyUnit.BTC));
+                    if (payoutPaymentAmountChange > decimal.Zero)
+                        builder.Send(bitcoinAddress,
+                            Money.FromUnit(payoutPaymentAmountChange, MoneyUnit.BTC));
 
                 }
 
-                builder.SetChange(payoutAddress);
+                builder.SendAllRemaining(payoutAddress);
 
                 // Set the fee rate
 
@@ -255,14 +258,18 @@ public class PayoutController : ControllerBase
                 var feeRate = (await _explorerClient.GetFeeRateAsync(1, fallbackFeeRate)).FeeRate;
 
                 var tx = builder.BuildTransaction(true);
-               var f =  builder.EstimateFees(tx,feeRate);
-
-               _logger.LogInformation($"fee is {f.ToString()}");
-               _logger.LogInformation($"feeRate is {feeRate.SatoshiPerByte}");
 
                 builder.SendEstimatedFees(feeRate);
 
-                tx = builder.BuildTransaction(true);
+                try
+                {
+                    tx = builder.BuildTransaction(true);
+                }
+                catch (Exception e) when( e is NotEnoughFundsException)
+                {
+                    ModelState.AddModelError<PayoutCreationRequestModel>(requestModel => requestModel.Amount, _stringLocalizer["AmountShouldBeBiggerThanNetworkFee"]);
+                    return ValidationProblem();
+                }
 
                 var result = await _explorerClient.BroadcastAsync(tx);
                 if (result.Success)

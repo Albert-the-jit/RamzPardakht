@@ -22,8 +22,8 @@ public class NewBitcoinBlockEventConsumer : IConsumer<NewBitcoinBlockEvent>
     private readonly IHubContext<PaymentHub, IPaymentClient> _hubContext;
     private readonly ExplorerClient _explorerClient;
     private readonly NBXplorerNetwork _network;
-    private readonly ConsumeContext ConsumeContext;
     private readonly IConfiguration _configuration;
+    private readonly ILogger<NewBitcoinBlockEventConsumer> _logger;
 
 
     public NewBitcoinBlockEventConsumer(
@@ -31,14 +31,15 @@ public class NewBitcoinBlockEventConsumer : IConsumer<NewBitcoinBlockEvent>
         IProjectDbContext projectDbContext,
         TimeProvider timeProvider,
         IHubContext<PaymentHub, IPaymentClient> hubContext,
-        IConfiguration configuration
-        )
+        IConfiguration configuration,
+        ILogger<NewBitcoinBlockEventConsumer> logger)
     {
 
         _projectDbContext = projectDbContext;
         _timeProvider = timeProvider;
         _hubContext = hubContext;
         _configuration = configuration;
+        _logger = logger;
 
         _network = new NBXplorerNetworkProvider(ChainName.Testnet).GetBTC();
 
@@ -51,6 +52,7 @@ public class NewBitcoinBlockEventConsumer : IConsumer<NewBitcoinBlockEvent>
 
     public async Task Consume(ConsumeContext<NewBitcoinBlockEvent> context)
     {
+        _logger.LogInformation("new block added");
         await CheckNewPaymentsStatusAndBalance(context, context.CancellationToken);
         await CheckPendingPaymentsStatusAndBalance(context, context.CancellationToken);
         await CheckUnconfirmedPayoutTransactions(context.CancellationToken);
@@ -59,6 +61,8 @@ public class NewBitcoinBlockEventConsumer : IConsumer<NewBitcoinBlockEvent>
     private async Task CheckNewPaymentsStatusAndBalance(ConsumeContext<NewBitcoinBlockEvent> context,
         CancellationToken cancellationToken)
     {
+        _logger.LogInformation("CheckNewPaymentsStatusAndBalance");
+
         var payments = await _projectDbContext.Payments.Include(x => x.Wallet)
             .Where(x => x.ExpireOn > _timeProvider.GetUtcNow())
             .Where(x => x.Status == Status.New || x.Status == Status.Pending)
@@ -66,6 +70,8 @@ public class NewBitcoinBlockEventConsumer : IConsumer<NewBitcoinBlockEvent>
 
         foreach (Payment payment in payments)
         {
+            _logger.LogInformation("CheckNewPaymentsStatusAndBalance {PaymentId}",payment.Id);
+
             var balanceResponse =
                 await _explorerClient.GetBalanceAsync(
                     BitcoinAddress.Create(payment.Wallet.Address, _network.NBitcoinNetwork),
@@ -106,14 +112,18 @@ public class NewBitcoinBlockEventConsumer : IConsumer<NewBitcoinBlockEvent>
     private async Task CheckPendingPaymentsStatusAndBalance(ConsumeContext<NewBitcoinBlockEvent> context,
         CancellationToken cancellationToken)
     {
+
+        _logger.LogInformation("CheckPendingPaymentsStatusAndBalance");
+
         var payments = await _projectDbContext.Payments
             .Include(x => x.Wallet)
             .Where(x => x.Status == Status.Pending)
-            .Where(x => x.ExpireOn > _timeProvider.GetUtcNow().AddMinutes(-60))
             .ToListAsync(cancellationToken: cancellationToken);
 
         foreach (Payment payment in payments)
         {
+            _logger.LogInformation("CheckPendingPaymentsStatusAndBalance {PaymentId}",payment.Id);
+
             var balanceResponse =
                 await _explorerClient.GetBalanceAsync(
                     BitcoinAddress.Create(payment.Wallet.Address, _network.NBitcoinNetwork),
@@ -153,12 +163,17 @@ public class NewBitcoinBlockEventConsumer : IConsumer<NewBitcoinBlockEvent>
 
     private async Task CheckUnconfirmedPayoutTransactions(CancellationToken cancellationToken)
     {
+        _logger.LogInformation("CheckUnconfirmedPayoutTransactions");
+
         var payouts = await _projectDbContext.Payouts
             .Where(x => x.Status == PayoutStatus.Unconfirmed)
             .ToListAsync(cancellationToken: cancellationToken);
 
         foreach (Payout payout in payouts)
         {
+
+            _logger.LogInformation("CheckUnconfirmedPayoutTransactions {PayoutId}", payout.Id);
+
             var transactionResult =
                 await _explorerClient.GetTransactionAsync(new uint256(payout.TransactionId), cancellationToken);
 

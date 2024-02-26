@@ -212,6 +212,7 @@ public class PayoutController : ControllerBase
                 Network.TestNet);
 
             TransactionBuilder builder = Network.TestNet.CreateTransactionBuilder();
+
             foreach (var payoutPayment in payout.PayoutPayments)
             {
 
@@ -243,14 +244,11 @@ public class PayoutController : ControllerBase
 
             builder.SendAllRemaining(payoutAddress);
 
-            // Set the fee rate
-
-
 
             var fallbackFeeRate = new FeeRate(Money.Satoshis(1), 1);
             var feeRate = (await _explorerClient.GetFeeRateAsync(1, fallbackFeeRate)).FeeRate;
 
-            var tx = builder.BuildTransaction(true);
+            Transaction tx;
 
             builder.SendEstimatedFees(feeRate);
 

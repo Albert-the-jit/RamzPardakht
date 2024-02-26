@@ -239,16 +239,22 @@ public class PaymentController : ControllerBase
 
         if (payment?.Wallet is null)
         {
-            (WalletVersion walletVersion, PubKey pubKey) = _bitcoinWalletProvider.GetNewWalletPublicKey(payment!.Id);
 
             var wallet = new Wallet()
             {
-                Address = pubKey.GetAddress(ScriptPubKeyType.Segwit, Network.TestNet).ToString(),
-                Version = walletVersion,
+                Address = "",
                 Currency = payment.Currency,
                 Path = payment.Id
             };
             payment.Wallet = wallet;
+
+            await _projectDbContext.SaveChangesAsync(CancellationToken.None);
+            (WalletVersion walletVersion, PubKey pubKey) = _bitcoinWalletProvider.GetNewWalletPublicKey(wallet!.Id);
+
+            wallet.Address = pubKey.GetAddress(ScriptPubKeyType.Segwit, Network.TestNet).ToString();
+            wallet.Version = walletVersion;
+
+            await _projectDbContext.SaveChangesAsync(CancellationToken.None);
 
             var addressTrackedSource =
             new AddressTrackedSource(BitcoinAddress.Create(payment.Wallet.Address, _network.NBitcoinNetwork));

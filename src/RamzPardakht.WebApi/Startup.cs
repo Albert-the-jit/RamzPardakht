@@ -204,7 +204,7 @@ public class Startup
             builder.SetResourceBuilder(ResourceBuilder.CreateDefault().AddEnvironmentVariableDetector());
             //environment set docs
             //https://github.com/open-telemetry/opentelemetry-dotnet/blob/main/src/OpenTelemetry.Exporter.Jaeger/README.md#environment-variables
-            builder.AddZipkinExporter();
+            //builder.AddZipkinExporter();
             builder.AddAspNetCoreInstrumentation();
             builder.AddElasticsearchClientInstrumentation();
             builder.AddHttpClientInstrumentation();

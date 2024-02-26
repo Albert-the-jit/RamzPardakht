@@ -100,7 +100,8 @@ public class PayoutController : ControllerBase
         }
         catch (Exception e)
         {
-            ModelState.AddModelError<PayoutCreationRequestModel>(requestModel => requestModel.ToAddress, _stringLocalizer["InvalidWalletAddress"]);
+            ModelState.AddModelError<PayoutCreationRequestModel>(requestModel => requestModel.ToAddress,
+                _stringLocalizer["InvalidWalletAddress"]);
             return ValidationProblem();
         }
 
@@ -145,10 +146,7 @@ public class PayoutController : ControllerBase
 
                 var paymentPayout = new PayoutPayment()
                 {
-                    Payout = payout,
-                    Payment = payment,
-                    Amount = paymentPayoutAmount,
-                    PaymentId = payment.Id,
+                    Payout = payout, Payment = payment, Amount = paymentPayoutAmount, PaymentId = payment.Id,
 
                 };
                 payout.PayoutPayments.Add(paymentPayout);
@@ -192,10 +190,7 @@ public class PayoutController : ControllerBase
 
                     var paymentPayout = new PayoutPayment()
                     {
-                        Payout = payout,
-                        Payment = payment,
-                        Amount = paymentPayoutAmount,
-                        PaymentId = payment.Id,
+                        Payout = payout, Payment = payment, Amount = paymentPayoutAmount, PaymentId = payment.Id,
 
                     };
                     payout.PayoutPayments.Add(paymentPayout);
@@ -213,89 +208,91 @@ public class PayoutController : ControllerBase
         if (finalRemainingPayoutAmount == 0)
         {
 
-            while (true)
+            BitcoinAddress payoutAddress = BitcoinAddress.Create(payout.ToAddress,
+                Network.TestNet);
+
+            TransactionBuilder builder = Network.TestNet.CreateTransactionBuilder();
+            foreach (var payoutPayment in payout.PayoutPayments)
             {
-                BitcoinAddress payoutAddress = BitcoinAddress.Create(payout.ToAddress,
+
+
+                BitcoinAddress bitcoinAddress = BitcoinAddress.Create(
+                    payoutPayment.Payment.Wallet.Address,
                     Network.TestNet);
 
-                TransactionBuilder builder = Network.TestNet.CreateTransactionBuilder();
-                foreach (var payoutPayment in payout.PayoutPayments)
-                {
+                var addressTrackedSource = new AddressTrackedSource(bitcoinAddress);
 
+                var utxos = await _explorerClient.GetUTXOsAsync(addressTrackedSource);
 
-                    BitcoinAddress bitcoinAddress = BitcoinAddress.Create(
-                        payoutPayment.Payment.Wallet.Address,
-                        Network.TestNet);
+                var coins = utxos.GetUnspentCoins();
+                builder.AddCoins(coins);
 
-                    var addressTrackedSource = new AddressTrackedSource(bitcoinAddress);
+                var key = _bitcoinWalletProvider.GetPrivateKeyById(payoutPayment.Payment.Wallet.Version,
+                    payoutPayment.Payment.Wallet.Id);
 
-                    var utxos = await _explorerClient.GetUTXOsAsync(addressTrackedSource);
+                builder.AddKeys(key);
 
-                    var coins = utxos.GetUnspentCoins();
-                    builder.AddCoins(coins);
+                decimal payoutPaymentAmountChange =
+                    coins.Sum(coin => coin.Amount.ToDecimal(MoneyUnit.BTC)) - payoutPayment.Amount;
 
-                    var key = _bitcoinWalletProvider.GetPrivateKeyById(payoutPayment.Payment.Wallet.Version,
-                        payoutPayment.Payment.Wallet.Id);
+                if (payoutPaymentAmountChange > decimal.Zero)
+                    builder.Send(bitcoinAddress,
+                        Money.FromUnit(payoutPaymentAmountChange, MoneyUnit.BTC));
 
-                    builder.AddKeys(key);
-
-                    decimal payoutPaymentAmountChange =
-                        coins.Sum(coin => coin.Amount.ToDecimal(MoneyUnit.BTC)) - payoutPayment.Amount;
-
-                    if (payoutPaymentAmountChange > decimal.Zero)
-                        builder.Send(bitcoinAddress,
-                            Money.FromUnit(payoutPaymentAmountChange, MoneyUnit.BTC));
-
-                }
-
-                builder.SendAllRemaining(payoutAddress);
-
-                // Set the fee rate
-
-
-
-                var fallbackFeeRate = new FeeRate(Money.Satoshis(1), 1);
-                var feeRate = (await _explorerClient.GetFeeRateAsync(1, fallbackFeeRate)).FeeRate;
-
-                var tx = builder.BuildTransaction(true);
-
-                builder.SendEstimatedFees(feeRate);
-
-                try
-                {
-                    tx = builder.BuildTransaction(true);
-                }
-                catch (Exception e) when( e is NotEnoughFundsException)
-                {
-                    ModelState.AddModelError<PayoutCreationRequestModel>(requestModel => requestModel.Amount, _stringLocalizer["AmountShouldBeBiggerThanNetworkFee"]);
-                    return ValidationProblem();
-                }
-
-                var result = await _explorerClient.BroadcastAsync(tx);
-                if (result.Success)
-                {
-                    payout.Status = PayoutStatus.Unconfirmed;
-                    payout.TransactionId = tx.GetHash().ToString();
-                    payout.NetworkFee = feeRate.GetFee(tx).ToDecimal(MoneyUnit.BTC);
-
-                    await _projectDbContext.Payouts.AddAsync(payout);
-                    await _projectDbContext.SaveChangesAsync();
-
-                    return _mapper.ToModel(payout);
-
-                }
-                else if (result.RPCCode.HasValue && result.RPCCode.Value == RPCErrorCode.RPC_TRANSACTION_REJECTED)
-                {
-                    Console.WriteLine("We probably got a conflict, let's try again!");
-                }
-                else
-                {
-                    Console.WriteLine(
-                        $"Something is really wrong {result.RPCCode} {result.RPCCodeMessage} {result.RPCMessage}");
-                    return Problem("Something is really wrong");
-                    // Do something!!!
-                }
             }
+
+            builder.SendAllRemaining(payoutAddress);
+
+            // Set the fee rate
+
+
+
+            var fallbackFeeRate = new FeeRate(Money.Satoshis(1), 1);
+            var feeRate = (await _explorerClient.GetFeeRateAsync(1, fallbackFeeRate)).FeeRate;
+
+            var tx = builder.BuildTransaction(true);
+
+            builder.SendEstimatedFees(feeRate);
+
+            try
+            {
+                tx = builder.BuildTransaction(true);
+            }
+            catch (Exception e) when (e is NotEnoughFundsException)
+            {
+                ModelState.AddModelError<PayoutCreationRequestModel>(requestModel => requestModel.Amount,
+                    _stringLocalizer["AmountShouldBeBiggerThanNetworkFee"]);
+                return ValidationProblem();
+            }
+
+            var result = await _explorerClient.BroadcastAsync(tx);
+            if (result.Success)
+            {
+                payout.Status = PayoutStatus.Unconfirmed;
+                payout.TransactionId = tx.GetHash().ToString();
+                payout.NetworkFee = feeRate.GetFee(tx).ToDecimal(MoneyUnit.BTC);
+
+                await _projectDbContext.Payouts.AddAsync(payout);
+                await _projectDbContext.SaveChangesAsync();
+
+                return _mapper.ToModel(payout);
+
+            }
+            else if (result.RPCCode.HasValue && result.RPCCode.Value == RPCErrorCode.RPC_TRANSACTION_REJECTED)
+            {
+                Console.WriteLine("We probably got a conflict, let's try again!");
+
+                return Problem(
+                    $"Something is really wrong {result.RPCCode} {result.RPCCodeMessage} {result.RPCMessage}");
+            }
+            else
+            {
+                Console.WriteLine(
+                    $"Something is really wrong {result.RPCCode} {result.RPCCodeMessage} {result.RPCMessage}");
+                return Problem("Something is really wrong");
+                // Do something!!!
+            }
+
 
         }
         else if (finalRemainingPayoutAmount < 0)
@@ -304,12 +301,14 @@ public class PayoutController : ControllerBase
         }
         else if (finalRemainingPayoutAmount > 0)
         {
-            ModelState.AddModelError<PayoutCreationRequestModel>(requestModel => requestModel.Amount, _stringLocalizer["NotEnoughMoney"]);
+            ModelState.AddModelError<PayoutCreationRequestModel>(requestModel => requestModel.Amount,
+                _stringLocalizer["NotEnoughMoney"]);
             return ValidationProblem();
         }
         else
         {
-            ModelState.AddModelError<PayoutCreationRequestModel>(requestModel => requestModel.Amount, _stringLocalizer["NotEnoughMoney"]);
+            ModelState.AddModelError<PayoutCreationRequestModel>(requestModel => requestModel.Amount,
+                _stringLocalizer["NotEnoughMoney"]);
             return ValidationProblem();
         }
     }

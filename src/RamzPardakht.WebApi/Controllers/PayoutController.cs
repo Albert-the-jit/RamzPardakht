@@ -248,7 +248,7 @@ public class PayoutController : ControllerBase
 
                 // Set the fee rate
 
-                var fallbackFeeRate = new FeeRate(Money.Satoshis(100), 1);
+                var fallbackFeeRate = new FeeRate(Money.Satoshis(1), 1);
                 var feeRate = (await _explorerClient.GetFeeRateAsync(1, fallbackFeeRate)).FeeRate;
 
                 builder.SendEstimatedFees(feeRate);

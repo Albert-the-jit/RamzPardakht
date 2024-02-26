@@ -148,7 +148,7 @@ public class NewBitcoinBlockEventConsumer : IConsumer<NewBitcoinBlockEvent>
 
             await _projectDbContext.SaveChangesAsync(CancellationToken.None);
 
-            if (payment.Status is Status.Pending or Status.UnderPaid)
+            if (payment.Status is Status.Paid or Status.UnderPaid)
                 await context.Publish(
                     new PaymentStatusChanged()
                     {

@@ -1611,6 +1611,11 @@
           "accessToken": {
             "type": "string",
             "nullable": true
+          },
+          "logoId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
           }
         },
         "additionalProperties": false

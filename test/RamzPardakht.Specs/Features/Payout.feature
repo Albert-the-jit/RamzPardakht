@@ -88,6 +88,11 @@ Scenario: Successful payout creation
     Then the "person 1" should receive a failed message with "400" status and "InvalidWalletAddress" error massage
 
     When "person 1" sends payout request with the following information:
+      | Currency | Amount   | ToAddress                                  |
+      | BTC      | 0.000009 | tb1qdmzvjd0azxpntnfjm66cdr04zy0grxj6cwfy62 |
+    Then the "person 1" should receive a failed message with "400" status and "RangeAttribute_ValidationError" error massage
+
+    When "person 1" sends payout request with the following information:
       | Currency | Amount | ToAddress                                  |
       | BTC      | 750    | tb1qdmzvjd0azxpntnfjm66cdr04zy0grxj6cwfy62 |
     Then the "person 1" should receive a failed message with "400" status and "NotEnoughMoney" error massage

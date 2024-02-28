@@ -54,7 +54,7 @@ public class Archive
                                             BindingFlags.NonPublic |
                                             BindingFlags.Public);
 
-                Action<Stream>? action = (Action<Stream>)propertyInfo?.GetValue(arg1)!;
+                Func<Stream, CancellationToken, Task> action = (Func<Stream, CancellationToken, Task>)propertyInfo?.GetValue(arg1)!;
 
                 string path = @"ArchiveTestFiles/images.jpg";
                 await using var stream = File.OpenRead(path);
@@ -63,7 +63,7 @@ public class Archive
                 await stream.CopyToAsync(memoryStream, arg2);
                 memoryStream.Seek(0, SeekOrigin.Begin);
 
-                action?.Invoke(memoryStream);
+                await action.Invoke(memoryStream, arg2);
 
                 var statResponse = ObjectStat.FromResponseHeaders("xcvxcv", new Dictionary<string, string>());
 

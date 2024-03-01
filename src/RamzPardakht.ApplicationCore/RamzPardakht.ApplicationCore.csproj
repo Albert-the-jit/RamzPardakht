@@ -11,7 +11,7 @@
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0"/>
         <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.2" />
         <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="8.0.2" />
-        <PackageReference Include="NBitcoin" Version="7.0.35" />
+        <PackageReference Include="NBitcoin" Version="7.0.36" />
         <PackageReference Include="NBitcoin.Altcoins" Version="3.0.23" />
         <PackageReference Include="NBXplorer.Client" Version="4.3.0" />
     </ItemGroup>

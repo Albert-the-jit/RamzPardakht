@@ -47,7 +47,8 @@ public class PaymentController : ControllerBase
         IExchangeService exchangeService,
         IBitcoinWalletProvider bitcoinWalletProvider,
         IStringLocalizer<SharedResource> stringLocalizer,
-        IConfiguration configuration)
+        IConfiguration configuration
+        )
     {
         _timeProvider = timeProvider;
         _projectDbContext = projectDbContext;
@@ -86,6 +87,7 @@ public class PaymentController : ControllerBase
         }
 
         var payments = await _projectDbContext.Payments
+            .Where(x=>x.UserId == User.GetUserId())
             .ProjectToModel()
             .GridifyAsync(query, cancellationToken);
 
@@ -234,35 +236,41 @@ public class PaymentController : ControllerBase
         if (payment is null)
             return NotFound();
 
-        if (payment.Currency != Currency.BTC)
-            return ValidationProblem($"{payment.Currency} Not Implemented");
-
-        if (payment?.Wallet is null)
+        if (payment.Currency == Currency.BTC)
         {
-
-            var wallet = new Wallet()
+            if (payment?.Wallet is null)
             {
-                Address = "",
-                Currency = payment.Currency,
-                Path = payment.Id
-            };
-            payment.Wallet = wallet;
+                var wallet = new Wallet() { Address = "", Currency = payment.Currency, Path = payment.Id };
+                payment.Wallet = wallet;
 
-            await _projectDbContext.SaveChangesAsync(CancellationToken.None);
-            (WalletVersion walletVersion, PubKey pubKey) = _bitcoinWalletProvider.GetNewWalletPublicKey(wallet!.Id);
+                await _projectDbContext.SaveChangesAsync(CancellationToken.None);
+                (WalletVersion walletVersion, PubKey pubKey) = _bitcoinWalletProvider.GetNewWalletPublicKey(wallet!.Id);
 
-            wallet.Address = pubKey.GetAddress(ScriptPubKeyType.Segwit, Network.TestNet).ToString();
-            wallet.Version = walletVersion;
+                wallet.Address = pubKey.GetAddress(ScriptPubKeyType.Segwit, Network.TestNet).ToString();
+                wallet.Version = walletVersion;
 
-            await _projectDbContext.SaveChangesAsync(CancellationToken.None);
+                await _projectDbContext.SaveChangesAsync(CancellationToken.None);
 
-            var addressTrackedSource =
-            new AddressTrackedSource(BitcoinAddress.Create(payment.Wallet.Address, _network.NBitcoinNetwork));
+                var addressTrackedSource =
+                    new AddressTrackedSource(BitcoinAddress.Create(payment.Wallet.Address, _network.NBitcoinNetwork));
 
-            await _explorerClient.TrackAsync(addressTrackedSource, cancellation: cancellationToken);
+                await _explorerClient.TrackAsync(addressTrackedSource, cancellation: cancellationToken);
 
-            await _projectDbContext.SaveChangesAsync(CancellationToken.None);
+                await _projectDbContext.SaveChangesAsync(CancellationToken.None);
 
+                return new PaymentInfoForPayerModel
+                {
+                    RefId = payment.Id,
+                    ClientRefId = payment.ClientRefId,
+                    Currency = payment.Currency,
+                    Address = payment.Wallet.Address,
+                    Amount = payment.Amount,
+                    PaidAmount = 0,
+                    SuccessUrl =
+                        $"{Request.Scheme}://{Request.Host.ToUriComponent()}/v1/Payment/Redirect/{payment.Code}",
+                    Status = payment.Status,
+                };
+            }
             return new PaymentInfoForPayerModel
             {
                 RefId = payment.Id,
@@ -270,24 +278,15 @@ public class PaymentController : ControllerBase
                 Currency = payment.Currency,
                 Address = payment.Wallet.Address,
                 Amount = payment.Amount,
-                PaidAmount = 0,
                 SuccessUrl = $"{Request.Scheme}://{Request.Host.ToUriComponent()}/v1/Payment/Redirect/{payment.Code}",
+                PaidAmount = payment.PaidAmount,
                 Status = payment.Status,
             };
-
         }
-
-        return new PaymentInfoForPayerModel
+        else
         {
-            RefId = payment.Id,
-            ClientRefId = payment.ClientRefId,
-            Currency = payment.Currency,
-            Address = payment.Wallet.Address,
-            Amount = payment.Amount,
-            SuccessUrl = $"{Request.Scheme}://{Request.Host.ToUriComponent()}/v1/Payment/Redirect/{payment.Code}",
-            PaidAmount = payment.PaidAmount,
-            Status = payment.Status,
-        };
+            return ValidationProblem($"{payment.Currency} Not Implemented");
+        }
     }
 
     [HttpGet("Redirect/{code:guid}")]

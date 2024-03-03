@@ -29,7 +29,7 @@ public class ArchiveController : ControllerBase
     private readonly IStringLocalizer<SharedResource> _stringLocalizer;
     private readonly IMinioClient _minioClient;
 
-    private string[] permittedExtensions = { ".png", ".jpg", ".jpeg", ".pdf" };
+    private string[] permittedExtensions = { ".png", ".jpg", ".jpeg", ".pdf", ".svg" };
 
     public ArchiveController(
         IProjectDbContext projectDbContext,

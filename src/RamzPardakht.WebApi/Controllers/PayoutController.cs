@@ -80,6 +80,7 @@ public class PayoutController : ControllerBase
         }
 
         var payouts = await _projectDbContext.Payouts
+            .Where(x=>x.UserId == User.GetUserId())
             .ProjectToModel()
             .GridifyAsync(query, cancellationToken);
 

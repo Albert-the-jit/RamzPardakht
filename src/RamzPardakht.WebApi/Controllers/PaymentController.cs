@@ -87,7 +87,7 @@ public class PaymentController : ControllerBase
         }
 
         var payments = await _projectDbContext.Payments
-            .Where(x=>x.UserId == User.GetUserId())
+            .Where(x => x.UserId == User.GetUserId())
             .ProjectToModel()
             .GridifyAsync(query, cancellationToken);
 

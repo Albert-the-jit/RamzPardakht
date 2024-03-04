@@ -4,10 +4,10 @@ services:
     container_name: api
     build: .
     ports:
-      - "80:80"
+      - "81:81"
 
     environment:
-      - ASPNETCORE_URLS=http://0.0.0.0:80
+      - ASPNETCORE_URLS=http://0.0.0.0:81
       - OTEL_EXPORTER_ZIPKIN_ENDPOINT=http://zipkin:9411/api/v2/spans
       - OTEL_SERVICE_NAME=Api
   postgres:

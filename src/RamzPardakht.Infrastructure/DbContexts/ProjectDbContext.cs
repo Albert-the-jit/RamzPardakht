@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq.Expressions;
 using System.Reflection;
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -14,11 +15,13 @@ using RamzPardakht.ApplicationCore.Entities;
 
 namespace RamzPardakht.Infrastructure.DbContexts;
 
-public class ProjectDbContext : IdentityDbContext<User, Role, int, IdentityUserClaim<int>, UserRole, IdentityUserLogin<int>, IdentityRoleClaim<int>, IdentityUserToken<int>>, IProjectDbContext
+public class ProjectDbContext : IdentityDbContext<User, Role, int, IdentityUserClaim<int>, UserRole, IdentityUserLogin<int>, IdentityRoleClaim<int>, IdentityUserToken<int>>, IProjectDbContext, IDataProtectionKeyContext
 {
     public ProjectDbContext(DbContextOptions options) : base(options)
     {
     }
+
+    public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
 
     public DbSet<ReferenceToken> ReferenceTokens { get; set; }
     public DbSet<Payment> Payments { get; set; }
@@ -184,5 +187,4 @@ public class ProjectDbContext : IdentityDbContext<User, Role, int, IdentityUserC
             }
         }
     }
-
 }

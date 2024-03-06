@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -71,6 +72,10 @@ public static class InfrastructureSetup
         // https://github.com/VahidN/EFCoreSecondLevelCacheInterceptor
         // services.AddEFSecondLevelCache(options =>
         //     options.UseMemoryCacheProvider().DisableLogging(true).UseCacheKeyPrefix("EF_"));
+
+
+        services.AddDataProtection()
+            .PersistKeysToDbContext<ProjectDbContext>();
 
         return services;
     }

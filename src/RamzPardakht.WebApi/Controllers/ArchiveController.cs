@@ -52,8 +52,11 @@ public class ArchiveController : ControllerBase
     {
         string ext = Path.GetExtension(file.FileName).ToLowerInvariant();
         if (string.IsNullOrEmpty(ext) || !permittedExtensions.Contains(ext))
-            return ValidationProblem(_stringLocalizer["InvalidFileExtension"]);
+        {
+            ModelState.AddModelError("", _stringLocalizer["InvalidFileExtension"]);
 
+            return ValidationProblem();
+        }
         using var stream = new MemoryStream();
         await file.CopyToAsync(stream);
 

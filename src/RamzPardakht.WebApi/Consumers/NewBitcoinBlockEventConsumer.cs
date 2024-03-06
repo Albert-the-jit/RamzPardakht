@@ -63,7 +63,10 @@ public class NewBitcoinBlockEventConsumer : IConsumer<NewBitcoinBlockEvent>
     {
         _logger.LogInformation("CheckNewPaymentsStatusAndBalance");
 
-        var payments = await _projectDbContext.Payments.Include(x => x.Wallet)
+        var payments = await _projectDbContext.Payments
+            .Include(x => x.Wallet)
+            .Where(x => x.Currency == Currency.BTC)
+            .Where(x => !string.IsNullOrEmpty(x.Wallet.Address))
             .Where(x => x.ExpireOn > _timeProvider.GetUtcNow())
             .Where(x => x.Status == Status.New || x.Status == Status.Pending)
             .ToListAsync(cancellationToken: cancellationToken);
@@ -117,6 +120,7 @@ public class NewBitcoinBlockEventConsumer : IConsumer<NewBitcoinBlockEvent>
 
         var payments = await _projectDbContext.Payments
             .Include(x => x.Wallet)
+            .Where(x => x.Currency == Currency.BTC)
             .Where(x => x.Status == Status.Pending)
             .ToListAsync(cancellationToken: cancellationToken);
 
@@ -167,6 +171,7 @@ public class NewBitcoinBlockEventConsumer : IConsumer<NewBitcoinBlockEvent>
 
         var payouts = await _projectDbContext.Payouts
             .Where(x => x.Status == PayoutStatus.Unconfirmed)
+            .Where(x => x.Currency == Currency.BTC)
             .ToListAsync(cancellationToken: cancellationToken);
 
         foreach (Payout payout in payouts)

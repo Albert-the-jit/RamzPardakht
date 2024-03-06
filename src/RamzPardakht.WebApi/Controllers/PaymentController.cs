@@ -240,7 +240,7 @@ public class PaymentController : ControllerBase
         {
             if (payment?.Wallet is null)
             {
-                var wallet = new Wallet() { Address = "", Currency = payment.Currency, Path = payment.Id };
+                var wallet = new Wallet() { Address = "", Currency = payment.Currency };
                 payment.Wallet = wallet;
 
                 await _projectDbContext.SaveChangesAsync(CancellationToken.None);
@@ -248,6 +248,7 @@ public class PaymentController : ControllerBase
 
                 wallet.Address = pubKey.GetAddress(ScriptPubKeyType.Segwit, Network.TestNet).ToString();
                 wallet.Version = walletVersion;
+                wallet.Path = wallet.Id;
 
                 await _projectDbContext.SaveChangesAsync(CancellationToken.None);
 

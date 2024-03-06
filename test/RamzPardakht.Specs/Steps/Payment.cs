@@ -64,7 +64,7 @@ public class Payment
         result!.RedirectUrl.Should().NotBeNullOrWhiteSpace();
         result.RefId.Should().BeGreaterThan(0);
         result.ClientRefId.Should().BeEquivalentTo(paymentCreationRequestModel.ClientRefId);
-        result.ExpireOn.Should().BeCloseTo(DateTimeOffset.Now.AddMinutes(10), TimeSpan.FromMinutes(5));
+        result.ExpireOn.Should().BeCloseTo(DateTimeOffset.Now.AddMinutes(25), TimeSpan.FromMinutes(5));
 
         _scenarioContext.Set(result, $"{p0}:{nameof(PaymentCreationResponseModel)}");
     }
@@ -107,7 +107,7 @@ public class Payment
         result.PaidAmount.Should().Be(expectedResponse.PaidAmount);
         result.SelectedCurrencyAmount.Should().Be(expectedResponse.SelectedCurrencyAmount);
 
-        result.ExpireOn.Should().BeCloseTo(DateTimeOffset.Now.AddMinutes(10), TimeSpan.FromMinutes(5));
+        result.ExpireOn.Should().BeCloseTo(DateTimeOffset.Now.AddMinutes(25), TimeSpan.FromMinutes(5));
 
         _scenarioContext.Set(result, $"{p0}:{nameof(PaymentInquiryResponseModel)}");
     }

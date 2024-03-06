@@ -105,7 +105,7 @@ public class PaymentController : ControllerBase
         CancellationToken cancellationToken)
     {
         var payment = _mapper.ToEntity(model);
-        payment.ExpireOn = _timeProvider.GetUtcNow().AddMinutes(15);
+        payment.ExpireOn = _timeProvider.GetUtcNow().AddMinutes(25);
         payment.UserId = User.GetUserId();
 
         if (payment.Currency != Currency.NotSelected)

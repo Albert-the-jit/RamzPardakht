@@ -3,17 +3,17 @@
 
 |||
 |:---|:---|
-| Generated on: | 3/2/2024 - 9:06:48 PM |
-| Coverage date: | 3/2/2024 - 9:06:46 PM |
+| Generated on: | 3/7/2024 - 6:32:30 PM |
+| Coverage date: | 3/7/2024 - 6:32:28 PM |
 | Parser: | Cobertura |
 | Assemblies: | 3 |
-| Classes: | 27 |
-| Files: | 28 |
-| **Line coverage:** | 73.2% (550 of 751) |
-| Covered lines: | 550 |
-| Uncovered lines: | 201 |
-| Coverable lines: | 751 |
-| Total lines: | 2600 |
+| Classes: | 25 |
+| Files: | 26 |
+| **Line coverage:** | 75.1% (553 of 736) |
+| Covered lines: | 553 |
+| Uncovered lines: | 183 |
+| Coverable lines: | 736 |
+| Total lines: | 2560 |
 | **Branch coverage:** | 72% (85 of 118) |
 | Covered branches: | 85 |
 | Total branches: | 118 |
@@ -43,11 +43,11 @@
 |RamzPardakht.Infrastructure.Services.ExchangeService|100%||
 
 </details>
-<details><summary>RamzPardakht.WebApi - 88.6%</summary>
+<details><summary>RamzPardakht.WebApi - 92.9%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**RamzPardakht.WebApi**|**88.6%**|**72.7%**|
+|**RamzPardakht.WebApi**|**92.9%**|**72.7%**|
 |RamzPardakht.WebApi.BackgroundServices.BitcoinNewBlockListener|0%||
 |RamzPardakht.WebApi.Common.ClaimsPrincipalExtensions|75%|50%|
 |RamzPardakht.WebApi.Common.HideSignalRHubSpecificationFromSwaggerFilter|100%||
@@ -61,12 +61,10 @@
 |RamzPardakht.WebApi.Controllers.BalanceController|100%||
 |RamzPardakht.WebApi.Controllers.PaymentController|100%||
 |RamzPardakht.WebApi.Controllers.PayoutController|100%||
-|RamzPardakht.WebApi.Controllers.WeatherForecastController|0%||
 |RamzPardakht.WebApi.Hubs.PaymentHub|100%||
 |RamzPardakht.WebApi.Models.PaymentInquiryResponseModel|100%||
 |RamzPardakht.WebApi.Models.PayoutCreationResponseModel|100%||
 |RamzPardakht.WebApi.Startup|95.5%|50%|
-|RamzPardakht.WebApi.WeatherForecast|0%||
 |TypedSignalR.Client.DevTools.EndpointRouteBuilderExtensions|||
 
 </details>

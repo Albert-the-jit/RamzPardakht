@@ -88,6 +88,7 @@ public class PaymentController : ControllerBase
 
         var payments = await _projectDbContext.Payments
             .Where(x => x.UserId == User.GetUserId())
+            .OrderByDescending(x => x.Id)
             .ProjectToModel()
             .GridifyAsync(query, cancellationToken);
 
@@ -205,11 +206,20 @@ public class PaymentController : ControllerBase
         CancellationToken cancellationToken)
     {
         var payment = await _projectDbContext.Payments
-            .FirstOrDefaultAsync(x => x.Code == model.Code && x.Currency == Currency.NotSelected && x.Status == Status.New, cancellationToken);
+            .FirstOrDefaultAsync(x =>
+                x.Code == model.Code &&
+                x.Status == Status.New &&
+                (x.Currency == Currency.NotSelected ||
+                 x.Currency != Currency.NotSelected &&
+                 string.IsNullOrEmpty(x.PayerEmail))
+                , cancellationToken);
+
         if (payment is null)
             return NotFound();
 
-        payment.Currency = model.Currency;
+        if(payment.Currency == Currency.NotSelected)
+            payment.Currency = model.Currency;
+
         payment.PayerEmail = model.PayerEmail;
 
         decimal amount = await _exchangeService.ConvertUsdTo(payment.Currency, payment.UsdAmount);

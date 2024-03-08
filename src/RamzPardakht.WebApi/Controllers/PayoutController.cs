@@ -81,6 +81,7 @@ public class PayoutController : ControllerBase
 
         var payouts = await _projectDbContext.Payouts
             .Where(x => x.UserId == User.GetUserId())
+            .OrderByDescending(x => x.Id)
             .ProjectToModel()
             .GridifyAsync(query, cancellationToken);
 

@@ -217,7 +217,7 @@ public class PaymentController : ControllerBase
         if (payment is null)
             return NotFound();
 
-        if(payment.Currency == Currency.NotSelected)
+        if (payment.Currency == Currency.NotSelected)
             payment.Currency = model.Currency;
 
         payment.PayerEmail = model.PayerEmail;

@@ -17,5 +17,6 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
           script: |
+            docker system prune -f
             if cd RamzPardakht; then git pull ${{ secrets.Repo }}; else git clone ${{ secrets.Repo }}; fi
             docker-compose up -d --build

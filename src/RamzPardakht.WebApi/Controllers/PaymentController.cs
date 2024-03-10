@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Options;
 using NBitcoin;
 using NBXplorer;
 using NBXplorer.Models;
+using RamzPardakht.ApplicationCore.Common;
 using RamzPardakht.ApplicationCore.Contracts;
 using RamzPardakht.ApplicationCore.Entities;
 using RamzPardakht.ApplicationCore.Resources;
@@ -37,7 +39,7 @@ public class PaymentController : ControllerBase
 
     private readonly ExplorerClient _explorerClient;
     private readonly NBXplorerNetwork _network;
-    private readonly IConfiguration _configuration;
+    private readonly IOptionsSnapshot<AppSettings> _optionsSnapshot;
 
     public PaymentController(
         TimeProvider timeProvider,
@@ -47,7 +49,8 @@ public class PaymentController : ControllerBase
         IExchangeService exchangeService,
         IBitcoinWalletProvider bitcoinWalletProvider,
         IStringLocalizer<SharedResource> stringLocalizer,
-        IConfiguration configuration
+        IConfiguration configuration,
+        IOptionsSnapshot<AppSettings> optionsSnapshot
         )
     {
         _timeProvider = timeProvider;
@@ -56,7 +59,7 @@ public class PaymentController : ControllerBase
         _exchangeService = exchangeService;
         _bitcoinWalletProvider = bitcoinWalletProvider;
         _stringLocalizer = stringLocalizer;
-        _configuration = configuration;
+        _optionsSnapshot = optionsSnapshot;
 
 
         _network = new NBXplorerNetworkProvider(ChainName.Testnet).GetBTC();
@@ -121,7 +124,7 @@ public class PaymentController : ControllerBase
         return new PaymentCreationResponseModel()
         {
             ClientRefId = payment.ClientRefId,
-            RedirectUrl = $"https://example.com/payment/{payment.Code}",
+            RedirectUrl = $"{_optionsSnapshot.Value.PaymentFrontPageAddress}/{payment.Code}",
             Code = payment.Code,
             RefId = payment.Id,
             ExpireOn = payment.ExpireOn,
@@ -185,6 +188,7 @@ public class PaymentController : ControllerBase
         }
 
         info.Currency = payment.Currency;
+        info.CancelUrl = payment.CancelUrl;
         info.PayerEmail = payment.PayerEmail;
         info.ExpireOn = payment.ExpireOn;
 

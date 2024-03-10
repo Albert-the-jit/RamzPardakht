@@ -11,6 +11,7 @@
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0"/>
         <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.2" />
         <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="8.0.2" />
+        <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
         <PackageReference Include="NBitcoin" Version="7.0.36" />
         <PackageReference Include="NBitcoin.Altcoins" Version="3.0.23" />
         <PackageReference Include="NBXplorer.Client" Version="4.3.0" />
@@ -20,11 +21,4 @@
         <EmbeddedResource Update="Resources\SharedResource.en-US.resx"/>
         <EmbeddedResource Update="Resources\SharedResource.fa-IR.resx"/>
     </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="Microsoft.Extensions.Http">
-        <HintPath>..\..\..\..\..\..\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.0\Microsoft.Extensions.Http.dll</HintPath>
-      </Reference>
-    </ItemGroup>
-
 </Project>

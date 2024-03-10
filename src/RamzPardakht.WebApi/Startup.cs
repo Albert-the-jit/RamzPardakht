@@ -139,7 +139,7 @@ public class Startup
         services.UseHttpClientLogRequestResponse(options => _configuration.Bind("LogRequestResponse", options));
 
         services.AddInfrastructure(_configuration);
-        services.AddApplication();
+        services.AddApplication(_configuration);
 
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen(options =>

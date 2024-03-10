@@ -57,8 +57,8 @@ public class EmailSender : IEmailSender<User>
         var uriBuilder = new UriBuilder(_options.Value.ResetPasswordFrontAddress);
         var query = HttpUtility.ParseQueryString(uriBuilder.Query);
 
-        query["Email"] = email;
-        query["ResetCode"] = resetCode;
+        query["email"] = email;
+        query["resetCode"] = resetCode;
 
         uriBuilder.Query = query.ToString();
 

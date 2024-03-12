@@ -7,10 +7,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.2" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0"/>
-        <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.2" />
-        <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="8.0.2" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.3" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1"/>
+        <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="8.0.3" />
+        <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="8.0.3" />
         <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
         <PackageReference Include="NBitcoin" Version="7.0.36" />
         <PackageReference Include="NBitcoin.Altcoins" Version="3.0.23" />

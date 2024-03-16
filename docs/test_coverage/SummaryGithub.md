@@ -3,17 +3,17 @@
 
 |||
 |:---|:---|
-| Generated on: | 3/7/2024 - 6:32:30 PM |
-| Coverage date: | 3/7/2024 - 6:32:28 PM |
+| Generated on: | 3/16/2024 - 9:08:53 PM |
+| Coverage date: | 3/16/2024 - 9:08:49 PM |
 | Parser: | Cobertura |
 | Assemblies: | 3 |
 | Classes: | 25 |
 | Files: | 26 |
-| **Line coverage:** | 75.1% (553 of 736) |
-| Covered lines: | 553 |
-| Uncovered lines: | 183 |
-| Coverable lines: | 736 |
-| Total lines: | 2560 |
+| **Line coverage:** | 73.6% (566 of 769) |
+| Covered lines: | 566 |
+| Uncovered lines: | 203 |
+| Coverable lines: | 769 |
+| Total lines: | 2660 |
 | **Branch coverage:** | 72% (85 of 118) |
 | Covered branches: | 85 |
 | Total branches: | 118 |
@@ -22,32 +22,32 @@
 </details>
 
 ## Coverage
-<details><summary>RamzPardakht.ApplicationCore - 21.6%</summary>
+<details><summary>RamzPardakht.ApplicationCore - 22.1%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**RamzPardakht.ApplicationCore**|**21.6%**|****|
+|**RamzPardakht.ApplicationCore**|**22.1%**|****|
 |RamzPardakht.ApplicationCore.ApplicationCoreSetup|100%||
 |RamzPardakht.ApplicationCore.Resources.CustomIdentityErrorDescriber|6.9%||
 |RamzPardakht.ApplicationCore.Services.BitcoinWalletProvider|100%||
 
 </details>
-<details><summary>RamzPardakht.Infrastructure - 95.1%</summary>
+<details><summary>RamzPardakht.Infrastructure - 84.9%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**RamzPardakht.Infrastructure**|**95.1%**|**71.8%**|
+|**RamzPardakht.Infrastructure**|**84.9%**|**71.8%**|
 |RamzPardakht.Infrastructure.DbContexts.ProjectDbContext|96.4%|71.8%|
 |RamzPardakht.Infrastructure.InfrastructureSetup|100%||
 |RamzPardakht.Infrastructure.Services.EmailSender|0%||
 |RamzPardakht.Infrastructure.Services.ExchangeService|100%||
 
 </details>
-<details><summary>RamzPardakht.WebApi - 92.9%</summary>
+<details><summary>RamzPardakht.WebApi - 93.1%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**RamzPardakht.WebApi**|**92.9%**|**72.7%**|
+|**RamzPardakht.WebApi**|**93.1%**|**72.7%**|
 |RamzPardakht.WebApi.BackgroundServices.BitcoinNewBlockListener|0%||
 |RamzPardakht.WebApi.Common.ClaimsPrincipalExtensions|75%|50%|
 |RamzPardakht.WebApi.Common.HideSignalRHubSpecificationFromSwaggerFilter|100%||
@@ -65,6 +65,6 @@
 |RamzPardakht.WebApi.Models.PaymentInquiryResponseModel|100%||
 |RamzPardakht.WebApi.Models.PayoutCreationResponseModel|100%||
 |RamzPardakht.WebApi.Startup|95.5%|50%|
-|TypedSignalR.Client.DevTools.EndpointRouteBuilderExtensions|||
+|TypedSignalR.Client.DevTools.EndpointRouteBuilderExtensions|100%||
 
 </details>

@@ -1,28 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage line-rate="0.7550200803212851" branch-rate="0.7203389830508474" lines-covered="564" lines-valid="747" branches-covered="85" branches-valid="118" complexity="169" version="0" timestamp="1709836348">
+<coverage line-rate="0.7360208062418726" branch-rate="0.7203389830508474" lines-covered="566" lines-valid="769" branches-covered="85" branches-valid="118" complexity="172" version="0" timestamp="1710623329">
   <sources>
     <source>D:\a\RamzPardakht\RamzPardakht\src\</source>
   </sources>
   <packages>
-    <package name="RamzPardakht.ApplicationCore" line-rate="0.21693121693121692" branch-rate="1" complexity="28">
+    <package name="RamzPardakht.ApplicationCore" line-rate="0.22105263157894736" branch-rate="1" complexity="28">
       <classes>
         <class name="RamzPardakht.ApplicationCore.ApplicationCoreSetup" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.ApplicationCore\ApplicationCoreSetup.cs" line-rate="1" branch-rate="1" complexity="1">
           <methods>
-            <method name="AddApplication" signature="(Microsoft.Extensions.DependencyInjection.IServiceCollection)" line-rate="1" branch-rate="1" complexity="1">
+            <method name="AddApplication" signature="(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="10" hits="11" branch="false" />
-                <line number="11" hits="11" branch="false" />
                 <line number="12" hits="11" branch="false" />
                 <line number="13" hits="11" branch="false" />
+                <line number="15" hits="11" branch="false" />
+                <line number="17" hits="11" branch="false" />
+                <line number="18" hits="11" branch="false" />
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="10" hits="11" branch="false" />
-            <line number="11" hits="11" branch="false" />
             <line number="12" hits="11" branch="false" />
             <line number="13" hits="11" branch="false" />
+            <line number="15" hits="11" branch="false" />
+            <line number="17" hits="11" branch="false" />
+            <line number="18" hits="11" branch="false" />
           </lines>
         </class>
         <class name="RamzPardakht.ApplicationCore.Resources.CustomIdentityErrorDescriber" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.ApplicationCore\Resources\CustomIdentityErrorDescriber.cs" line-rate="0.06918238993710692" branch-rate="1" complexity="23">
@@ -517,7 +519,7 @@
         </class>
       </classes>
     </package>
-    <package name="RamzPardakht.Infrastructure" line-rate="0.9518072289156626" branch-rate="0.71875" complexity="100">
+    <package name="RamzPardakht.Infrastructure" line-rate="0.8494623655913979" branch-rate="0.71875" complexity="103">
       <classes>
         <class name="RamzPardakht.Infrastructure.DbContexts.ProjectDbContext" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.Infrastructure\DbContexts\ProjectDbContext.cs" line-rate="0.9649122807017544" branch-rate="0.71875" complexity="97">
           <methods>
@@ -769,21 +771,22 @@
           <methods>
             <method name="AddInfrastructure" signature="(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
+                <line number="22" hits="11" branch="false" />
                 <line number="23" hits="11" branch="false" />
                 <line number="24" hits="11" branch="false" />
                 <line number="25" hits="11" branch="false" />
                 <line number="26" hits="11" branch="false" />
                 <line number="27" hits="11" branch="false" />
-                <line number="28" hits="11" branch="false" />
+                <line number="29" hits="11" branch="false" />
                 <line number="30" hits="11" branch="false" />
-                <line number="31" hits="11" branch="false" />
-                <line number="34" hits="11" branch="false" />
-                <line number="36" hits="11" branch="false" />
+                <line number="33" hits="11" branch="false" />
+                <line number="35" hits="11" branch="false" />
+                <line number="37" hits="11" branch="false" />
                 <line number="38" hits="11" branch="false" />
                 <line number="39" hits="11" branch="false" />
                 <line number="40" hits="11" branch="false" />
                 <line number="41" hits="11" branch="false" />
-                <line number="42" hits="11" branch="false" />
+                <line number="43" hits="11" branch="false" />
                 <line number="44" hits="11" branch="false" />
                 <line number="45" hits="11" branch="false" />
                 <line number="46" hits="11" branch="false" />
@@ -808,30 +811,30 @@
                 <line number="65" hits="11" branch="false" />
                 <line number="66" hits="11" branch="false" />
                 <line number="67" hits="11" branch="false" />
-                <line number="68" hits="11" branch="false" />
+                <line number="76" hits="11" branch="false" />
                 <line number="77" hits="11" branch="false" />
-                <line number="78" hits="11" branch="false" />
+                <line number="79" hits="11" branch="false" />
                 <line number="80" hits="11" branch="false" />
-                <line number="81" hits="11" branch="false" />
               </lines>
             </method>
           </methods>
           <lines>
+            <line number="22" hits="11" branch="false" />
             <line number="23" hits="11" branch="false" />
             <line number="24" hits="11" branch="false" />
             <line number="25" hits="11" branch="false" />
             <line number="26" hits="11" branch="false" />
             <line number="27" hits="11" branch="false" />
-            <line number="28" hits="11" branch="false" />
+            <line number="29" hits="11" branch="false" />
             <line number="30" hits="11" branch="false" />
-            <line number="31" hits="11" branch="false" />
-            <line number="34" hits="11" branch="false" />
-            <line number="36" hits="11" branch="false" />
+            <line number="33" hits="11" branch="false" />
+            <line number="35" hits="11" branch="false" />
+            <line number="37" hits="11" branch="false" />
             <line number="38" hits="11" branch="false" />
             <line number="39" hits="11" branch="false" />
             <line number="40" hits="11" branch="false" />
             <line number="41" hits="11" branch="false" />
-            <line number="42" hits="11" branch="false" />
+            <line number="43" hits="11" branch="false" />
             <line number="44" hits="11" branch="false" />
             <line number="45" hits="11" branch="false" />
             <line number="46" hits="11" branch="false" />
@@ -856,29 +859,80 @@
             <line number="65" hits="11" branch="false" />
             <line number="66" hits="11" branch="false" />
             <line number="67" hits="11" branch="false" />
-            <line number="68" hits="11" branch="false" />
+            <line number="76" hits="11" branch="false" />
             <line number="77" hits="11" branch="false" />
-            <line number="78" hits="11" branch="false" />
+            <line number="79" hits="11" branch="false" />
             <line number="80" hits="11" branch="false" />
-            <line number="81" hits="11" branch="false" />
           </lines>
         </class>
-        <class name="RamzPardakht.Infrastructure.Services.EmailSender" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.Infrastructure\Services\EmailSender.cs" line-rate="0" branch-rate="1" complexity="1">
+        <class name="RamzPardakht.Infrastructure.Services.EmailSender" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.Infrastructure\Services\EmailSender.cs" line-rate="0" branch-rate="1" complexity="4">
           <methods>
-            <method name=".ctor" signature="(Resend.IResend)" line-rate="0" branch-rate="1" complexity="1">
+            <method name="SendConfirmationLinkAsync" signature="(RamzPardakht.ApplicationCore.Entities.User,System.String,System.String)" line-rate="0" branch-rate="1" complexity="1">
               <lines>
-                <line number="13" hits="0" branch="false" />
-                <line number="14" hits="0" branch="false" />
-                <line number="15" hits="0" branch="false" />
-                <line number="16" hits="0" branch="false" />
+                <line number="40" hits="0" branch="false" />
+                <line number="41" hits="0" branch="false" />
+                <line number="42" hits="0" branch="false" />
+                <line number="43" hits="0" branch="false" />
+                <line number="45" hits="0" branch="false" />
+                <line number="47" hits="0" branch="false" />
+                <line number="48" hits="0" branch="false" />
+                <line number="49" hits="0" branch="false" />
+              </lines>
+            </method>
+            <method name="SendPasswordResetLinkAsync" signature="(RamzPardakht.ApplicationCore.Entities.User,System.String,System.String)" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="51" hits="0" branch="false" />
+              </lines>
+            </method>
+            <method name="SendPasswordResetCodeAsync" signature="(RamzPardakht.ApplicationCore.Entities.User,System.String,System.String)" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="55" hits="0" branch="false" />
+                <line number="57" hits="0" branch="false" />
+                <line number="58" hits="0" branch="false" />
+                <line number="60" hits="0" branch="false" />
+                <line number="61" hits="0" branch="false" />
+                <line number="63" hits="0" branch="false" />
+                <line number="65" hits="0" branch="false" />
+                <line number="67" hits="0" branch="false" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="(Resend.IResend,Microsoft.Extensions.Options.IOptions`1&lt;RamzPardakht.ApplicationCore.Common.AppSettings&gt;)" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="20" hits="0" branch="false" />
+                <line number="21" hits="0" branch="false" />
+                <line number="22" hits="0" branch="false" />
+                <line number="23" hits="0" branch="false" />
+                <line number="24" hits="0" branch="false" />
+                <line number="25" hits="0" branch="false" />
+                <line number="26" hits="0" branch="false" />
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="13" hits="0" branch="false" />
-            <line number="14" hits="0" branch="false" />
-            <line number="15" hits="0" branch="false" />
-            <line number="16" hits="0" branch="false" />
+            <line number="20" hits="0" branch="false" />
+            <line number="21" hits="0" branch="false" />
+            <line number="22" hits="0" branch="false" />
+            <line number="23" hits="0" branch="false" />
+            <line number="24" hits="0" branch="false" />
+            <line number="25" hits="0" branch="false" />
+            <line number="26" hits="0" branch="false" />
+            <line number="40" hits="0" branch="false" />
+            <line number="41" hits="0" branch="false" />
+            <line number="42" hits="0" branch="false" />
+            <line number="43" hits="0" branch="false" />
+            <line number="45" hits="0" branch="false" />
+            <line number="47" hits="0" branch="false" />
+            <line number="48" hits="0" branch="false" />
+            <line number="49" hits="0" branch="false" />
+            <line number="51" hits="0" branch="false" />
+            <line number="55" hits="0" branch="false" />
+            <line number="57" hits="0" branch="false" />
+            <line number="58" hits="0" branch="false" />
+            <line number="60" hits="0" branch="false" />
+            <line number="61" hits="0" branch="false" />
+            <line number="63" hits="0" branch="false" />
+            <line number="65" hits="0" branch="false" />
+            <line number="67" hits="0" branch="false" />
           </lines>
         </class>
         <class name="RamzPardakht.Infrastructure.Services.ExchangeService" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.Infrastructure\Services\ExchangeService.cs" line-rate="1" branch-rate="1" complexity="1">
@@ -901,7 +955,7 @@
         </class>
       </classes>
     </package>
-    <package name="RamzPardakht.WebApi" line-rate="0.9311224489795918" branch-rate="0.7272727272727273" complexity="41">
+    <package name="RamzPardakht.WebApi" line-rate="0.9312977099236641" branch-rate="0.7272727272727273" complexity="41">
       <classes>
         <class name="RamzPardakht.WebApi.BackgroundServices.BitcoinNewBlockListener" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\BackgroundServices\BitcoinNewBlockListener.cs" line-rate="0" branch-rate="1" complexity="1">
           <methods>
@@ -1287,10 +1341,8 @@
         </class>
         <class name="RamzPardakht.WebApi.Controllers.PaymentController" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Controllers\PaymentController.cs" line-rate="1" branch-rate="1" complexity="1">
           <methods>
-            <method name=".ctor" signature="(System.TimeProvider,RamzPardakht.ApplicationCore.Contracts.IProjectDbContext,RamzPardakht.WebApi.Common.Mapper,System.Net.Http.IHttpClientFactory,RamzPardakht.ApplicationCore.Contracts.IExchangeService,RamzPardakht.ApplicationCore.Contracts.IBitcoinWalletProvider,Microsoft.Extensions.Localization.IStringLocalizer`1&lt;RamzPardakht.ApplicationCore.Resources.SharedResource&gt;,Microsoft.Extensions.Configuration.IConfiguration)" line-rate="1" branch-rate="1" complexity="1">
+            <method name=".ctor" signature="(System.TimeProvider,RamzPardakht.ApplicationCore.Contracts.IProjectDbContext,RamzPardakht.WebApi.Common.Mapper,System.Net.Http.IHttpClientFactory,RamzPardakht.ApplicationCore.Contracts.IExchangeService,RamzPardakht.ApplicationCore.Contracts.IBitcoinWalletProvider,Microsoft.Extensions.Localization.IStringLocalizer`1&lt;RamzPardakht.ApplicationCore.Resources.SharedResource&gt;,Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Options.IOptionsSnapshot`1&lt;RamzPardakht.ApplicationCore.Common.AppSettings&gt;)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="42" hits="21" branch="false" />
-                <line number="43" hits="21" branch="false" />
                 <line number="44" hits="21" branch="false" />
                 <line number="45" hits="21" branch="false" />
                 <line number="46" hits="21" branch="false" />
@@ -1307,18 +1359,19 @@
                 <line number="57" hits="21" branch="false" />
                 <line number="58" hits="21" branch="false" />
                 <line number="59" hits="21" branch="false" />
+                <line number="60" hits="21" branch="false" />
+                <line number="61" hits="21" branch="false" />
                 <line number="62" hits="21" branch="false" />
-                <line number="64" hits="21" branch="false" />
                 <line number="65" hits="21" branch="false" />
-                <line number="66" hits="21" branch="false" />
+                <line number="67" hits="21" branch="false" />
                 <line number="68" hits="21" branch="false" />
                 <line number="69" hits="21" branch="false" />
+                <line number="71" hits="21" branch="false" />
+                <line number="72" hits="21" branch="false" />
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="42" hits="21" branch="false" />
-            <line number="43" hits="21" branch="false" />
             <line number="44" hits="21" branch="false" />
             <line number="45" hits="21" branch="false" />
             <line number="46" hits="21" branch="false" />
@@ -1335,12 +1388,15 @@
             <line number="57" hits="21" branch="false" />
             <line number="58" hits="21" branch="false" />
             <line number="59" hits="21" branch="false" />
+            <line number="60" hits="21" branch="false" />
+            <line number="61" hits="21" branch="false" />
             <line number="62" hits="21" branch="false" />
-            <line number="64" hits="21" branch="false" />
             <line number="65" hits="21" branch="false" />
-            <line number="66" hits="21" branch="false" />
+            <line number="67" hits="21" branch="false" />
             <line number="68" hits="21" branch="false" />
             <line number="69" hits="21" branch="false" />
+            <line number="71" hits="21" branch="false" />
+            <line number="72" hits="21" branch="false" />
           </lines>
         </class>
         <class name="RamzPardakht.WebApi.Controllers.PayoutController" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Controllers\PayoutController.cs" line-rate="1" branch-rate="1" complexity="1">
@@ -1397,18 +1453,18 @@
           <methods>
             <method name=".ctor" signature="(RamzPardakht.ApplicationCore.Contracts.IProjectDbContext)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
-                <line number="17" hits="3" branch="false" />
-                <line number="18" hits="3" branch="false" />
-                <line number="19" hits="3" branch="false" />
-                <line number="20" hits="3" branch="false" />
+                <line number="17" hits="2" branch="false" />
+                <line number="18" hits="2" branch="false" />
+                <line number="19" hits="2" branch="false" />
+                <line number="20" hits="2" branch="false" />
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="17" hits="3" branch="false" />
-            <line number="18" hits="3" branch="false" />
-            <line number="19" hits="3" branch="false" />
-            <line number="20" hits="3" branch="false" />
+            <line number="17" hits="2" branch="false" />
+            <line number="18" hits="2" branch="false" />
+            <line number="19" hits="2" branch="false" />
+            <line number="20" hits="2" branch="false" />
           </lines>
         </class>
         <class name="RamzPardakht.WebApi.Models.PaymentInquiryResponseModel" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Models\PaymentInquiryResponseModel.cs" line-rate="1" branch-rate="1" complexity="1">
@@ -1858,18 +1914,44 @@
         <class name="TypedSignalR.Client.DevTools.EndpointRouteBuilderExtensions" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\TypedSignalR.Client.DevTools.Specification\TypedSignalR.Client.DevTools.SourceGenerator\TypedSignalR.Client.DevTools.Specification.Core.Generated.cs" line-rate="1" branch-rate="1" complexity="1">
           <methods>
             <method name="GetSpecJsonBytes" signature="()" line-rate="1" branch-rate="1" complexity="1">
-              <lines />
+              <lines>
+                <line number="10" hits="1" branch="false" />
+              </lines>
             </method>
           </methods>
-          <lines />
+          <lines>
+            <line number="10" hits="1" branch="false" />
+          </lines>
         </class>
         <class name="TypedSignalR.Client.DevTools.EndpointRouteBuilderExtensions" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\TypedSignalR.Client.DevTools.Specification\TypedSignalR.Client.DevTools.SourceGenerator\TypedSignalR.Client.DevTools.Specification.Generated.cs" line-rate="1" branch-rate="1" complexity="1">
           <methods>
             <method name="UseSignalRHubSpecification" signature="(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder)" line-rate="1" branch-rate="1" complexity="1">
-              <lines />
+              <lines>
+                <line number="19" hits="11" branch="false" />
+                <line number="21" hits="11" branch="false" />
+                <line number="22" hits="11" branch="false" />
+                <line number="23" hits="11" branch="false" />
+                <line number="24" hits="11" branch="false" />
+                <line number="25" hits="11" branch="false" />
+                <line number="26" hits="11" branch="false" />
+                <line number="27" hits="11" branch="false" />
+                <line number="28" hits="11" branch="false" />
+                <line number="29" hits="11" branch="false" />
+              </lines>
             </method>
           </methods>
-          <lines />
+          <lines>
+            <line number="19" hits="11" branch="false" />
+            <line number="21" hits="11" branch="false" />
+            <line number="22" hits="11" branch="false" />
+            <line number="23" hits="11" branch="false" />
+            <line number="24" hits="11" branch="false" />
+            <line number="25" hits="11" branch="false" />
+            <line number="26" hits="11" branch="false" />
+            <line number="27" hits="11" branch="false" />
+            <line number="28" hits="11" branch="false" />
+            <line number="29" hits="11" branch="false" />
+          </lines>
         </class>
       </classes>
     </package>

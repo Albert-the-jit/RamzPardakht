@@ -106,8 +106,8 @@ services:
       - STORAGE_TYPE=mysql
       - MYSQL_HOST=zipkin-storage-mysql
       - SELF_TRACING_ENABLED=true
-      # Uncomment to enable debug logging
-      # - JAVA_OPTS=-Dlogging.level.zipkin2=DEBUG
+      - MYSQL_USER=zipkin
+      - MYSQL_PASS=zipkin
     ports:
       - "9411:9411"
     depends_on:

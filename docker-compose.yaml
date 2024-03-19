@@ -92,6 +92,7 @@ services:
   zipkin:
     image: ghcr.io/openzipkin/zipkin-slim:${TAG:-latest}
     container_name: zipkin
+    restart: always
     environment:
       - STORAGE_TYPE=mem
     ports:

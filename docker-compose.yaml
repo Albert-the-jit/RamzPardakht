@@ -10,6 +10,7 @@ services:
       - ASPNETCORE_URLS=http://0.0.0.0:81
       - OTEL_EXPORTER_ZIPKIN_ENDPOINT=http://zipkin:9411/api/v2/spans
       - OTEL_SERVICE_NAME=Api
+
   postgres:
     container_name: postgres
     image: postgres:16.1
@@ -24,7 +25,6 @@ services:
 
   bitcoind:
     restart: unless-stopped
-
     container_name: bitcoind
     image: btcpayserver/bitcoin:26.0
     ports:
@@ -48,7 +48,6 @@ services:
     volumes:
       - bitcoin_datadir:/data
 
-
   nbxplorer-postgres:
     container_name: nbxplorer-postgres
     image: postgres:16.1
@@ -60,7 +59,6 @@ services:
       - POSTGRES_PASSWORD=S{@08[i8i3tX
     volumes:
       - nbxplorer_postgres_datadir:/var/lib/postgresql/data
-
 
   nbxplorer:
     image: nicolasdorier/nbxplorer:2.5.0
@@ -76,7 +74,7 @@ services:
       NBXPLORER_BIND: 0.0.0.0:32838
       NBXPLORER_TRIMEVENTS: 10000
       NBXPLORER_SIGNALFILESDIR: /datadir
-      NBXPLORER_POSTGRES: User ID=postgres;Password=S{@08[i8i3tX;Host=nbxplorer-postgres;Port=5432;Database=nbxplorer;
+      NBXPLORER_POSTGRES: User ID=postgres;Password=]431*8Z.gC;Host=postgres;Port=5432;Database=nbxplorer;
       NBXPLORER_AUTOMIGRATE: 1
       NBXPLORER_NOMIGRATEEVTS: 1
       NBXPLORER_CHAINS: "btc"
@@ -103,13 +101,13 @@ services:
       MINIO_ROOT_PASSWORD: 92;,7&UyU9%s
     command: server --console-address ":9001" /data
 
-#  zipkin:
-#    image: ghcr.io/openzipkin/zipkin-slim:${TAG:-latest}
-#    container_name: zipkin
-#    environment:
-#      - STORAGE_TYPE=mem
-#    ports:
-#      - 9411:9411
+  zipkin:
+    image: ghcr.io/openzipkin/zipkin-slim:${TAG:-latest}
+    container_name: zipkin
+    environment:
+      - STORAGE_TYPE=mem
+    ports:
+      - "9411:9411"
 
 volumes:
   nbxplorer_datadir:

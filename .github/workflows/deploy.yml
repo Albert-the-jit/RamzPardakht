@@ -20,4 +20,3 @@ jobs:
           script: |
             if cd RamzPardakht; then git pull ${{ secrets.Repo }}; else git clone ${{ secrets.Repo }}; fi
             docker-compose up -d --build
-            docker system prune -f

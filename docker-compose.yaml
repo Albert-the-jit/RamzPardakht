@@ -74,7 +74,7 @@ services:
       - "bitcoin_datadir:/root/.bitcoin"
     links:
       - bitcoind
-      - nbxplorer-postgres
+      - postgres
 
   minio:
     container_name: minio

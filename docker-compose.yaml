@@ -89,14 +89,47 @@ services:
       MINIO_ROOT_PASSWORD: 92;,7&UyU9%s
     command: server --console-address ":9001" /data
 
+  zipkin-storage-mysql:
+    image: openzipkin/zipkin-mysql
+    container_name: zipkin-storage-mysql
+    # Uncomment to expose the storage port for testing
+    # ports:
+    #   - 3306:3306
+
+  # The zipkin process services the UI, and also exposes a POST endpoint that
+  # instrumentation can send trace data to. Scribe is disabled by default.
   zipkin:
-    image: ghcr.io/openzipkin/zipkin-slim:${TAG:-latest}
+    image: openzipkin/zipkin
     container_name: zipkin
-    restart: always
+    # Environment settings are defined here https://github.com/openzipkin/zipkin/blob/master/zipkin-server/README.md#environment-variables
     environment:
-      - STORAGE_TYPE=mem
+      - STORAGE_TYPE=mysql
+      - MYSQL_HOST=zipkin-storage-mysql
+      - SELF_TRACING_ENABLED=true
+      # Uncomment to enable debug logging
+      # - JAVA_OPTS=-Dlogging.level.zipkin2=DEBUG
     ports:
       - "9411:9411"
+    depends_on:
+      - zipkin-storage
+
+  # Adds a cron to process spans since midnight every hour, and all spans each day
+  # This data is served by http://192.168.99.100:8080/dependency
+  #
+  # For more details, see https://github.com/openzipkin/docker-zipkin-dependencies
+  zipkin-dependencies-cron:
+    image: openzipkin/zipkin-dependencies
+    container_name: zipkin-dependencies-cron
+    entrypoint: crond -f
+    environment:
+      - STORAGE_TYPE=mysql
+      - MYSQL_HOST=zipkin-storage-mysql
+      # Add the baked-in username and password for the zipkin-mysql image
+      - MYSQL_USER=zipkin
+      - MYSQL_PASS=zipkin
+    depends_on:
+      - zipkin-storage
+
 
 volumes:
   nbxplorer_datadir:

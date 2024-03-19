@@ -90,6 +90,7 @@ services:
     command: server --console-address ":9001" /data
 
   zipkin-storage-mysql:
+    restart: always
     image: openzipkin/zipkin-mysql
     container_name: zipkin-storage-mysql
     # Uncomment to expose the storage port for testing
@@ -99,6 +100,7 @@ services:
   # The zipkin process services the UI, and also exposes a POST endpoint that
   # instrumentation can send trace data to. Scribe is disabled by default.
   zipkin:
+    restart: always
     image: openzipkin/zipkin
     container_name: zipkin
     # Environment settings are defined here https://github.com/openzipkin/zipkin/blob/master/zipkin-server/README.md#environment-variables
@@ -118,6 +120,7 @@ services:
   #
   # For more details, see https://github.com/openzipkin/docker-zipkin-dependencies
   zipkin-dependencies-cron:
+    restart: always
     image: openzipkin/zipkin-dependencies
     container_name: zipkin-dependencies-cron
     entrypoint: crond -f

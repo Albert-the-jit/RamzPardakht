@@ -48,18 +48,6 @@ services:
     volumes:
       - bitcoin_datadir:/data
 
-  nbxplorer-postgres:
-    container_name: nbxplorer-postgres
-    image: postgres:16.1
-    restart: always
-    ports:
-      - "4040:5432"
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=S{@08[i8i3tX
-    volumes:
-      - nbxplorer_postgres_datadir:/var/lib/postgresql/data
-
   nbxplorer:
     image: nicolasdorier/nbxplorer:2.5.0
     container_name: nbxplorer
@@ -117,9 +105,6 @@ volumes:
     driver: local
 
   postgres_datadir:
-    driver: local
-
-  nbxplorer_postgres_datadir:
     driver: local
 
   minio_storage:

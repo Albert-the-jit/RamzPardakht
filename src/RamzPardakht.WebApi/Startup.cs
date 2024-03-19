@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using Asp.Versioning;
 using Gridify;
 using MassTransit;
+using MassTransit.Logging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
@@ -188,6 +189,7 @@ public class Startup
             });
         });
 
+
         //for more information read
         //https://docs.microsoft.com/en-us/aspnet/core/fundamentals/http-logging/?view=aspnetcore-6.0
         //dont log Response if grpc is added it will break; track bug in below issue
@@ -199,6 +201,8 @@ public class Startup
             builder.AddSource(typeof(Startup).Assembly.FullName);
             builder.AddSource(typeof(ApplicationCoreSetup).Assembly.FullName);
             builder.AddSource(typeof(InfrastructureSetup).Assembly.FullName);
+            builder.AddSource(DiagnosticHeaders.DefaultListenerName); // MassTransit ActivitySource
+
             //environment set docs
             //https://github.com/open-telemetry/opentelemetry-dotnet/blob/main/docs/trace/extending-the-sdk/README.md#resource-detector
             builder.SetResourceBuilder(ResourceBuilder.CreateDefault().AddEnvironmentVariableDetector());

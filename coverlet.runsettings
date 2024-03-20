@@ -7,8 +7,7 @@
           <Format>cobertura</Format>
           <Exclude>[RamzPardakht.WebApi.IntegrationTests.*]*,[RamzPardakht.WebApi.IntegrationTests]*</Exclude>
           <ExcludeByAttribute>Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute</ExcludeByAttribute>
-          <ExcludeByFile>**/*Migrations/*.cs,</ExcludeByFile> <!-- Globbing filter -->
-          <ExcludeByFile>**/*Resources/*.cs,</ExcludeByFile> <!-- Globbing filter -->
+          <ExcludeByFile>**/*Migrations/*.cs,**/*Resources/*.cs</ExcludeByFile> <!-- Globbing filter -->
           <IncludeTestAssembly>false</IncludeTestAssembly>
           <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         </Configuration>

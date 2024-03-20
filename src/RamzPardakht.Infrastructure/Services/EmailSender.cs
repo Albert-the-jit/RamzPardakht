@@ -25,7 +25,7 @@ public class EmailSender : IEmailSender<User>
         _options = options;
     }
 
-    public async Task SendEmailAsync(string email, string subject, string htmlMessage)
+    private async Task SendEmailAsync(string email, string subject, string htmlMessage)
     {
         var message = new EmailMessage();
         message.From = "email@zaferanii.ir";

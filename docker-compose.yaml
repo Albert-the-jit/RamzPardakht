@@ -107,9 +107,10 @@ services:
     environment:
       - STORAGE_TYPE=mysql
       - MYSQL_HOST=zipkin-storage-mysql
-      - SELF_TRACING_ENABLED=true
+      # - SELF_TRACING_ENABLED=true
       - MYSQL_USER=zipkin
       - MYSQL_PASS=zipkin
+      # - JAVA_OPTS=-Xms128m -Xmx128m -XX:+ExitOnOutOfMemoryError
     ports:
       - "9411:9411"
     depends_on:

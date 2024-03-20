@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using System.Text.Json.Serialization;
 using Asp.Versioning;
-using AspNetCore.SignalR.OpenTelemetry;
 using Gridify;
 using MassTransit;
 using MassTransit.Logging;
@@ -82,8 +81,7 @@ public class Startup
             x.UsingInMemory((context, cfg) => { cfg.ConfigureEndpoints(context); });
         });
 
-        services.AddSignalR()
-            .AddHubInstrumentation();
+        services.AddSignalR();
 
         services.AddCors(corsOption =>
         {
@@ -216,7 +214,6 @@ public class Startup
             builder.AddHttpClientInstrumentation();
             builder.AddEntityFrameworkCoreInstrumentation(options => options.SetDbStatementForText = true);
             builder.AddNpgsql();
-            builder.AddSignalRInstrumentation();
         });
 
         //https://github.com/prometheus-net/prometheus-net#eventcounter-integration

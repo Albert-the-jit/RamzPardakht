@@ -198,9 +198,9 @@ public class Startup
 
         services.AddOpenTelemetry().WithTracing(builder =>
         {
-            builder.AddSource(typeof(Startup).Assembly.FullName);
-            builder.AddSource(typeof(ApplicationCoreSetup).Assembly.FullName);
-            builder.AddSource(typeof(InfrastructureSetup).Assembly.FullName);
+            builder.AddSource(typeof(Startup).Assembly.FullName!);
+            builder.AddSource(typeof(ApplicationCoreSetup).Assembly.FullName!);
+            builder.AddSource(typeof(InfrastructureSetup).Assembly.FullName!);
             builder.AddSource(DiagnosticHeaders.DefaultListenerName); // MassTransit ActivitySource
 
             //environment set docs

@@ -1,6 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Diagnostics;
 using MassTransit;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -90,11 +91,23 @@ public class NewBitcoinBlockEventConsumer : IConsumer<NewBitcoinBlockEvent>
 
             if (payment.PaidAmount < payment.Amount)
             {
+                using var activity =
+                    new ActivitySource(typeof(Startup).Assembly.FullName!).StartActivity(
+                        "SignalR:Invoke:TransactionPayedMessageModel");
+
+                activity?.AddTag("Group.Name", payment.Code.ToString());
+
                 await _hubContext.Clients.Group(payment.Code.ToString())
                     .TransactionPartiallyPayed(new TransactionPayedMessageModel() { Code = payment.Code });
             }
             else
             {
+                using var activity =
+                    new ActivitySource(typeof(Startup).Assembly.FullName!).StartActivity(
+                        "SignalR:Invoke:TransactionPayedMessageModel");
+
+                activity?.AddTag("Group.Name", payment.Code.ToString());
+
                 await _hubContext.Clients.Group(payment.Code.ToString())
                     .TransactionFullyPayed(new TransactionPayedMessageModel() { Code = payment.Code });
             }

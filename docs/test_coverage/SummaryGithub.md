@@ -3,17 +3,17 @@
 
 |||
 |:---|:---|
-| Generated on: | 3/16/2024 - 9:08:53 PM |
-| Coverage date: | 3/16/2024 - 9:08:49 PM |
+| Generated on: | 3/20/2024 - 5:07:44 PM |
+| Coverage date: | 3/20/2024 - 5:07:40 PM |
 | Parser: | Cobertura |
 | Assemblies: | 3 |
 | Classes: | 25 |
 | Files: | 26 |
-| **Line coverage:** | 73.6% (566 of 769) |
-| Covered lines: | 566 |
+| **Line coverage:** | 73.6% (568 of 771) |
+| Covered lines: | 568 |
 | Uncovered lines: | 203 |
-| Coverable lines: | 769 |
-| Total lines: | 2660 |
+| Coverable lines: | 771 |
+| Total lines: | 2677 |
 | **Branch coverage:** | 72% (85 of 118) |
 | Covered branches: | 85 |
 | Total branches: | 118 |

@@ -3,7 +3,6 @@
 
 using MassTransit;
 using NBitcoin;
-using NBXplorer;
 using NBXplorer.DerivationStrategy;
 using NBXplorer.Models;
 using RamzPardakht.ApplicationCore.Contracts;
@@ -13,32 +12,33 @@ namespace RamzPardakht.WebApi.BackgroundServices;
 
 public class BitcoinNewBlockListener : BackgroundService
 {
-    private readonly IHttpClientFactory _httpClientFactory;
     private readonly ILogger<BitcoinNewBlockListener> _logger;
     private readonly IBitcoinWalletProvider _bitcoinWalletProvider;
     private readonly IBus _bus;
-    private readonly IConfiguration _configuration;
+    private readonly IServiceScopeFactory _serviceScopeFactory;
+    private readonly IHostEnvironment _hostEnvironment;
 
     public BitcoinNewBlockListener(
-        IHttpClientFactory httpClientFactory,
-        IConfiguration configuration,
         ILogger<BitcoinNewBlockListener> logger,
         IBitcoinWalletProvider bitcoinWalletProvider,
-        IBus bus
+        IBus bus,
+        IServiceScopeFactory serviceScopeFactory,
+        IHostEnvironment hostEnvironment
         )
     {
-        _httpClientFactory = httpClientFactory;
-        _configuration = configuration;
         _logger = logger;
         _bitcoinWalletProvider = bitcoinWalletProvider;
         _bus = bus;
+        _serviceScopeFactory = serviceScopeFactory;
+        _hostEnvironment = hostEnvironment;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         try
         {
-            await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
+            if(_hostEnvironment.IsProduction())
+                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
 
             await NewBlockListener(stoppingToken);
         }
@@ -53,31 +53,27 @@ public class BitcoinNewBlockListener : BackgroundService
 
     private async Task NewBlockListener(CancellationToken stoppingToken)
     {
-        var network = new NBXplorerNetworkProvider(ChainName.Testnet).GetBTC();
+        using IServiceScope scope = _serviceScopeFactory.CreateScope();
 
-        var httpClient = _httpClientFactory.CreateClient(nameof(ExplorerClient));
-        ExplorerClient client = new ExplorerClient(network, new Uri(_configuration["NBXplorer:Endpoint"]!));
-        client.SetClient(httpClient);
+        IExplorerClientAdapter<Bitcoin> explorerClientAdapter =
+            scope.ServiceProvider.GetRequiredService<IExplorerClientAdapter<Bitcoin>>();
 
         var userDerivationScheme =
-            network.DerivationStrategyFactory.CreateDirectDerivationStrategy(
+            explorerClientAdapter.NbXplorerNetwork.DerivationStrategyFactory.CreateDirectDerivationStrategy(
                 _bitcoinWalletProvider.GetMasterPublicKey(), new DerivationStrategyOptions()
                 {
                     ScriptPubKeyType = ScriptPubKeyType.Segwit
                 });
+        ;
 
-        await client.TrackAsync(userDerivationScheme, stoppingToken);
+        await explorerClientAdapter.TrackAsync(userDerivationScheme, stoppingToken);
 
         await _bus.Publish(new NewBitcoinBlockEvent(), stoppingToken);
 
-        var session = await client.CreateWebsocketNotificationSessionAsync(stoppingToken);
-
-        await session.ListenNewBlockAsync(stoppingToken);
-
         while (true)
         {
-            var newEventBase = await session.NextEventAsync(stoppingToken);
-            if (newEventBase is NewBlockEvent)
+            var newEventBase = await explorerClientAdapter.ListenNewBlockAsync(stoppingToken);
+            if (newEventBase is not null && newEventBase is NewBlockEvent)
             {
                 await _bus.Publish(new NewBitcoinBlockEvent(), stoppingToken);
             }

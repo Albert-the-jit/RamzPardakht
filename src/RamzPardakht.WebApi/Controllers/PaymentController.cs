@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using NBitcoin;
-using NBXplorer;
 using NBXplorer.Models;
 using RamzPardakht.ApplicationCore.Common;
 using RamzPardakht.ApplicationCore.Contracts;
@@ -36,22 +35,18 @@ public class PaymentController : ControllerBase
     private readonly IExchangeService _exchangeService;
     private readonly IBitcoinWalletProvider _bitcoinWalletProvider;
     private readonly IStringLocalizer<SharedResource> _stringLocalizer;
-
-    private readonly ExplorerClient _explorerClient;
-    private readonly NBXplorerNetwork _network;
     private readonly IOptionsSnapshot<AppSettings> _optionsSnapshot;
+    private readonly IExplorerClientAdapter<Bitcoin> _explorerClientAdapter;
 
     public PaymentController(
         TimeProvider timeProvider,
         IProjectDbContext projectDbContext,
         Mapper mapper,
-        IHttpClientFactory httpClientFactory,
         IExchangeService exchangeService,
         IBitcoinWalletProvider bitcoinWalletProvider,
         IStringLocalizer<SharedResource> stringLocalizer,
-        IConfiguration configuration,
-        IOptionsSnapshot<AppSettings> optionsSnapshot
-        )
+        IOptionsSnapshot<AppSettings> optionsSnapshot,
+        IExplorerClientAdapter<Bitcoin> explorerClientAdapter)
     {
         _timeProvider = timeProvider;
         _projectDbContext = projectDbContext;
@@ -60,15 +55,7 @@ public class PaymentController : ControllerBase
         _bitcoinWalletProvider = bitcoinWalletProvider;
         _stringLocalizer = stringLocalizer;
         _optionsSnapshot = optionsSnapshot;
-
-
-        _network = new NBXplorerNetworkProvider(ChainName.Testnet).GetBTC();
-
-        var httpClient = httpClientFactory.CreateClient(nameof(ExplorerClient));
-        ExplorerClient client = new ExplorerClient(_network, new Uri(configuration["NBXplorer:Endpoint"]!));
-        client.SetClient(httpClient);
-
-        _explorerClient = client;
+        _explorerClientAdapter = explorerClientAdapter;
     }
 
 
@@ -267,9 +254,9 @@ public class PaymentController : ControllerBase
                 await _projectDbContext.SaveChangesAsync(CancellationToken.None);
 
                 var addressTrackedSource =
-                    new AddressTrackedSource(BitcoinAddress.Create(payment.Wallet.Address, _network.NBitcoinNetwork));
+                    new AddressTrackedSource(BitcoinAddress.Create(payment.Wallet.Address, _explorerClientAdapter.NbXplorerNetwork.NBitcoinNetwork));
 
-                await _explorerClient.TrackAsync(addressTrackedSource, cancellation: cancellationToken);
+                await _explorerClientAdapter.TrackAsync(addressTrackedSource, cancellation: cancellationToken);
 
                 await _projectDbContext.SaveChangesAsync(CancellationToken.None);
 

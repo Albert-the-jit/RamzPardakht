@@ -10,13 +10,13 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Time.Testing;
 using Minio;
 using Moq;
+using NBitcoin;
 using NBXplorer;
 using RamzPardakht.ApplicationCore.Contracts;
 using RamzPardakht.ApplicationCore.Entities;
 using RamzPardakht.Infrastructure.DbContexts;
 using RamzPardakht.Infrastructure.Services;
 using RamzPardakht.WebApi.BackgroundServices;
-using RichardSzalay.MockHttp;
 
 namespace RamzPardakht.WebApi.IntegrationTests;
 
@@ -34,6 +34,12 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 
             services.AddTransient(_ => minioMock);
             services.AddTransient<IMinioClient>(_ => minioMock.Object);
+
+            var explorerClientAdapterMock = new Mock<IExplorerClientAdapter<Bitcoin>>();
+            explorerClientAdapterMock.Setup(adapter => adapter.NbXplorerNetwork)
+                .Returns(() => new NBXplorerNetworkProvider(ChainName.Testnet).GetBTC());
+            services.AddTransient(_ => explorerClientAdapterMock);
+            services.AddTransient<IExplorerClientAdapter<Bitcoin>>(_ => explorerClientAdapterMock.Object);
 
 
             services.Remove(services.First(serviceDescriptor => serviceDescriptor.ServiceType == typeof(TimeProvider)));
@@ -64,15 +70,6 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 
             services.AddTransient(_ => coinGateMock);
             services.AddTransient<ICoinGateExchangeService>(_ => coinGateMock.Object);
-
-            var httpMocks = new Dictionary<string, MockHttpMessageHandler>();
-
-            var explorerClientMock = new MockHttpMessageHandler();
-
-            services.AddHttpClient(nameof(ExplorerClient)).ConfigurePrimaryHttpMessageHandler(() => explorerClientMock);
-            httpMocks.Add(nameof(ExplorerClient), explorerClientMock);
-
-            services.AddTransient<Dictionary<string, MockHttpMessageHandler>>(_ => httpMocks);
 
             #region remove Ef and setup sqlite
 

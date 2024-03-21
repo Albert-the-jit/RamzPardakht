@@ -32,6 +32,8 @@ public static class InfrastructureSetup
 
         services.AddHttpClient(nameof(ExplorerClient));
 
+        services.AddScoped(typeof(IExplorerClientAdapter<>), typeof(ExplorerClientAdapter<>));
+
         services.AddScoped<IExchangeService, ExchangeService>();
 
         services.AddTransient<IEmailSender<User>, EmailSender>();

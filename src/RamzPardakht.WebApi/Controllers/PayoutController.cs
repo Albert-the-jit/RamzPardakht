@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 using NBitcoin;
 using NBitcoin.RPC;
-using NBXplorer;
 using NBXplorer.Models;
 using RamzPardakht.ApplicationCore.Contracts;
 using RamzPardakht.ApplicationCore.Entities;
@@ -33,34 +32,26 @@ public class PayoutController : ControllerBase
     private readonly Mapper _mapper;
     private readonly IStringLocalizer<SharedResource> _stringLocalizer;
 
-    private readonly ExplorerClient _explorerClient;
     private readonly IBitcoinWalletProvider _bitcoinWalletProvider;
-    private readonly IConfiguration _configuration;
     private readonly ILogger<PayoutController> _logger;
+    private readonly IExplorerClientAdapter<Bitcoin> _explorerClientAdapter;
+
 
     public PayoutController(
         IProjectDbContext projectDbContext,
         Mapper mapper,
-        IHttpClientFactory httpClientFactory,
         IBitcoinWalletProvider bitcoinWalletProvider,
         IStringLocalizer<SharedResource> stringLocalizer,
-        IConfiguration configuration, ILogger<PayoutController> logger)
+        ILogger<PayoutController> logger,
+        IExplorerClientAdapter<Bitcoin> explorerClientAdapter
+        )
     {
         _projectDbContext = projectDbContext;
         _mapper = mapper;
         _bitcoinWalletProvider = bitcoinWalletProvider;
         _stringLocalizer = stringLocalizer;
-        _configuration = configuration;
         _logger = logger;
-
-        NBXplorerNetwork network = new NBXplorerNetworkProvider(ChainName.Testnet).GetBTC();
-
-        var httpClient = httpClientFactory.CreateClient(nameof(ExplorerClient));
-        ExplorerClient client = new ExplorerClient(network, new Uri(configuration["NBXplorer:Endpoint"]!));
-        client.SetClient(httpClient);
-
-        _explorerClient = client;
-
+        _explorerClientAdapter = explorerClientAdapter;
     }
 
     /// <summary>
@@ -231,7 +222,7 @@ public class PayoutController : ControllerBase
 
                 var addressTrackedSource = new AddressTrackedSource(bitcoinAddress);
 
-                var utxos = await _explorerClient.GetUTXOsAsync(addressTrackedSource);
+                var utxos = await _explorerClientAdapter.GetUTXOsAsync(addressTrackedSource);
 
                 var coins = utxos.GetUnspentCoins();
                 builder.AddCoins(coins);
@@ -254,7 +245,7 @@ public class PayoutController : ControllerBase
 
 
             var fallbackFeeRate = new FeeRate(Money.Satoshis(1), 1);
-            var feeRate = (await _explorerClient.GetFeeRateAsync(1, fallbackFeeRate)).FeeRate;
+            var feeRate = (await _explorerClientAdapter.GetFeeRateAsync(1, fallbackFeeRate)).FeeRate;
 
             Transaction tx;
 
@@ -271,7 +262,7 @@ public class PayoutController : ControllerBase
                 return ValidationProblem();
             }
 
-            var result = await _explorerClient.BroadcastAsync(tx);
+            var result = await _explorerClientAdapter.BroadcastAsync(tx);
             if (result.Success)
             {
                 payout.Status = PayoutStatus.Unconfirmed;

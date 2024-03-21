@@ -7,6 +7,7 @@ using MassTransit.Testing;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using NBitcoin;
 using NBXplorer;
 using NBXplorer.DerivationStrategy;
@@ -16,10 +17,9 @@ using RamzPardakht.ApplicationCore.Entities;
 using RamzPardakht.ApplicationCore.MessageModels;
 using RamzPardakht.WebApi.IntegrationTests;
 using RamzPardakht.WebApi.Models;
-using RichardSzalay.MockHttp;
 using TechTalk.SpecFlow.Assist;
 
-namespace RamzPardakht.Specs;
+namespace RamzPardakht.Specs.Steps;
 
 [Binding]
 public class Payout
@@ -47,66 +47,60 @@ public class Payout
         using var scope = _applicationFactory.Services.CreateScope();
 
         var scopedServices = scope.ServiceProvider;
-        var mockHttpMessageHandlers = scopedServices.GetRequiredService<Dictionary<string, MockHttpMessageHandler>>();
-        var mockHttpMessageHandler = mockHttpMessageHandlers.TryGet(nameof(ExplorerClient));
         var bitcoinWalletProvider = scopedServices.GetRequiredService<IBitcoinWalletProvider>();
         var projectDbContext = scopedServices.GetRequiredService<IProjectDbContext>();
+
+        var explorerClientAdapterMock = scopedServices.GetRequiredService<Mock<IExplorerClientAdapter<Bitcoin>>>();
 
         var user = await projectDbContext.Users.FirstOrDefaultAsync(x => x.Email == registerModel.Email);
 
         var userPayments = await projectDbContext.Payments.Where(x => x.UserId == user.Id && x.Status == Status.Paid).ToListAsync();
-
-        mockHttpMessageHandler.ResetBackendDefinitions();
 
         DerivationStrategyBase directDerivationStrategy =
             network.DerivationStrategyFactory.CreateDirectDerivationStrategy(bitcoinWalletProvider.GetMasterPublicKey());
 
         KeyPath keyPath = new KeyPath("1");
 
-        mockHttpMessageHandler.When($"http://*/v1/cryptos/*/addresses/*/utxos")
-            .Respond("application/json",
-                network.Serializer.ToString(new UTXOChanges
+        explorerClientAdapterMock.Setup(adapter => adapter.GetUTXOsAsync(It.IsAny<TrackedSource>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new UTXOChanges
+            {
+                Unconfirmed = new UTXOChange(),
+                DerivationStrategy =
+                    directDerivationStrategy,
+                Confirmed = new UTXOChange()
                 {
-                    Unconfirmed = new UTXOChange(),
-                    DerivationStrategy =
-                        directDerivationStrategy,
-                    Confirmed = new UTXOChange()
+                    UTXOs = new List<UTXO>()
                     {
-                        UTXOs = new List<UTXO>()
+                        new UTXO()
                         {
-                            new UTXO()
-                            {
-                                Value = new Money(userPayments.Sum(x => x.PaidAmount) / 2, MoneyUnit.BTC),
-                                KeyPath = keyPath,
-                                Confirmations = 6,
-                                Outpoint = new OutPoint(uint256.Zero, 0),
-                                ScriptPubKey = directDerivationStrategy.GetDerivation(keyPath).ScriptPubKey
-                            },
-                            new UTXO()
-                            {
-                                Value = new Money(userPayments.Sum(x => x.PaidAmount) / 2, MoneyUnit.BTC),
-                                KeyPath = keyPath,
-                                Confirmations = 6,
-                                Outpoint = new OutPoint(uint256.One, 1),
-                                ScriptPubKey = directDerivationStrategy.GetDerivation(keyPath).ScriptPubKey
-                            },
-                        }
+                            Value = new Money(userPayments.Sum(x => x.PaidAmount) / 2, MoneyUnit.BTC),
+                            KeyPath = keyPath,
+                            Confirmations = 6,
+                            Outpoint = new OutPoint(uint256.Zero, 0),
+                            ScriptPubKey = directDerivationStrategy.GetDerivation(keyPath).ScriptPubKey
+                        },
+                        new UTXO()
+                        {
+                            Value = new Money(userPayments.Sum(x => x.PaidAmount) / 2, MoneyUnit.BTC),
+                            KeyPath = keyPath,
+                            Confirmations = 6,
+                            Outpoint = new OutPoint(uint256.One, 1),
+                            ScriptPubKey = directDerivationStrategy.GetDerivation(keyPath).ScriptPubKey
+                        },
                     }
-                }));
+                }
+            });
 
-        mockHttpMessageHandler.When($"http://*/v1/cryptos/*/fees/*")
-            .Respond("application/json", network.Serializer.ToString(new GetFeeRateResult { FeeRate = new FeeRate(10M), BlockCount = 1 }));
+        explorerClientAdapterMock.Setup(adapter => adapter.GetFeeRateAsync(It.IsAny<int>(), It.IsAny<FeeRate>(),It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new GetFeeRateResult { FeeRate = new FeeRate(10M), BlockCount = 1 });
 
-        mockHttpMessageHandler.When($"http://*/v1/cryptos/*/transactions").WithQueryString("testMempoolAccept=False")
-            .Respond("application/json", network.Serializer.ToString(new BroadcastResult { Success = true }));
-
-
+        explorerClientAdapterMock.Setup(adapter => adapter.BroadcastAsync(It.IsAny<Transaction>(),It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new BroadcastResult { Success = true });
 
         var request = await client.PostAsJsonAsync("/v1/Payout", payoutCreationRequestModel);
 
         _scenarioContext.Set(request, $"{p0}:{request.GetType().Name}");
         _scenarioContext.Set(payoutCreationRequestModel, $"{p0}:{nameof(PayoutCreationRequestModel)}");
-
 
     }
 
@@ -139,12 +133,10 @@ public class Payout
         using var scope = _applicationFactory.Services.CreateScope();
 
         var scopedServices = scope.ServiceProvider;
-        var mockHttpMessageHandlers = scopedServices.GetRequiredService<Dictionary<string, MockHttpMessageHandler>>();
-        var mockHttpMessageHandler = mockHttpMessageHandlers.TryGet(nameof(ExplorerClient));
 
-        mockHttpMessageHandler.VerifyNoOutstandingExpectation();
+        var explorerClientAdapterMock = scopedServices.GetRequiredService<Mock<IExplorerClientAdapter<Bitcoin>>>();
 
-        mockHttpMessageHandler.ResetExpectations();
+        explorerClientAdapterMock.Verify();
     }
 
     [When(@"after user ""(.*)"" payout request broadcast and confirmed for ""(.*)"" time")]
@@ -158,22 +150,18 @@ public class Payout
         using var scope = _applicationFactory.Services.CreateScope();
 
         var scopedServices = scope.ServiceProvider;
-        var mockHttpMessageHandlers = scopedServices.GetRequiredService<Dictionary<string, MockHttpMessageHandler>>();
-        var mockHttpMessageHandler = mockHttpMessageHandlers.TryGet(nameof(ExplorerClient));
 
-        mockHttpMessageHandler.Expect($"http://*/v1/cryptos/*/transactions/*")
-            .Respond("application/json", network.Serializer.ToString(new TransactionResult
-            {
-                Confirmations = confirmationCount,
-            }));
+        var explorerClientAdapterMock = scopedServices.GetRequiredService<Mock<IExplorerClientAdapter<Bitcoin>>>();
+
+        explorerClientAdapterMock.Setup(adapter =>
+                adapter.GetTransactionAsync(It.IsAny<uint256>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new TransactionResult { Confirmations = confirmationCount, });
 
         await harness.Bus.Publish(new NewBitcoinBlockEvent());
 
         await Task.Delay(2000);
 
-        mockHttpMessageHandler.VerifyNoOutstandingExpectation();
-        mockHttpMessageHandler.ResetExpectations();
-
+        explorerClientAdapterMock.Verify();
     }
 
     [When(@"""(.*)"" send list request for payouts")]

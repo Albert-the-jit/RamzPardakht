@@ -6,7 +6,6 @@ using MassTransit;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using NBitcoin;
-using NBXplorer;
 using NBXplorer.Models;
 using RamzPardakht.ApplicationCore.Contracts;
 using RamzPardakht.ApplicationCore.Entities;
@@ -21,34 +20,24 @@ public class NewBitcoinBlockEventConsumer : IConsumer<NewBitcoinBlockEvent>
     private readonly IProjectDbContext _projectDbContext;
     private readonly TimeProvider _timeProvider;
     private readonly IHubContext<PaymentHub, IPaymentClient> _hubContext;
-    private readonly ExplorerClient _explorerClient;
-    private readonly NBXplorerNetwork _network;
-    private readonly IConfiguration _configuration;
     private readonly ILogger<NewBitcoinBlockEventConsumer> _logger;
+    private readonly IExplorerClientAdapter<Bitcoin> _explorerClientAdapter;
 
 
     public NewBitcoinBlockEventConsumer(
-        IHttpClientFactory httpClientFactory,
         IProjectDbContext projectDbContext,
         TimeProvider timeProvider,
         IHubContext<PaymentHub, IPaymentClient> hubContext,
-        IConfiguration configuration,
-        ILogger<NewBitcoinBlockEventConsumer> logger)
+        ILogger<NewBitcoinBlockEventConsumer> logger,
+        IExplorerClientAdapter<Bitcoin> explorerClientAdapter
+        )
     {
 
         _projectDbContext = projectDbContext;
         _timeProvider = timeProvider;
         _hubContext = hubContext;
-        _configuration = configuration;
         _logger = logger;
-
-        _network = new NBXplorerNetworkProvider(ChainName.Testnet).GetBTC();
-
-        var httpClient = httpClientFactory.CreateClient(nameof(ExplorerClient));
-        ExplorerClient client = new ExplorerClient(_network, new Uri(configuration["NBXplorer:Endpoint"]!));
-        client.SetClient(httpClient);
-
-        _explorerClient = client;
+        _explorerClientAdapter = explorerClientAdapter;
     }
 
     public async Task Consume(ConsumeContext<NewBitcoinBlockEvent> context)
@@ -77,8 +66,8 @@ public class NewBitcoinBlockEventConsumer : IConsumer<NewBitcoinBlockEvent>
             _logger.LogInformation("CheckNewPaymentsStatusAndBalance {PaymentId}", payment.Id);
 
             var balanceResponse =
-                await _explorerClient.GetBalanceAsync(
-                    BitcoinAddress.Create(payment.Wallet.Address, _network.NBitcoinNetwork),
+                await _explorerClientAdapter.GetBalanceAsync(
+                    BitcoinAddress.Create(payment.Wallet.Address, _explorerClientAdapter.NbXplorerNetwork.NBitcoinNetwork),
                     cancellationToken);
 
             payment.PaidAmount = ((Money)balanceResponse.Confirmed).ToDecimal(MoneyUnit.BTC);
@@ -142,17 +131,17 @@ public class NewBitcoinBlockEventConsumer : IConsumer<NewBitcoinBlockEvent>
             _logger.LogInformation("CheckPendingPaymentsStatusAndBalance {PaymentId}", payment.Id);
 
             var balanceResponse =
-                await _explorerClient.GetBalanceAsync(
-                    BitcoinAddress.Create(payment.Wallet.Address, _network.NBitcoinNetwork),
+                await _explorerClientAdapter.GetBalanceAsync(
+                    BitcoinAddress.Create(payment.Wallet.Address, _explorerClientAdapter.NbXplorerNetwork.NBitcoinNetwork),
                     cancellationToken);
 
             payment.PaidAmount = ((Money)balanceResponse.Confirmed).ToDecimal(MoneyUnit.BTC);
 
             var addressTrackedSource =
-                new AddressTrackedSource(BitcoinAddress.Create(payment.Wallet.Address, _network.NBitcoinNetwork));
+                new AddressTrackedSource(BitcoinAddress.Create(payment.Wallet.Address, _explorerClientAdapter.NbXplorerNetwork.NBitcoinNetwork));
 
             var utxos =
-                await _explorerClient.GetUTXOsAsync(
+                await _explorerClientAdapter.GetUTXOsAsync(
                     addressTrackedSource,
                     cancellationToken);
 
@@ -193,7 +182,7 @@ public class NewBitcoinBlockEventConsumer : IConsumer<NewBitcoinBlockEvent>
             _logger.LogInformation("CheckUnconfirmedPayoutTransactions {PayoutId}", payout.Id);
 
             var transactionResult =
-                await _explorerClient.GetTransactionAsync(new uint256(payout.TransactionId), cancellationToken);
+                await _explorerClientAdapter.GetTransactionAsync(new uint256(payout.TransactionId), cancellationToken);
 
 
             if (transactionResult is null)

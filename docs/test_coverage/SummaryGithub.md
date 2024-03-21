@@ -3,20 +3,20 @@
 
 |||
 |:---|:---|
-| Generated on: | 3/21/2024 - 12:11:56 PM |
-| Coverage date: | 3/21/2024 - 12:11:54 PM |
+| Generated on: | 3/21/2024 - 7:28:24 PM |
+| Coverage date: | 3/21/2024 - 7:28:22 PM |
 | Parser: | Cobertura |
 | Assemblies: | 3 |
-| Classes: | 24 |
-| Files: | 25 |
-| **Line coverage:** | 91% (557 of 612) |
+| Classes: | 25 |
+| Files: | 26 |
+| **Line coverage:** | 86.6% (557 of 643) |
 | Covered lines: | 557 |
-| Uncovered lines: | 55 |
-| Coverable lines: | 612 |
-| Total lines: | 2461 |
-| **Branch coverage:** | 72% (85 of 118) |
+| Uncovered lines: | 86 |
+| Coverable lines: | 643 |
+| Total lines: | 2538 |
+| **Branch coverage:** | 70.8% (85 of 120) |
 | Covered branches: | 85 |
-| Total branches: | 118 |
+| Total branches: | 120 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
 
 </details>
@@ -31,23 +31,24 @@
 |RamzPardakht.ApplicationCore.Services.BitcoinWalletProvider|100%||
 
 </details>
-<details><summary>RamzPardakht.Infrastructure - 84.9%</summary>
+<details><summary>RamzPardakht.Infrastructure - 68.5%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**RamzPardakht.Infrastructure**|**84.9%**|**71.8%**|
+|**RamzPardakht.Infrastructure**|**68.5%**|**70.4%**|
 |RamzPardakht.Infrastructure.DbContexts.ProjectDbContext|96.4%|71.8%|
 |RamzPardakht.Infrastructure.InfrastructureSetup|100%||
 |RamzPardakht.Infrastructure.Services.EmailSender|0%||
 |RamzPardakht.Infrastructure.Services.ExchangeService|100%||
+|RamzPardakht.Infrastructure.Services.ExplorerClientAdapter`1|0%|0%|
 
 </details>
-<details><summary>RamzPardakht.WebApi - 93.1%</summary>
+<details><summary>RamzPardakht.WebApi - 96.5%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**RamzPardakht.WebApi**|**93.1%**|**72.7%**|
-|RamzPardakht.WebApi.BackgroundServices.BitcoinNewBlockListener|0%||
+|**RamzPardakht.WebApi**|**96.5%**|**72.7%**|
+|RamzPardakht.WebApi.BackgroundServices.BitcoinNewBlockListener|100%||
 |RamzPardakht.WebApi.Common.ClaimsPrincipalExtensions|75%|50%|
 |RamzPardakht.WebApi.Common.HideSignalRHubSpecificationFromSwaggerFilter|100%||
 |RamzPardakht.WebApi.Common.HttpClientBuilderExtensions|91.6%|50%|

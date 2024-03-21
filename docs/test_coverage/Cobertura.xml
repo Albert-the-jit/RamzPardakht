@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage line-rate="0.8662519440124417" branch-rate="0.7083333333333334" lines-covered="557" lines-valid="643" branches-covered="85" branches-valid="120" complexity="159" version="0" timestamp="1711049302">
+<coverage line-rate="0.9703832752613241" branch-rate="0.7203389830508474" lines-covered="557" lines-valid="574" branches-covered="85" branches-valid="118" complexity="145" version="0" timestamp="1711051094">
   <sources>
     <source>D:\a\RamzPardakht\RamzPardakht\src\</source>
   </sources>
@@ -103,7 +103,7 @@
         </class>
       </classes>
     </package>
-    <package name="RamzPardakht.Infrastructure" line-rate="0.6853448275862069" branch-rate="0.7040816326530612" complexity="113">
+    <package name="RamzPardakht.Infrastructure" line-rate="0.9754601226993865" branch-rate="0.71875" complexity="99">
       <classes>
         <class name="RamzPardakht.Infrastructure.DbContexts.ProjectDbContext" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.Infrastructure\DbContexts\ProjectDbContext.cs" line-rate="0.9649122807017544" branch-rate="0.71875" complexity="97">
           <methods>
@@ -451,76 +451,6 @@
             <line number="82" hits="11" branch="false" />
           </lines>
         </class>
-        <class name="RamzPardakht.Infrastructure.Services.EmailSender" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.Infrastructure\Services\EmailSender.cs" line-rate="0" branch-rate="1" complexity="4">
-          <methods>
-            <method name="SendConfirmationLinkAsync" signature="(RamzPardakht.ApplicationCore.Entities.User,System.String,System.String)" line-rate="0" branch-rate="1" complexity="1">
-              <lines>
-                <line number="40" hits="0" branch="false" />
-                <line number="41" hits="0" branch="false" />
-                <line number="42" hits="0" branch="false" />
-                <line number="43" hits="0" branch="false" />
-                <line number="45" hits="0" branch="false" />
-                <line number="47" hits="0" branch="false" />
-                <line number="48" hits="0" branch="false" />
-                <line number="49" hits="0" branch="false" />
-              </lines>
-            </method>
-            <method name="SendPasswordResetLinkAsync" signature="(RamzPardakht.ApplicationCore.Entities.User,System.String,System.String)" line-rate="0" branch-rate="1" complexity="1">
-              <lines>
-                <line number="51" hits="0" branch="false" />
-              </lines>
-            </method>
-            <method name="SendPasswordResetCodeAsync" signature="(RamzPardakht.ApplicationCore.Entities.User,System.String,System.String)" line-rate="0" branch-rate="1" complexity="1">
-              <lines>
-                <line number="55" hits="0" branch="false" />
-                <line number="57" hits="0" branch="false" />
-                <line number="58" hits="0" branch="false" />
-                <line number="60" hits="0" branch="false" />
-                <line number="61" hits="0" branch="false" />
-                <line number="63" hits="0" branch="false" />
-                <line number="65" hits="0" branch="false" />
-                <line number="67" hits="0" branch="false" />
-              </lines>
-            </method>
-            <method name=".ctor" signature="(Resend.IResend,Microsoft.Extensions.Options.IOptions`1&lt;RamzPardakht.ApplicationCore.Common.AppSettings&gt;)" line-rate="0" branch-rate="1" complexity="1">
-              <lines>
-                <line number="20" hits="0" branch="false" />
-                <line number="21" hits="0" branch="false" />
-                <line number="22" hits="0" branch="false" />
-                <line number="23" hits="0" branch="false" />
-                <line number="24" hits="0" branch="false" />
-                <line number="25" hits="0" branch="false" />
-                <line number="26" hits="0" branch="false" />
-              </lines>
-            </method>
-          </methods>
-          <lines>
-            <line number="20" hits="0" branch="false" />
-            <line number="21" hits="0" branch="false" />
-            <line number="22" hits="0" branch="false" />
-            <line number="23" hits="0" branch="false" />
-            <line number="24" hits="0" branch="false" />
-            <line number="25" hits="0" branch="false" />
-            <line number="26" hits="0" branch="false" />
-            <line number="40" hits="0" branch="false" />
-            <line number="41" hits="0" branch="false" />
-            <line number="42" hits="0" branch="false" />
-            <line number="43" hits="0" branch="false" />
-            <line number="45" hits="0" branch="false" />
-            <line number="47" hits="0" branch="false" />
-            <line number="48" hits="0" branch="false" />
-            <line number="49" hits="0" branch="false" />
-            <line number="51" hits="0" branch="false" />
-            <line number="55" hits="0" branch="false" />
-            <line number="57" hits="0" branch="false" />
-            <line number="58" hits="0" branch="false" />
-            <line number="60" hits="0" branch="false" />
-            <line number="61" hits="0" branch="false" />
-            <line number="63" hits="0" branch="false" />
-            <line number="65" hits="0" branch="false" />
-            <line number="67" hits="0" branch="false" />
-          </lines>
-        </class>
         <class name="RamzPardakht.Infrastructure.Services.ExchangeService" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.Infrastructure\Services\ExchangeService.cs" line-rate="1" branch-rate="1" complexity="1">
           <methods>
             <method name=".ctor" signature="(RamzPardakht.Infrastructure.Services.ICoinGateExchangeService)" line-rate="1" branch-rate="1" complexity="1">
@@ -537,138 +467,6 @@
             <line number="14" hits="21" branch="false" />
             <line number="15" hits="21" branch="false" />
             <line number="16" hits="21" branch="false" />
-          </lines>
-        </class>
-        <class name="RamzPardakht.Infrastructure.Services.ExplorerClientAdapter`1" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.Infrastructure\Services\ExplorerClientAdapter.cs" line-rate="0" branch-rate="0" complexity="10">
-          <methods>
-            <method name="TrackAsync" signature="(NBXplorer.Models.TrackedSource,NBXplorer.Models.TrackWalletRequest,System.Threading.CancellationToken)" line-rate="0" branch-rate="1" complexity="1">
-              <lines>
-                <line number="49" hits="0" branch="false" />
-                <line number="50" hits="0" branch="false" />
-                <line number="51" hits="0" branch="false" />
-              </lines>
-            </method>
-            <method name="TrackAsync" signature="(NBXplorer.DerivationStrategy.DerivationStrategyBase,System.Threading.CancellationToken)" line-rate="0" branch-rate="1" complexity="1">
-              <lines>
-                <line number="54" hits="0" branch="false" />
-                <line number="55" hits="0" branch="false" />
-                <line number="56" hits="0" branch="false" />
-              </lines>
-            </method>
-            <method name="GetUTXOsAsync" signature="(NBXplorer.Models.TrackedSource,System.Threading.CancellationToken)" line-rate="0" branch-rate="1" complexity="1">
-              <lines>
-                <line number="59" hits="0" branch="false" />
-                <line number="60" hits="0" branch="false" />
-                <line number="61" hits="0" branch="false" />
-              </lines>
-            </method>
-            <method name="GetFeeRateAsync" signature="(System.Int32,NBitcoin.FeeRate,System.Threading.CancellationToken)" line-rate="0" branch-rate="1" complexity="1">
-              <lines>
-                <line number="65" hits="0" branch="false" />
-                <line number="66" hits="0" branch="false" />
-                <line number="67" hits="0" branch="false" />
-              </lines>
-            </method>
-            <method name="BroadcastAsync" signature="(NBitcoin.Transaction,System.Threading.CancellationToken)" line-rate="0" branch-rate="1" complexity="1">
-              <lines>
-                <line number="70" hits="0" branch="false" />
-                <line number="71" hits="0" branch="false" />
-                <line number="72" hits="0" branch="false" />
-              </lines>
-            </method>
-            <method name="GetBalanceAsync" signature="(NBitcoin.BitcoinAddress,System.Threading.CancellationToken)" line-rate="0" branch-rate="1" complexity="1">
-              <lines>
-                <line number="75" hits="0" branch="false" />
-                <line number="76" hits="0" branch="false" />
-                <line number="77" hits="0" branch="false" />
-              </lines>
-            </method>
-            <method name="GetTransactionAsync" signature="(NBitcoin.uint256,System.Threading.CancellationToken)" line-rate="0" branch-rate="1" complexity="1">
-              <lines>
-                <line number="80" hits="0" branch="false" />
-                <line number="81" hits="0" branch="false" />
-                <line number="82" hits="0" branch="false" />
-              </lines>
-            </method>
-            <method name="Dispose" signature="()" line-rate="0" branch-rate="0" complexity="2">
-              <lines>
-                <line number="98" hits="0" branch="false" />
-                <line number="99" hits="0" branch="true" condition-coverage="0% (0/2)" />
-                <line number="100" hits="0" branch="false" />
-                <line number="101" hits="0" branch="false" />
-                <line number="102" hits="0" branch="false" />
-                <line number="103" hits="0" branch="false" />
-              </lines>
-            </method>
-            <method name=".ctor" signature="(System.Net.Http.IHttpClientFactory,Microsoft.Extensions.Configuration.IConfiguration)" line-rate="0" branch-rate="1" complexity="1">
-              <lines>
-                <line number="19" hits="0" branch="false" />
-                <line number="23" hits="0" branch="false" />
-                <line number="24" hits="0" branch="false" />
-                <line number="25" hits="0" branch="false" />
-                <line number="26" hits="0" branch="false" />
-                <line number="27" hits="0" branch="false" />
-                <line number="28" hits="0" branch="false" />
-                <line number="29" hits="0" branch="false" />
-                <line number="31" hits="0" branch="false" />
-                <line number="34" hits="0" branch="false" />
-                <line number="36" hits="0" branch="false" />
-                <line number="37" hits="0" branch="false" />
-                <line number="38" hits="0" branch="false" />
-                <line number="40" hits="0" branch="false" />
-                <line number="41" hits="0" branch="false" />
-                <line number="42" hits="0" branch="false" />
-                <line number="44" hits="0" branch="false" />
-                <line number="45" hits="0" branch="false" />
-              </lines>
-            </method>
-          </methods>
-          <lines>
-            <line number="19" hits="0" branch="false" />
-            <line number="23" hits="0" branch="false" />
-            <line number="24" hits="0" branch="false" />
-            <line number="25" hits="0" branch="false" />
-            <line number="26" hits="0" branch="false" />
-            <line number="27" hits="0" branch="false" />
-            <line number="28" hits="0" branch="false" />
-            <line number="29" hits="0" branch="false" />
-            <line number="31" hits="0" branch="false" />
-            <line number="34" hits="0" branch="false" />
-            <line number="36" hits="0" branch="false" />
-            <line number="37" hits="0" branch="false" />
-            <line number="38" hits="0" branch="false" />
-            <line number="40" hits="0" branch="false" />
-            <line number="41" hits="0" branch="false" />
-            <line number="42" hits="0" branch="false" />
-            <line number="44" hits="0" branch="false" />
-            <line number="45" hits="0" branch="false" />
-            <line number="49" hits="0" branch="false" />
-            <line number="50" hits="0" branch="false" />
-            <line number="51" hits="0" branch="false" />
-            <line number="54" hits="0" branch="false" />
-            <line number="55" hits="0" branch="false" />
-            <line number="56" hits="0" branch="false" />
-            <line number="59" hits="0" branch="false" />
-            <line number="60" hits="0" branch="false" />
-            <line number="61" hits="0" branch="false" />
-            <line number="65" hits="0" branch="false" />
-            <line number="66" hits="0" branch="false" />
-            <line number="67" hits="0" branch="false" />
-            <line number="70" hits="0" branch="false" />
-            <line number="71" hits="0" branch="false" />
-            <line number="72" hits="0" branch="false" />
-            <line number="75" hits="0" branch="false" />
-            <line number="76" hits="0" branch="false" />
-            <line number="77" hits="0" branch="false" />
-            <line number="80" hits="0" branch="false" />
-            <line number="81" hits="0" branch="false" />
-            <line number="82" hits="0" branch="false" />
-            <line number="98" hits="0" branch="false" />
-            <line number="99" hits="0" branch="true" condition-coverage="0% (0/2)" />
-            <line number="100" hits="0" branch="false" />
-            <line number="101" hits="0" branch="false" />
-            <line number="102" hits="0" branch="false" />
-            <line number="103" hits="0" branch="false" />
           </lines>
         </class>
       </classes>

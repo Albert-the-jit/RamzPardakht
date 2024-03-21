@@ -3,20 +3,20 @@
 
 |||
 |:---|:---|
-| Generated on: | 3/21/2024 - 7:28:24 PM |
-| Coverage date: | 3/21/2024 - 7:28:22 PM |
+| Generated on: | 3/21/2024 - 7:58:16 PM |
+| Coverage date: | 3/21/2024 - 7:58:14 PM |
 | Parser: | Cobertura |
 | Assemblies: | 3 |
-| Classes: | 25 |
-| Files: | 26 |
-| **Line coverage:** | 86.6% (557 of 643) |
+| Classes: | 23 |
+| Files: | 24 |
+| **Line coverage:** | 97% (557 of 574) |
 | Covered lines: | 557 |
-| Uncovered lines: | 86 |
-| Coverable lines: | 643 |
-| Total lines: | 2538 |
-| **Branch coverage:** | 70.8% (85 of 120) |
+| Uncovered lines: | 17 |
+| Coverable lines: | 574 |
+| Total lines: | 2358 |
+| **Branch coverage:** | 72% (85 of 118) |
 | Covered branches: | 85 |
-| Total branches: | 120 |
+| Total branches: | 118 |
 | **Method coverage:** | [Feature is only available for sponsors](https://reportgenerator.io/pro) |
 
 </details>
@@ -31,16 +31,14 @@
 |RamzPardakht.ApplicationCore.Services.BitcoinWalletProvider|100%||
 
 </details>
-<details><summary>RamzPardakht.Infrastructure - 68.5%</summary>
+<details><summary>RamzPardakht.Infrastructure - 97.5%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**RamzPardakht.Infrastructure**|**68.5%**|**70.4%**|
+|**RamzPardakht.Infrastructure**|**97.5%**|**71.8%**|
 |RamzPardakht.Infrastructure.DbContexts.ProjectDbContext|96.4%|71.8%|
 |RamzPardakht.Infrastructure.InfrastructureSetup|100%||
-|RamzPardakht.Infrastructure.Services.EmailSender|0%||
 |RamzPardakht.Infrastructure.Services.ExchangeService|100%||
-|RamzPardakht.Infrastructure.Services.ExplorerClientAdapter`1|0%|0%|
 
 </details>
 <details><summary>RamzPardakht.WebApi - 96.5%</summary>

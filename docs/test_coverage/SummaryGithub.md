@@ -3,17 +3,17 @@
 
 |||
 |:---|:---|
-| Generated on: | 3/20/2024 - 5:07:44 PM |
-| Coverage date: | 3/20/2024 - 5:07:40 PM |
+| Generated on: | 3/21/2024 - 12:11:56 PM |
+| Coverage date: | 3/21/2024 - 12:11:54 PM |
 | Parser: | Cobertura |
 | Assemblies: | 3 |
-| Classes: | 25 |
-| Files: | 26 |
-| **Line coverage:** | 73.6% (568 of 771) |
-| Covered lines: | 568 |
-| Uncovered lines: | 203 |
-| Coverable lines: | 771 |
-| Total lines: | 2677 |
+| Classes: | 24 |
+| Files: | 25 |
+| **Line coverage:** | 91% (557 of 612) |
+| Covered lines: | 557 |
+| Uncovered lines: | 55 |
+| Coverable lines: | 612 |
+| Total lines: | 2461 |
 | **Branch coverage:** | 72% (85 of 118) |
 | Covered branches: | 85 |
 | Total branches: | 118 |
@@ -22,13 +22,12 @@
 </details>
 
 ## Coverage
-<details><summary>RamzPardakht.ApplicationCore - 22.1%</summary>
+<details><summary>RamzPardakht.ApplicationCore - 100%</summary>
 
 |**Name**|**Line**|**Branch**|
 |:---|---:|---:|
-|**RamzPardakht.ApplicationCore**|**22.1%**|****|
+|**RamzPardakht.ApplicationCore**|**100%**|****|
 |RamzPardakht.ApplicationCore.ApplicationCoreSetup|100%||
-|RamzPardakht.ApplicationCore.Resources.CustomIdentityErrorDescriber|6.9%||
 |RamzPardakht.ApplicationCore.Services.BitcoinWalletProvider|100%||
 
 </details>

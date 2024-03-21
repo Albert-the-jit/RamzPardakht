@@ -37,7 +37,7 @@ public class BitcoinNewBlockListener : BackgroundService
     {
         try
         {
-            if(_hostEnvironment.IsProduction())
+            if (_hostEnvironment.IsProduction())
                 await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
 
             await NewBlockListener(stoppingToken);

@@ -316,13 +316,13 @@ public class Payment
 
         explorerClientAdapterMock.Setup(adapter => adapter.GetBalanceAsync(It.IsAny<BitcoinAddress>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new GetBalanceResponse
-        {
-            Unconfirmed = Money.Zero,
-            Available = Money.Zero,
-            Confirmed = new Money(paidAmount, MoneyUnit.BTC),
-            Immature = Money.Zero,
-            Total = new Money(paidAmount, MoneyUnit.BTC),
-        });
+            {
+                Unconfirmed = Money.Zero,
+                Available = Money.Zero,
+                Confirmed = new Money(paidAmount, MoneyUnit.BTC),
+                Immature = Money.Zero,
+                Total = new Money(paidAmount, MoneyUnit.BTC),
+            });
 
         await harness.Bus.Publish(new NewBitcoinBlockEvent());
 

@@ -8,7 +8,7 @@ using NBXplorer.Models;
 
 namespace RamzPardakht.ApplicationCore.Contracts;
 
-public interface IExplorerClientAdapter<TNetwork> : IAsyncDisposable ,IDisposable
+public interface IExplorerClientAdapter<TNetwork> : IAsyncDisposable, IDisposable
     where TNetwork : class, INetworkSet
 
 {

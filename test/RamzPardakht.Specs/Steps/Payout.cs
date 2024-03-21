@@ -91,10 +91,10 @@ public class Payout
                 }
             });
 
-        explorerClientAdapterMock.Setup(adapter => adapter.GetFeeRateAsync(It.IsAny<int>(), It.IsAny<FeeRate>(),It.IsAny<CancellationToken>()))
+        explorerClientAdapterMock.Setup(adapter => adapter.GetFeeRateAsync(It.IsAny<int>(), It.IsAny<FeeRate>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new GetFeeRateResult { FeeRate = new FeeRate(10M), BlockCount = 1 });
 
-        explorerClientAdapterMock.Setup(adapter => adapter.BroadcastAsync(It.IsAny<Transaction>(),It.IsAny<CancellationToken>()))
+        explorerClientAdapterMock.Setup(adapter => adapter.BroadcastAsync(It.IsAny<Transaction>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new BroadcastResult { Success = true });
 
         var request = await client.PostAsJsonAsync("/v1/Payout", payoutCreationRequestModel);

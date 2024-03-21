@@ -240,6 +240,8 @@ public class Startup
         app.UseRequestLocalization(options =>
             options.AddSupportedUICultures("en-US", "fa-IR").SetDefaultCulture("en-US"));
 
+        app.UseCors();
+
         app.UseSwagger(options => options.RouteTemplate = "api-docs/{documentName}/swagger.json");
         app.UseSwaggerUI(options =>
         {
@@ -263,8 +265,6 @@ public class Startup
                 });
             });
         }
-
-        app.UseCors();
 
         app.UseRouting();
 

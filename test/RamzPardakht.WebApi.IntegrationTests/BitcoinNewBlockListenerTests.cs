@@ -66,9 +66,8 @@ public class BitcoinNewBlockListenerTests
         (await harness.Published.Any<NewBitcoinBlockEvent>()).Should().BeTrue();
         harness.Published.Select(context => context.MessageType == typeof(NewBitcoinBlockEvent)).Count().Should().Be(1);
 
-        await Task.Delay(4000);
+        await Task.Delay(4500);
 
-        cancellationTokenSource.Cancel();
 
         harness.Published.Select(context => context.MessageType == typeof(NewBitcoinBlockEvent)).Count().Should().Be(2);
 

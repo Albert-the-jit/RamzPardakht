@@ -1,6 +1,5 @@
 using RamzPardakht.Infrastructure;
 using RamzPardakht.WebApi;
-using Sentry;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);

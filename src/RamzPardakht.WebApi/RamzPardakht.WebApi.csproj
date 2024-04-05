@@ -46,4 +46,8 @@
         <ProjectReference Include="..\RamzPardakht.SqliteMigrations\RamzPardakht.SqliteMigrations.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="wwwroot\" />
+    </ItemGroup>
+
 </Project>

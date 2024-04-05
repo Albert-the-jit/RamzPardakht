@@ -46,7 +46,7 @@ public class BitcoinNewBlockListenerTests
             .Returns(() => new NBXplorerNetworkProvider(ChainName.Testnet).GetBTC());
 
         explorerClientAdapterMock.Setup(adapter => adapter.ListenNewBlockAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new NewBlockEvent() { CryptoCode = "BTC" }, TimeSpan.FromSeconds(5));
+            .ReturnsAsync(new NewBlockEvent() { CryptoCode = "BTC" }, TimeSpan.FromSeconds(3));
 
         serviceCollection.AddTransient(_ => explorerClientAdapterMock);
         serviceCollection.AddTransient<IExplorerClientAdapter<Bitcoin>>(_ => explorerClientAdapterMock.Object);
@@ -66,7 +66,7 @@ public class BitcoinNewBlockListenerTests
         (await harness.Published.Any<NewBitcoinBlockEvent>()).Should().BeTrue();
         harness.Published.Select(context => context.MessageType == typeof(NewBitcoinBlockEvent)).Count().Should().Be(1);
 
-        await Task.Delay(5000);
+        await Task.Delay(4000);
 
         cancellationTokenSource.Cancel();
 

@@ -59,14 +59,14 @@ public class BitcoinNewBlockListenerTests
 
         hostedService.StartAsync(cancellationTokenSource.Token);
 
-        await Task.Delay(500);
+        await Task.Delay(200);
 
         explorerClientAdapterMock.Verify();
 
         (await harness.Published.Any<NewBitcoinBlockEvent>()).Should().BeTrue();
         harness.Published.Select(context => context.MessageType == typeof(NewBitcoinBlockEvent)).Count().Should().Be(1);
 
-        await Task.Delay(4500);
+        await Task.Delay(4200);
 
 
         harness.Published.Select(context => context.MessageType == typeof(NewBitcoinBlockEvent)).Count().Should().Be(2);

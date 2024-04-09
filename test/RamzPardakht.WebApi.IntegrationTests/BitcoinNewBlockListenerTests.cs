@@ -74,7 +74,7 @@ public class BitcoinNewBlockListenerTests
         while (newBlockCount <= 3)
         {
             await Task.Delay(2000);
-            harness.Published.Select(context => context.MessageType == typeof(NewBitcoinBlockEvent)).Count().Should().Be(newBlockCount+1);
+            harness.Published.Select(context => context.MessageType == typeof(NewBitcoinBlockEvent)).Count().Should().Be(newBlockCount + 1);
         }
 
 

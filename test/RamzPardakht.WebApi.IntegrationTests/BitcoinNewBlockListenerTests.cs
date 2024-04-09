@@ -49,7 +49,7 @@ public class BitcoinNewBlockListenerTests
         explorerClientAdapterMock.Setup(adapter => adapter.ListenNewBlockAsync(It.IsAny<CancellationToken>()))
             .Returns(() =>
             {
-                return Task.Delay(TimeSpan.FromSeconds(3))
+                return Task.Delay(3000)
                     .ContinueWith(task => newBlockCount++)
                     .ContinueWith(t => (NewEventBase)new NewBlockEvent() { CryptoCode = "BTC" });
             });
@@ -71,9 +71,9 @@ public class BitcoinNewBlockListenerTests
 
         (await harness.Published.Any<NewBitcoinBlockEvent>()).Should().BeTrue();
 
-        while (newBlockCount <= 2)
+        while (newBlockCount <= 3)
         {
-            await Task.Delay(1000);
+            await Task.Delay(2000);
             harness.Published.Select(context => context.MessageType == typeof(NewBitcoinBlockEvent)).Count().Should().Be(newBlockCount+1);
         }
 

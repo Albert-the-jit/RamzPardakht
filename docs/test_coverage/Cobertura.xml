@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage line-rate="0.9703832752613241" branch-rate="0.7203389830508474" lines-covered="557" lines-valid="574" branches-covered="85" branches-valid="118" complexity="145" version="0" timestamp="1713042392">
+<coverage line-rate="0.9703832752613241" branch-rate="0.7203389830508474" lines-covered="557" lines-valid="574" branches-covered="85" branches-valid="118" complexity="145" version="0" timestamp="1716671299">
   <sources>
     <source>D:\a\RamzPardakht\RamzPardakht\src\</source>
   </sources>
@@ -1401,7 +1401,7 @@
             <line number="295" hits="11" branch="false" />
           </lines>
         </class>
-        <class name="TypedSignalR.Client.DevTools.EndpointRouteBuilderExtensions" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\TypedSignalR.Client.DevTools.Specification\TypedSignalR.Client.DevTools.SourceGenerator\TypedSignalR.Client.DevTools.Specification.Core.Generated.cs" line-rate="1" branch-rate="1" complexity="1">
+        <class name="TypedSignalR.Client.DevTools.EndpointRouteBuilderExtensions" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\obj\Debug\net8.0\TypedSignalR.Client.DevTools.Specification\TypedSignalR.Client.DevTools.SourceGenerator\TypedSignalR.Client.DevTools.Specification.Core.Generated.cs" line-rate="1" branch-rate="1" complexity="1">
           <methods>
             <method name="GetSpecJsonBytes" signature="()" line-rate="1" branch-rate="1" complexity="1">
               <lines>
@@ -1413,7 +1413,7 @@
             <line number="10" hits="1" branch="false" />
           </lines>
         </class>
-        <class name="TypedSignalR.Client.DevTools.EndpointRouteBuilderExtensions" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\TypedSignalR.Client.DevTools.Specification\TypedSignalR.Client.DevTools.SourceGenerator\TypedSignalR.Client.DevTools.Specification.Generated.cs" line-rate="1" branch-rate="1" complexity="1">
+        <class name="TypedSignalR.Client.DevTools.EndpointRouteBuilderExtensions" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\obj\Debug\net8.0\TypedSignalR.Client.DevTools.Specification\TypedSignalR.Client.DevTools.SourceGenerator\TypedSignalR.Client.DevTools.Specification.Generated.cs" line-rate="1" branch-rate="1" complexity="1">
           <methods>
             <method name="UseSignalRHubSpecification" signature="(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder)" line-rate="1" branch-rate="1" complexity="1">
               <lines>

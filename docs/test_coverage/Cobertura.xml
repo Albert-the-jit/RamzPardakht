@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage line-rate="0.9703832752613241" branch-rate="0.7203389830508474" lines-covered="557" lines-valid="574" branches-covered="85" branches-valid="118" complexity="145" version="0" timestamp="1748725928">
+<coverage line-rate="0.9703832752613241" branch-rate="0.7203389830508474" lines-covered="557" lines-valid="574" branches-covered="85" branches-valid="118" complexity="145" version="0" timestamp="1749935574">
   <sources>
-    <source>D:\a\RamzPardakht\RamzPardakht\src\</source>
+    <source>C:\a\RamzPardakht\RamzPardakht\src\</source>
   </sources>
   <packages>
     <package name="RamzPardakht.ApplicationCore" line-rate="1" branch-rate="1" complexity="5">
       <classes>
-        <class name="RamzPardakht.ApplicationCore.ApplicationCoreSetup" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.ApplicationCore\ApplicationCoreSetup.cs" line-rate="1" branch-rate="1" complexity="1">
+        <class name="RamzPardakht.ApplicationCore.ApplicationCoreSetup" filename="C:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.ApplicationCore\ApplicationCoreSetup.cs" line-rate="1" branch-rate="1" complexity="1">
           <methods>
             <method name="AddApplication" signature="(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
@@ -27,7 +27,7 @@
             <line number="18" hits="11" branch="false" />
           </lines>
         </class>
-        <class name="RamzPardakht.ApplicationCore.Services.BitcoinWalletProvider" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.ApplicationCore\Services\BitcoinWalletProvider.cs" line-rate="1" branch-rate="1" complexity="4">
+        <class name="RamzPardakht.ApplicationCore.Services.BitcoinWalletProvider" filename="C:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.ApplicationCore\Services\BitcoinWalletProvider.cs" line-rate="1" branch-rate="1" complexity="4">
           <methods>
             <method name="GetNewWalletPublicKey" signature="(System.Int32)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
@@ -105,7 +105,7 @@
     </package>
     <package name="RamzPardakht.Infrastructure" line-rate="0.9754601226993865" branch-rate="0.71875" complexity="99">
       <classes>
-        <class name="RamzPardakht.Infrastructure.DbContexts.ProjectDbContext" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.Infrastructure\DbContexts\ProjectDbContext.cs" line-rate="0.9649122807017544" branch-rate="0.71875" complexity="97">
+        <class name="RamzPardakht.Infrastructure.DbContexts.ProjectDbContext" filename="C:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.Infrastructure\DbContexts\ProjectDbContext.cs" line-rate="0.9649122807017544" branch-rate="0.71875" complexity="97">
           <methods>
             <method name="OnModelCreating" signature="(Microsoft.EntityFrameworkCore.ModelBuilder)" line-rate="0.9285714285714286" branch-rate="0.9166666666666666" complexity="12">
               <lines>
@@ -351,7 +351,7 @@
             <line number="189" hits="116" branch="false" />
           </lines>
         </class>
-        <class name="RamzPardakht.Infrastructure.InfrastructureSetup" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.Infrastructure\InfrastructureSetup.cs" line-rate="1" branch-rate="1" complexity="1">
+        <class name="RamzPardakht.Infrastructure.InfrastructureSetup" filename="C:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.Infrastructure\InfrastructureSetup.cs" line-rate="1" branch-rate="1" complexity="1">
           <methods>
             <method name="AddInfrastructure" signature="(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
@@ -451,7 +451,7 @@
             <line number="82" hits="11" branch="false" />
           </lines>
         </class>
-        <class name="RamzPardakht.Infrastructure.Services.ExchangeService" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.Infrastructure\Services\ExchangeService.cs" line-rate="1" branch-rate="1" complexity="1">
+        <class name="RamzPardakht.Infrastructure.Services.ExchangeService" filename="C:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.Infrastructure\Services\ExchangeService.cs" line-rate="1" branch-rate="1" complexity="1">
           <methods>
             <method name=".ctor" signature="(RamzPardakht.Infrastructure.Services.ICoinGateExchangeService)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
@@ -473,7 +473,7 @@
     </package>
     <package name="RamzPardakht.WebApi" line-rate="0.9657894736842105" branch-rate="0.7272727272727273" complexity="41">
       <classes>
-        <class name="RamzPardakht.WebApi.BackgroundServices.BitcoinNewBlockListener" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\BackgroundServices\BitcoinNewBlockListener.cs" line-rate="1" branch-rate="1" complexity="1">
+        <class name="RamzPardakht.WebApi.BackgroundServices.BitcoinNewBlockListener" filename="C:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\BackgroundServices\BitcoinNewBlockListener.cs" line-rate="1" branch-rate="1" complexity="1">
           <methods>
             <method name=".ctor" signature="(Microsoft.Extensions.Logging.ILogger`1&lt;RamzPardakht.WebApi.BackgroundServices.BitcoinNewBlockListener&gt;,RamzPardakht.ApplicationCore.Contracts.IBitcoinWalletProvider,MassTransit.IBus,Microsoft.Extensions.DependencyInjection.IServiceScopeFactory,Microsoft.Extensions.Hosting.IHostEnvironment)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
@@ -511,7 +511,7 @@
             <line number="34" hits="1" branch="false" />
           </lines>
         </class>
-        <class name="RamzPardakht.WebApi.Common.ClaimsPrincipalExtensions" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Common\ClaimsPrincipalExtensions.cs" line-rate="0.75" branch-rate="0.5" complexity="4">
+        <class name="RamzPardakht.WebApi.Common.ClaimsPrincipalExtensions" filename="C:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Common\ClaimsPrincipalExtensions.cs" line-rate="0.75" branch-rate="0.5" complexity="4">
           <methods>
             <method name="GetUserId" signature="(System.Security.Claims.ClaimsPrincipal)" line-rate="0.75" branch-rate="0.5" complexity="4">
               <lines>
@@ -537,7 +537,7 @@
             <line number="19" hits="80" branch="false" />
           </lines>
         </class>
-        <class name="RamzPardakht.WebApi.Common.HideSignalRHubSpecificationFromSwaggerFilter" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Common\HideSignalRHubSpecificationFromSwaggerFilter.cs" line-rate="1" branch-rate="1" complexity="1">
+        <class name="RamzPardakht.WebApi.Common.HideSignalRHubSpecificationFromSwaggerFilter" filename="C:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Common\HideSignalRHubSpecificationFromSwaggerFilter.cs" line-rate="1" branch-rate="1" complexity="1">
           <methods>
             <method name="Apply" signature="(Microsoft.OpenApi.Models.OpenApiDocument,Swashbuckle.AspNetCore.SwaggerGen.DocumentFilterContext)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
@@ -553,7 +553,7 @@
             <line number="15" hits="1" branch="false" />
           </lines>
         </class>
-        <class name="RamzPardakht.WebApi.Common.HttpClientBuilderExtensions" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Common\HttpClientBuilderExtensions.cs" line-rate="0.9166666666666666" branch-rate="0.5" complexity="2">
+        <class name="RamzPardakht.WebApi.Common.HttpClientBuilderExtensions" filename="C:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Common\HttpClientBuilderExtensions.cs" line-rate="0.9166666666666666" branch-rate="0.5" complexity="2">
           <methods>
             <method name="UseHttpClientLogRequestResponse" signature="(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action`1&lt;Serilog.HttpClient.RequestLoggingOptions&gt;)" line-rate="0.9166666666666666" branch-rate="0.5" complexity="2">
               <lines>
@@ -587,7 +587,7 @@
             <line number="34" hits="11" branch="false" />
           </lines>
         </class>
-        <class name="RamzPardakht.WebApi.Common.HttpUrlAttribute" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Common\HttpUrlAttribute.cs" line-rate="0.9666666666666667" branch-rate="0.8571428571428571" complexity="16">
+        <class name="RamzPardakht.WebApi.Common.HttpUrlAttribute" filename="C:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Common\HttpUrlAttribute.cs" line-rate="0.9666666666666667" branch-rate="0.8571428571428571" complexity="16">
           <methods>
             <method name="IsValid" signature="(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)" line-rate="0.9230769230769231" branch-rate="0.8333333333333334" complexity="12">
               <lines>
@@ -669,7 +669,7 @@
             <line number="59" hits="1" branch="false" />
           </lines>
         </class>
-        <class name="RamzPardakht.WebApi.Common.ReferenceTokenAuthorizationHandler" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Common\ReferenceTokenAuthorizationHandler.cs" line-rate="1" branch-rate="1" complexity="1">
+        <class name="RamzPardakht.WebApi.Common.ReferenceTokenAuthorizationHandler" filename="C:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Common\ReferenceTokenAuthorizationHandler.cs" line-rate="1" branch-rate="1" complexity="1">
           <methods>
             <method name=".ctor" signature="(RamzPardakht.ApplicationCore.Contracts.IProjectDbContext,System.TimeProvider)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
@@ -689,7 +689,7 @@
             <line number="20" hits="81" branch="false" />
           </lines>
         </class>
-        <class name="RamzPardakht.WebApi.Consumers.NewBitcoinBlockEventConsumer" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Consumers\NewBitcoinBlockEventConsumer.cs" line-rate="1" branch-rate="1" complexity="1">
+        <class name="RamzPardakht.WebApi.Consumers.NewBitcoinBlockEventConsumer" filename="C:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Consumers\NewBitcoinBlockEventConsumer.cs" line-rate="1" branch-rate="1" complexity="1">
           <methods>
             <method name=".ctor" signature="(RamzPardakht.ApplicationCore.Contracts.IProjectDbContext,System.TimeProvider,Microsoft.AspNetCore.SignalR.IHubContext`2&lt;RamzPardakht.WebApi.Hubs.PaymentHub,RamzPardakht.WebApi.Hubs.IPaymentClient&gt;,Microsoft.Extensions.Logging.ILogger`1&lt;RamzPardakht.WebApi.Consumers.NewBitcoinBlockEventConsumer&gt;,RamzPardakht.ApplicationCore.Contracts.IExplorerClientAdapter`1&lt;NBitcoin.Bitcoin&gt;)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
@@ -727,7 +727,7 @@
             <line number="41" hits="12" branch="false" />
           </lines>
         </class>
-        <class name="RamzPardakht.WebApi.Consumers.PaymentStatusChangedConsumer" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Consumers\PaymentStatusChangedConsumer.cs" line-rate="1" branch-rate="1" complexity="1">
+        <class name="RamzPardakht.WebApi.Consumers.PaymentStatusChangedConsumer" filename="C:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Consumers\PaymentStatusChangedConsumer.cs" line-rate="1" branch-rate="1" complexity="1">
           <methods>
             <method name=".ctor" signature="(System.Net.Http.HttpClient)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
@@ -745,7 +745,7 @@
             <line number="17" hits="5" branch="false" />
           </lines>
         </class>
-        <class name="RamzPardakht.WebApi.Controllers.AccessTokenController" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Controllers\AccessTokenController.cs" line-rate="1" branch-rate="1" complexity="1">
+        <class name="RamzPardakht.WebApi.Controllers.AccessTokenController" filename="C:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Controllers\AccessTokenController.cs" line-rate="1" branch-rate="1" complexity="1">
           <methods>
             <method name=".ctor" signature="(Microsoft.Extensions.Options.IOptionsMonitor`1&lt;Microsoft.AspNetCore.Authentication.BearerToken.BearerTokenOptions&gt;,System.TimeProvider,RamzPardakht.ApplicationCore.Contracts.IProjectDbContext,RamzPardakht.WebApi.Common.Mapper,Microsoft.Extensions.Localization.IStringLocalizer`1&lt;RamzPardakht.ApplicationCore.Resources.SharedResource&gt;)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
@@ -783,7 +783,7 @@
             <line number="54" hits="10" branch="false" />
           </lines>
         </class>
-        <class name="RamzPardakht.WebApi.Controllers.ArchiveController" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Controllers\ArchiveController.cs" line-rate="1" branch-rate="1" complexity="1">
+        <class name="RamzPardakht.WebApi.Controllers.ArchiveController" filename="C:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Controllers\ArchiveController.cs" line-rate="1" branch-rate="1" complexity="1">
           <methods>
             <method name=".ctor" signature="(RamzPardakht.ApplicationCore.Contracts.IProjectDbContext,RamzPardakht.WebApi.Common.Mapper,Microsoft.Extensions.Localization.IStringLocalizer`1&lt;RamzPardakht.ApplicationCore.Resources.SharedResource&gt;,Minio.IMinioClient,Microsoft.Extensions.Logging.ILogger`1&lt;RamzPardakht.WebApi.Controllers.ArchiveController&gt;)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
@@ -823,7 +823,7 @@
             <line number="47" hits="8" branch="false" />
           </lines>
         </class>
-        <class name="RamzPardakht.WebApi.Controllers.BalanceController" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Controllers\BalanceController.cs" line-rate="1" branch-rate="1" complexity="1">
+        <class name="RamzPardakht.WebApi.Controllers.BalanceController" filename="C:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Controllers\BalanceController.cs" line-rate="1" branch-rate="1" complexity="1">
           <methods>
             <method name=".ctor" signature="(RamzPardakht.ApplicationCore.Contracts.IProjectDbContext)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
@@ -845,7 +845,7 @@
             <line number="31" hits="8" branch="false" />
           </lines>
         </class>
-        <class name="RamzPardakht.WebApi.Controllers.PaymentController" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Controllers\PaymentController.cs" line-rate="1" branch-rate="1" complexity="1">
+        <class name="RamzPardakht.WebApi.Controllers.PaymentController" filename="C:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Controllers\PaymentController.cs" line-rate="1" branch-rate="1" complexity="1">
           <methods>
             <method name=".ctor" signature="(System.TimeProvider,RamzPardakht.ApplicationCore.Contracts.IProjectDbContext,RamzPardakht.WebApi.Common.Mapper,RamzPardakht.ApplicationCore.Contracts.IExchangeService,RamzPardakht.ApplicationCore.Contracts.IBitcoinWalletProvider,Microsoft.Extensions.Localization.IStringLocalizer`1&lt;RamzPardakht.ApplicationCore.Resources.SharedResource&gt;,Microsoft.Extensions.Options.IOptionsSnapshot`1&lt;RamzPardakht.ApplicationCore.Common.AppSettings&gt;,RamzPardakht.ApplicationCore.Contracts.IExplorerClientAdapter`1&lt;NBitcoin.Bitcoin&gt;)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
@@ -893,7 +893,7 @@
             <line number="59" hits="21" branch="false" />
           </lines>
         </class>
-        <class name="RamzPardakht.WebApi.Controllers.PayoutController" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Controllers\PayoutController.cs" line-rate="1" branch-rate="1" complexity="1">
+        <class name="RamzPardakht.WebApi.Controllers.PayoutController" filename="C:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Controllers\PayoutController.cs" line-rate="1" branch-rate="1" complexity="1">
           <methods>
             <method name=".ctor" signature="(RamzPardakht.ApplicationCore.Contracts.IProjectDbContext,RamzPardakht.WebApi.Common.Mapper,RamzPardakht.ApplicationCore.Contracts.IBitcoinWalletProvider,Microsoft.Extensions.Localization.IStringLocalizer`1&lt;RamzPardakht.ApplicationCore.Resources.SharedResource&gt;,Microsoft.Extensions.Logging.ILogger`1&lt;RamzPardakht.WebApi.Controllers.PayoutController&gt;,RamzPardakht.ApplicationCore.Contracts.IExplorerClientAdapter`1&lt;NBitcoin.Bitcoin&gt;)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
@@ -935,7 +935,7 @@
             <line number="55" hits="16" branch="false" />
           </lines>
         </class>
-        <class name="RamzPardakht.WebApi.Hubs.PaymentHub" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Hubs\PaymentHub.cs" line-rate="1" branch-rate="1" complexity="1">
+        <class name="RamzPardakht.WebApi.Hubs.PaymentHub" filename="C:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Hubs\PaymentHub.cs" line-rate="1" branch-rate="1" complexity="1">
           <methods>
             <method name=".ctor" signature="(RamzPardakht.ApplicationCore.Contracts.IProjectDbContext)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
@@ -953,7 +953,7 @@
             <line number="20" hits="3" branch="false" />
           </lines>
         </class>
-        <class name="RamzPardakht.WebApi.Models.PaymentInquiryResponseModel" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Models\PaymentInquiryResponseModel.cs" line-rate="1" branch-rate="1" complexity="1">
+        <class name="RamzPardakht.WebApi.Models.PaymentInquiryResponseModel" filename="C:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Models\PaymentInquiryResponseModel.cs" line-rate="1" branch-rate="1" complexity="1">
           <methods>
             <method name="get_StatusCode" signature="()" line-rate="1" branch-rate="1" complexity="1">
               <lines>
@@ -965,7 +965,7 @@
             <line number="17" hits="8" branch="false" />
           </lines>
         </class>
-        <class name="RamzPardakht.WebApi.Models.PayoutCreationResponseModel" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Models\PayoutCreationResponseModel.cs" line-rate="1" branch-rate="1" complexity="1">
+        <class name="RamzPardakht.WebApi.Models.PayoutCreationResponseModel" filename="C:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Models\PayoutCreationResponseModel.cs" line-rate="1" branch-rate="1" complexity="1">
           <methods>
             <method name="get_AmountAfterNetworkFee" signature="()" line-rate="1" branch-rate="1" complexity="1">
               <lines>
@@ -977,7 +977,7 @@
             <line number="19" hits="3" branch="false" />
           </lines>
         </class>
-        <class name="RamzPardakht.WebApi.Startup" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Startup.cs" line-rate="0.9556650246305419" branch-rate="0.5" complexity="4">
+        <class name="RamzPardakht.WebApi.Startup" filename="C:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\Startup.cs" line-rate="0.9556650246305419" branch-rate="0.5" complexity="4">
           <methods>
             <method name="ConfigureServices" signature="(Microsoft.Extensions.DependencyInjection.IServiceCollection)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
@@ -1401,7 +1401,7 @@
             <line number="295" hits="11" branch="false" />
           </lines>
         </class>
-        <class name="TypedSignalR.Client.DevTools.EndpointRouteBuilderExtensions" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\obj\Debug\net8.0\TypedSignalR.Client.DevTools.Specification\TypedSignalR.Client.DevTools.SourceGenerator\TypedSignalR.Client.DevTools.Specification.Core.Generated.cs" line-rate="1" branch-rate="1" complexity="1">
+        <class name="TypedSignalR.Client.DevTools.EndpointRouteBuilderExtensions" filename="C:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\obj\Debug\net8.0\TypedSignalR.Client.DevTools.Specification\TypedSignalR.Client.DevTools.SourceGenerator\TypedSignalR.Client.DevTools.Specification.Core.Generated.cs" line-rate="1" branch-rate="1" complexity="1">
           <methods>
             <method name="GetSpecJsonBytes" signature="()" line-rate="1" branch-rate="1" complexity="1">
               <lines>
@@ -1413,7 +1413,7 @@
             <line number="10" hits="1" branch="false" />
           </lines>
         </class>
-        <class name="TypedSignalR.Client.DevTools.EndpointRouteBuilderExtensions" filename="D:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\obj\Debug\net8.0\TypedSignalR.Client.DevTools.Specification\TypedSignalR.Client.DevTools.SourceGenerator\TypedSignalR.Client.DevTools.Specification.Generated.cs" line-rate="1" branch-rate="1" complexity="1">
+        <class name="TypedSignalR.Client.DevTools.EndpointRouteBuilderExtensions" filename="C:\a\RamzPardakht\RamzPardakht\src\RamzPardakht.WebApi\obj\Debug\net8.0\TypedSignalR.Client.DevTools.Specification\TypedSignalR.Client.DevTools.SourceGenerator\TypedSignalR.Client.DevTools.Specification.Generated.cs" line-rate="1" branch-rate="1" complexity="1">
           <methods>
             <method name="UseSignalRHubSpecification" signature="(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder)" line-rate="1" branch-rate="1" complexity="1">
               <lines>
